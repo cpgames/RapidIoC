@@ -59,11 +59,6 @@ namespace cpGames.core.RapidMVC
             }
             return context;
         }
-
-        public void RegisterView(IView view, string name = null)
-        {
-            FindContext(name).RegisterView(view);
-        }
         #endregion
     }
 }

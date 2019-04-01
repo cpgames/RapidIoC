@@ -15,7 +15,8 @@ namespace cpGames.core.RapidMVC
             {
                 throw new Exception(string.Format("View <{0}> missing context attribute", view));
             }
-            GlobalContext.Instance.RegisterView(view, att.Name);
+            var context = GlobalContext.Instance.FindContext(att.Name);
+            context.RegisterView(view);
         }
         #endregion
     }

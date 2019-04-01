@@ -10,6 +10,8 @@ namespace cpGames.core.RapidMVC
         #endregion
 
         #region Constructors
+        public InjectAttribute() { }
+
         public InjectAttribute(object key)
         {
             Key = key;
