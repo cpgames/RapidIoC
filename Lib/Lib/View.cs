@@ -1,23 +1,23 @@
-﻿using System;
-using cpGames.core.Serialization;
-
-namespace cpGames.core.RapidMVC
+﻿namespace cpGames.core.RapidMVC
 {
-    public interface IView { }
-
-    public static class ViewHelpers
+    public interface IView
     {
-        #region Methods
-        public static void RegisterWithContext(this IView view)
+        #region Properties
+        Signal<IBindingKey> PropertyUpdatedSignal { get; }
+        #endregion
+    }
+
+    public class View : IView
+    {
+        #region Constructors
+        public View()
         {
-            var att = view.GetType().GetAttribute<ContextAttribute>();
-            if (att == null)
-            {
-                throw new Exception(string.Format("View <{0}> missing context attribute", view));
-            }
-            var context = GlobalContext.Instance.FindContext(att.Name);
-            context.RegisterView(view);
+            Rapid.RegisterView(this);
         }
+        #endregion
+
+        #region IView Members
+        public Signal<IBindingKey> PropertyUpdatedSignal { get; } = new Signal<IBindingKey>();
         #endregion
     }
 }

@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,15 +31,17 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityExamplesDebug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\Examples\UnityExamples\Assets\lib\</OutputPath>
+    <OutputPath>..\..\Examples\UnityExamples\Assets\cpGames\core\rapidMVC\lib\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -50,12 +54,17 @@
   <ItemGroup>
     <Compile Include="Attributes.cs" />
     <Compile Include="Binding.cs" />
-    <Compile Include="BindingKey.cs" />
-    <Compile Include="Context.cs" />
-    <Compile Include="GlobalContext.cs" />
+    <Compile Include="binding\BindingCollection.cs" />
+    <Compile Include="binding\BindingKey.cs" />
+    <Compile Include="binding\BindingKeyFactory.cs" />
+    <Compile Include="binding\BindingKeyFactoryCollection.cs" />
+    <Compile Include="binding\NameBindingKey.cs" />
+    <Compile Include="binding\TypeBindingKey.cs" />
+    <Compile Include="context\Context.cs" />
+    <Compile Include="context\ContextCollection.cs" />
     <Compile Include="Instantiator.cs" />
-    <Compile Include="LocalContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rapid.cs" />
     <Compile Include="Signal.cs" />
     <Compile Include="View.cs" />
   </ItemGroup>

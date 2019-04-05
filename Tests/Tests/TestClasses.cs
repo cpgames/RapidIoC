@@ -1,7 +1,7 @@
 ﻿namespace cpGames.core.RapidMVC.Tests
 {
     [Context("TestContext")]
-    public class TestView : IView
+    public class TestView : View
     {
         #region Properties
         [Inject("TestName")]
@@ -12,6 +12,18 @@
 
         [Inject]
         public Nested2 Nested2 { get; set; }
+
+        public bool PropertyUpdated { get; set; }
+        #endregion
+
+        #region Constructors
+        public TestView()
+        {
+            PropertyUpdatedSignal.AddListener(key =>
+            {
+                PropertyUpdated = true;
+            });
+        }
         #endregion
 
         #region Methods
