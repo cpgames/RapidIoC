@@ -96,10 +96,24 @@ namespace cpGames.core.RapidMVC
 
         public bool Register(IBindingKey key, out IBinding binding, out string errorMessage)
         {
+            if (_owner.IsRoot)
+            {
+                foreach (var context in Rapid.Contexts.Contexts)
+                {
+                    if (context.Bindings.Exists(key, out _))
+                    {
+                        binding = null;
+                        errorMessage = string.Format("Binding with key <{0}> is already registered in at least one context <{1}>, " +
+                            "it can't be bound to root context until local binding is removed.", key, context);
+                        return false;
+                    }
+                }
+            }
+
             if (!Find(key, out binding, out errorMessage))
             {
                 binding = new Binding(key);
-                binding.OnRemoved.AddOnce(() => _bindings.Remove(key));
+                binding.RemovedSignal.AddOnce(() => _bindings.Remove(key));
                 _bindings.Add(key, binding);
             }
             errorMessage = string.Empty;

@@ -9,7 +9,8 @@ namespace cpGames.core.RapidMVC
         IBindingKey Key { get; }
         object Value { get; set; }
         bool Empty { get; }
-        Signal OnRemoved { get; }
+        Signal RemovedSignal { get; }
+        Signal ValueUpdatedSignal { get; }
         #endregion
 
         #region Methods
@@ -45,7 +46,8 @@ namespace cpGames.core.RapidMVC
         }
 
         public bool Empty => Value == null;
-        public Signal OnRemoved => new Signal();
+        public Signal RemovedSignal { get; } = new Signal();
+        public Signal ValueUpdatedSignal { get; } = new Signal();
 
         public bool RegisterViewProperty(IView view, PropertyInfo property, out string errorMessage)
         {
@@ -75,7 +77,7 @@ namespace cpGames.core.RapidMVC
             _propertyMap.Remove(view);
             if (Empty && _propertyMap.Count == 0)
             {
-                OnRemoved.Dispatch();
+                RemovedSignal.Dispatch();
             }
             errorMessage = string.Empty;
             return true;
@@ -89,6 +91,7 @@ namespace cpGames.core.RapidMVC
             {
                 propertyMap.Value.SetValue(propertyMap.Key, Value, null);
                 propertyMap.Key.PropertyUpdatedSignal.Dispatch(Key);
+                ValueUpdatedSignal.Dispatch();
             }
         }
         #endregion

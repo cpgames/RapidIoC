@@ -7,6 +7,7 @@ namespace cpGames.core.RapidMVC
         #region Properties
         IContext Root { get; }
         int Count { get; }
+        IEnumerable<IContext> Contexts { get; }
         #endregion
 
         #region Methods
@@ -26,6 +27,7 @@ namespace cpGames.core.RapidMVC
         #region IContextCollection Members
         public IContext Root { get; } = new Context(ROOT_CONTEXT_NAME);
         public int Count => _contexts.Count;
+        public IEnumerable<IContext> Contexts => _contexts.Values;
 
         public bool Find(string name, out IContext context, out string errorMessage)
         {

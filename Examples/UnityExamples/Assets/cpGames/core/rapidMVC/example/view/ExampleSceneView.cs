@@ -20,7 +20,6 @@ namespace cpGames.core.RapidMVC.examples
             {
                 throw new Exception("Model collection is empty.");
             }
-            Rapid.Bind(typeof(SphereModel), models[_index]);
             StartCoroutine(UpdateModel());
         }
 
@@ -28,7 +27,7 @@ namespace cpGames.core.RapidMVC.examples
         {
             yield return new WaitForSeconds(1);
             _index = (_index + 1) % models.Count;
-            Rapid.Bind(typeof(SphereModel), models[_index]);
+            Rapid.Bind(typeof(SphereModel), models[_index], "ExampleContext");
             yield return StartCoroutine(UpdateModel());
         }
         #endregion
