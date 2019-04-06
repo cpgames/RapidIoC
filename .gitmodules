@@ -1,0 +1,3 @@
+[submodule "CpReflection"]
+	path = CpReflection
+	url = https://github.com/cpgames/CpReflection.git
