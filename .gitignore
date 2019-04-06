@@ -20,6 +20,7 @@ bin/
 Builds/
 log/
 Temp/
+packages/
 
 # Unity specific
 UnityExamples/Temp
