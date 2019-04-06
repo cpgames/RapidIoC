@@ -60,13 +60,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\cpGames\core\rapidMVC\example\model\SphereModel.cs" />
-    <Compile Include="Assets\cpGames\core\rapidMVC\example\view\ExampleSceneView.cs" />
-    <Compile Include="Assets\cpGames\core\rapidMVC\example\view\SphereView.cs" />
-    <Compile Include="Assets\cpGames\core\rapidMVC\src\ComponentView.cs" />
-    <Compile Include="Assets\cpGames\core\rapidMVC\src\SceneView.cs" />
+    <Compile Include="Assets\cpGames\demo\DemoScene.cs" />
+    <Reference Include="Unity.TextMeshPro.Editor">
+      <HintPath>C:/Users/Misha/Documents/GameProjects/cpgames/core/RapidMVC/Examples/UnityExamples/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/Misha/Documents/GameProjects/cpgames/RapidMVC/Examples/UnityExamples/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/Misha/Documents/GameProjects/cpgames/core/RapidMVC/Examples/UnityExamples/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.CollabProxy.Editor">
+      <HintPath>C:/Users/Misha/Documents/GameProjects/cpgames/core/RapidMVC/Examples/UnityExamples/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>C:/Users/Misha/Documents/GameProjects/cpgames/core/RapidMVC/Examples/UnityExamples/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Analytics.DataPrivacy">
+      <HintPath>C:/Users/Misha/Documents/GameProjects/cpgames/core/RapidMVC/Examples/UnityExamples/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -269,11 +277,14 @@
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
-    <Reference Include="Lib">
-      <HintPath>C:/Users/Misha/Documents/GameProjects/cpgames/RapidMVC/Examples/UnityExamples/Assets/cpGames/core/rapidMVC/lib/Lib.dll</HintPath>
+    <Reference Include="Unity.Analytics.Editor">
+      <HintPath>C:/Users/Misha/Documents/GameProjects/cpgames/core/RapidMVC/Examples/UnityExamples/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="SerializationHelpers">
-      <HintPath>C:/Users/Misha/Documents/GameProjects/cpgames/RapidMVC/Examples/UnityExamples/Assets/cpGames/core/rapidMVC/lib/SerializationHelpers.dll</HintPath>
+    <Reference Include="Unity.Analytics.StandardEvents">
+      <HintPath>C:/Users/Misha/Documents/GameProjects/cpgames/core/RapidMVC/Examples/UnityExamples/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Analytics.Tracker">
+      <HintPath>C:/Users/Misha/Documents/GameProjects/cpgames/core/RapidMVC/Examples/UnityExamples/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:/Program Files/Unity/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

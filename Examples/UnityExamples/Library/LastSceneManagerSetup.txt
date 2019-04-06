@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/cpGames/core/rapidMVC/example/ExampleScene.unity
-  isLoaded: 1
-  isActive: 1
+- path: Assets/cpGames/demo/DemoScene.unity
+  isLoaded: 0
+  isActive: 0

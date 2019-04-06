@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RapidMVCTests", "RapidMVCTests\RapidMVCTests.csproj", "{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RapidMVC", "..\RapidMVCLib\RapidMVC\RapidMVC.csproj", "{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpReflection", "..\CpReflection\CpReflectionLib\CpReflection\CpReflection.csproj", "{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		UnityExamplesDebug|Any CPU = UnityExamplesDebug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}.UnityExamplesDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}.UnityExamplesDebug|Any CPU.Build.0 = Debug|Any CPU
+		{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}.UnityExamplesDebug|Any CPU.ActiveCfg = UnityExamplesDebug|Any CPU
+		{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}.UnityExamplesDebug|Any CPU.Build.0 = UnityExamplesDebug|Any CPU
+		{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}.Release|Any CPU.Build.0 = Release|Any CPU
+		{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}.UnityExamplesDebug|Any CPU.ActiveCfg = UnityExamplesDebug|Any CPU
+		{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}.UnityExamplesDebug|Any CPU.Build.0 = UnityExamplesDebug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FBD1AB6D-F291-4146-916B-AF7E81E45391}
+	EndGlobalSection
+EndGlobal
