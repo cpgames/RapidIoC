@@ -1,0 +1,99 @@
+\hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding}{}\section{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding Interface Reference}
+\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding}\index{cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}}
+
+
+Binding is a map of views with properties matching a unique Binding\+Key. Binding handles updating values of mapped properties.  
+
+
+Inheritance diagram for cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_a600504a6b8ba86a81e02ef03c4dc9e53}{Register\+View\+Property}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_view}{I\+View}} view, Property\+Info property, out string error\+Message)
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_ab36c868f3a9163935a650c30663f7a97}{Unregister\+View}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_view}{I\+View}} view, out string error\+Message)
+\end{DoxyCompactItemize}
+\subsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}} \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_aa61ee9cd1b44e221f1ae28f9552792c7}{Key}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+object \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_a7ec4a6dc07e378d9ffd775b4d6b387f7}{Value}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_ad4ea0596cb7a0ef820717785e1e5a4ef}{Empty}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_signal}{Signal}} \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_afc250797ed507d05b9b611f4d63cd345}{Removed\+Signal}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_signal}{Signal}} \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_a24032f62e91ba7f08581be9afd09b2c7}{Value\+Updated\+Signal}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Binding is a map of views with properties matching a unique Binding\+Key. Binding handles updating values of mapped properties. 
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_a600504a6b8ba86a81e02ef03c4dc9e53}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_a600504a6b8ba86a81e02ef03c4dc9e53}} 
+\index{cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}!RegisterViewProperty@{RegisterViewProperty}}
+\index{RegisterViewProperty@{RegisterViewProperty}!cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}}
+\subsubsection{\texorpdfstring{RegisterViewProperty()}{RegisterViewProperty()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding.\+Register\+View\+Property (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_view}{I\+View}}}]{view,  }\item[{Property\+Info}]{property,  }\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_binding_aebd156eee7ea9bd0aea09c36b3a32a95}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Binding}}.
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_ab36c868f3a9163935a650c30663f7a97}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_ab36c868f3a9163935a650c30663f7a97}} 
+\index{cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}!UnregisterView@{UnregisterView}}
+\index{UnregisterView@{UnregisterView}!cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}}
+\subsubsection{\texorpdfstring{UnregisterView()}{UnregisterView()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding.\+Unregister\+View (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_view}{I\+View}}}]{view,  }\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_binding_a09b069af4432f3652799483a7dd41fee}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Binding}}.
+
+
+
+\subsection{Property Documentation}
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_ad4ea0596cb7a0ef820717785e1e5a4ef}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_ad4ea0596cb7a0ef820717785e1e5a4ef}} 
+\index{cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}!Empty@{Empty}}
+\index{Empty@{Empty}!cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}}
+\subsubsection{\texorpdfstring{Empty}{Empty}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding.\+Empty\hspace{0.3cm}{\ttfamily [get]}}
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_aa61ee9cd1b44e221f1ae28f9552792c7}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_aa61ee9cd1b44e221f1ae28f9552792c7}} 
+\index{cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}!Key@{Key}}
+\index{Key@{Key}!cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}}
+\subsubsection{\texorpdfstring{Key}{Key}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}} cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding.\+Key\hspace{0.3cm}{\ttfamily [get]}}
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_afc250797ed507d05b9b611f4d63cd345}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_afc250797ed507d05b9b611f4d63cd345}} 
+\index{cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}!RemovedSignal@{RemovedSignal}}
+\index{RemovedSignal@{RemovedSignal}!cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}}
+\subsubsection{\texorpdfstring{RemovedSignal}{RemovedSignal}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_signal}{Signal}} cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding.\+Removed\+Signal\hspace{0.3cm}{\ttfamily [get]}}
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_a7ec4a6dc07e378d9ffd775b4d6b387f7}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_a7ec4a6dc07e378d9ffd775b4d6b387f7}} 
+\index{cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}!Value@{Value}}
+\index{Value@{Value}!cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}}
+\subsubsection{\texorpdfstring{Value}{Value}}
+{\footnotesize\ttfamily object cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding.\+Value\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_a24032f62e91ba7f08581be9afd09b2c7}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_a24032f62e91ba7f08581be9afd09b2c7}} 
+\index{cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}!ValueUpdatedSignal@{ValueUpdatedSignal}}
+\index{ValueUpdatedSignal@{ValueUpdatedSignal}!cpGames.core.RapidMVC.IBinding@{cpGames.core.RapidMVC.IBinding}}
+\subsubsection{\texorpdfstring{ValueUpdatedSignal}{ValueUpdatedSignal}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_signal}{Signal}} cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding.\+Value\+Updated\+Signal\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Misha/\+Documents/\+Game\+Projects/cpgames/core/\+Rapid\+M\+V\+C/\+Rapid\+M\+V\+C\+Lib/\+Rapid\+M\+V\+C/api/binding/\mbox{\hyperlink{_i_binding_8cs}{I\+Binding.\+cs}}\end{DoxyCompactItemize}

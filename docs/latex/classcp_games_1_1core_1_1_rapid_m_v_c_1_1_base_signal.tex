@@ -1,0 +1,81 @@
+\hypertarget{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal}{}\section{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+Base\+Signal Class Reference}
+\label{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal}\index{cpGames.core.RapidMVC.BaseSignal@{cpGames.core.RapidMVC.BaseSignal}}
+
+
+Signals are a way to execute commands. To use, connect your commands to a signal and the call signal.\+Dispatch(parameters) to execute connected commands.  
+
+
+Inheritance diagram for cp\+Games.\+core.\+Rapid\+M\+V\+C.\+Base\+Signal\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.469816cm]{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_aa97df2a65a67878d56a83df578f09bc8}{Remove\+Command}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}} command)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_a3f273a225810de09d155144a5e948257}{Command\+Count}} =$>$ \+\_\+commands.\+Count + \+\_\+once\+Commands.\+Count
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}} \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_ab3899ea2a251c554f2b7ec3e6f4a9ed3}{Add\+Command\+Internal}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}} command, bool once)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+readonly List$<$ \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}} $>$ \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_ad29b324b141365d15882e0b6e35b8af6}{\+\_\+commands}} = new List$<$\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}}$>$()
+\item 
+readonly List$<$ \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}} $>$ \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_a952e859b0a6e3623fffc16d323a75dd4}{\+\_\+once\+Commands}} = new List$<$\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}}$>$()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Signals are a way to execute commands. To use, connect your commands to a signal and the call signal.\+Dispatch(parameters) to execute connected commands. 
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_ab3899ea2a251c554f2b7ec3e6f4a9ed3}\label{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_ab3899ea2a251c554f2b7ec3e6f4a9ed3}} 
+\index{cpGames.core.RapidMVC.BaseSignal@{cpGames.core.RapidMVC.BaseSignal}!AddCommandInternal@{AddCommandInternal}}
+\index{AddCommandInternal@{AddCommandInternal}!cpGames.core.RapidMVC.BaseSignal@{cpGames.core.RapidMVC.BaseSignal}}
+\subsubsection{\texorpdfstring{AddCommandInternal()}{AddCommandInternal()}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}} cp\+Games.\+core.\+Rapid\+M\+V\+C.\+Base\+Signal.\+Add\+Command\+Internal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}}}]{command,  }\item[{bool}]{once }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+\mbox{\Hypertarget{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_aa97df2a65a67878d56a83df578f09bc8}\label{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_aa97df2a65a67878d56a83df578f09bc8}} 
+\index{cpGames.core.RapidMVC.BaseSignal@{cpGames.core.RapidMVC.BaseSignal}!RemoveCommand@{RemoveCommand}}
+\index{RemoveCommand@{RemoveCommand}!cpGames.core.RapidMVC.BaseSignal@{cpGames.core.RapidMVC.BaseSignal}}
+\subsubsection{\texorpdfstring{RemoveCommand()}{RemoveCommand()}}
+{\footnotesize\ttfamily void cp\+Games.\+core.\+Rapid\+M\+V\+C.\+Base\+Signal.\+Remove\+Command (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}}}]{command }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_ad29b324b141365d15882e0b6e35b8af6}\label{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_ad29b324b141365d15882e0b6e35b8af6}} 
+\index{cpGames.core.RapidMVC.BaseSignal@{cpGames.core.RapidMVC.BaseSignal}!\_commands@{\_commands}}
+\index{\_commands@{\_commands}!cpGames.core.RapidMVC.BaseSignal@{cpGames.core.RapidMVC.BaseSignal}}
+\subsubsection{\texorpdfstring{\_commands}{\_commands}}
+{\footnotesize\ttfamily readonly List$<$\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}}$>$ cp\+Games.\+core.\+Rapid\+M\+V\+C.\+Base\+Signal.\+\_\+commands = new List$<$\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}}$>$()\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_a952e859b0a6e3623fffc16d323a75dd4}\label{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_a952e859b0a6e3623fffc16d323a75dd4}} 
+\index{cpGames.core.RapidMVC.BaseSignal@{cpGames.core.RapidMVC.BaseSignal}!\_onceCommands@{\_onceCommands}}
+\index{\_onceCommands@{\_onceCommands}!cpGames.core.RapidMVC.BaseSignal@{cpGames.core.RapidMVC.BaseSignal}}
+\subsubsection{\texorpdfstring{\_onceCommands}{\_onceCommands}}
+{\footnotesize\ttfamily readonly List$<$\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}}$>$ cp\+Games.\+core.\+Rapid\+M\+V\+C.\+Base\+Signal.\+\_\+once\+Commands = new List$<$\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_base_command}{I\+Base\+Command}}$>$()\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_a3f273a225810de09d155144a5e948257}\label{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_base_signal_a3f273a225810de09d155144a5e948257}} 
+\index{cpGames.core.RapidMVC.BaseSignal@{cpGames.core.RapidMVC.BaseSignal}!CommandCount@{CommandCount}}
+\index{CommandCount@{CommandCount}!cpGames.core.RapidMVC.BaseSignal@{cpGames.core.RapidMVC.BaseSignal}}
+\subsubsection{\texorpdfstring{CommandCount}{CommandCount}}
+{\footnotesize\ttfamily int cp\+Games.\+core.\+Rapid\+M\+V\+C.\+Base\+Signal.\+Command\+Count =$>$ \+\_\+commands.\+Count + \+\_\+once\+Commands.\+Count}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Misha/\+Documents/\+Game\+Projects/cpgames/core/\+Rapid\+M\+V\+C/\+Rapid\+M\+V\+C\+Lib/\+Rapid\+M\+V\+C/api/signal/\mbox{\hyperlink{_signal_8cs}{Signal.\+cs}}\end{DoxyCompactItemize}

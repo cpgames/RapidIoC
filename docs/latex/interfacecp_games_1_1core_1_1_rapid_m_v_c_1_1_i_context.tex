@@ -1,0 +1,139 @@
+\hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context}{}\section{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Context Interface Reference}
+\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context}\index{cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}}
+
+
+Context encapsulates data for a collection of views registered under it. Registering view with context automatically binds injected properties.  
+
+
+Inheritance diagram for cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Context\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a975a12d7037f6425755b27feeeafb155}{Register\+View}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_view}{I\+View}} view, out string error\+Message)
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a86f05401110f08cbc79a83fd4366d505}{Unregister\+View}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_view}{I\+View}} view, out string error\+Message)
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a5f24672bfe61416bdc05a8e68eb147d0}{Bind}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}} key, out \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding}{I\+Binding}} binding, out string error\+Message)
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_abd1373878fbfe20526c96a476e939e9e}{Bind\+Value}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}} key, object value, out string error\+Message)
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_abfff82911155824da32f84d8647d9e56}{Unbind}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}} key, out string error\+Message)
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_acf8d52b810d6b088bf1999ea980c7705}{Destroy}} (out string error\+Message)
+\end{DoxyCompactItemize}
+\subsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a75d949e147b0c638729e455a99d361bc}{Name}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_ac7e05700419090786a56b92d64a35728}{Is\+Root}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection}{I\+Binding\+Collection}} \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a5aba456e160e86d5da856d6d823ac393}{Bindings}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_signal}{Signal}} \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a59f314929b2f01751bdf6f2a00586e80}{Destroyed\+Signal}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Context encapsulates data for a collection of views registered under it. Registering view with context automatically binds injected properties. 
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a5f24672bfe61416bdc05a8e68eb147d0}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a5f24672bfe61416bdc05a8e68eb147d0}} 
+\index{cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}!Bind@{Bind}}
+\index{Bind@{Bind}!cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}}
+\subsubsection{\texorpdfstring{Bind()}{Bind()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Context.\+Bind (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}}}]{key,  }\item[{out \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding}{I\+Binding}}}]{binding,  }\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_context_a47ae1588b3891b1cd10bd102e2799465}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Context}}.
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_abd1373878fbfe20526c96a476e939e9e}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_abd1373878fbfe20526c96a476e939e9e}} 
+\index{cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}!BindValue@{BindValue}}
+\index{BindValue@{BindValue}!cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}}
+\subsubsection{\texorpdfstring{BindValue()}{BindValue()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Context.\+Bind\+Value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}}}]{key,  }\item[{object}]{value,  }\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_context_afc41dc6765626b99f60958bcbb31cf37}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Context}}.
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_acf8d52b810d6b088bf1999ea980c7705}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_acf8d52b810d6b088bf1999ea980c7705}} 
+\index{cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}!Destroy@{Destroy}}
+\index{Destroy@{Destroy}!cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}}
+\subsubsection{\texorpdfstring{Destroy()}{Destroy()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Context.\+Destroy (\begin{DoxyParamCaption}\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_context_af533afc2087ed95d2c5123a3c69f66c5}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Context}}.
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a975a12d7037f6425755b27feeeafb155}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a975a12d7037f6425755b27feeeafb155}} 
+\index{cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}!RegisterView@{RegisterView}}
+\index{RegisterView@{RegisterView}!cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}}
+\subsubsection{\texorpdfstring{RegisterView()}{RegisterView()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Context.\+Register\+View (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_view}{I\+View}}}]{view,  }\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_context_a382256a6867b84c58d9c69b995423e63}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Context}}.
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_abfff82911155824da32f84d8647d9e56}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_abfff82911155824da32f84d8647d9e56}} 
+\index{cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}!Unbind@{Unbind}}
+\index{Unbind@{Unbind}!cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}}
+\subsubsection{\texorpdfstring{Unbind()}{Unbind()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Context.\+Unbind (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}}}]{key,  }\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_context_a7de73496fa8c30c2dfc84cb3e58c7543}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Context}}.
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a86f05401110f08cbc79a83fd4366d505}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a86f05401110f08cbc79a83fd4366d505}} 
+\index{cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}!UnregisterView@{UnregisterView}}
+\index{UnregisterView@{UnregisterView}!cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}}
+\subsubsection{\texorpdfstring{UnregisterView()}{UnregisterView()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Context.\+Unregister\+View (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_view}{I\+View}}}]{view,  }\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_context_a5f033c640e3b84d53ff2bf330e2baf58}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Context}}.
+
+
+
+\subsection{Property Documentation}
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a5aba456e160e86d5da856d6d823ac393}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a5aba456e160e86d5da856d6d823ac393}} 
+\index{cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}!Bindings@{Bindings}}
+\index{Bindings@{Bindings}!cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}}
+\subsubsection{\texorpdfstring{Bindings}{Bindings}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection}{I\+Binding\+Collection}} cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Context.\+Bindings\hspace{0.3cm}{\ttfamily [get]}}
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a59f314929b2f01751bdf6f2a00586e80}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a59f314929b2f01751bdf6f2a00586e80}} 
+\index{cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}!DestroyedSignal@{DestroyedSignal}}
+\index{DestroyedSignal@{DestroyedSignal}!cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}}
+\subsubsection{\texorpdfstring{DestroyedSignal}{DestroyedSignal}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1_signal}{Signal}} cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Context.\+Destroyed\+Signal\hspace{0.3cm}{\ttfamily [get]}}
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_ac7e05700419090786a56b92d64a35728}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_ac7e05700419090786a56b92d64a35728}} 
+\index{cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}!IsRoot@{IsRoot}}
+\index{IsRoot@{IsRoot}!cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}}
+\subsubsection{\texorpdfstring{IsRoot}{IsRoot}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Context.\+Is\+Root\hspace{0.3cm}{\ttfamily [get]}}
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a75d949e147b0c638729e455a99d361bc}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_context_a75d949e147b0c638729e455a99d361bc}} 
+\index{cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}!Name@{Name}}
+\index{Name@{Name}!cpGames.core.RapidMVC.IContext@{cpGames.core.RapidMVC.IContext}}
+\subsubsection{\texorpdfstring{Name}{Name}}
+{\footnotesize\ttfamily string cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Context.\+Name\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Misha/\+Documents/\+Game\+Projects/cpgames/core/\+Rapid\+M\+V\+C/\+Rapid\+M\+V\+C\+Lib/\+Rapid\+M\+V\+C/api/context/\mbox{\hyperlink{_i_context_8cs}{I\+Context.\+cs}}\end{DoxyCompactItemize}

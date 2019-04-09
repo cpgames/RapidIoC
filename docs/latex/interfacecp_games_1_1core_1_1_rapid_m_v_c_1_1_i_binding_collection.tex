@@ -1,0 +1,115 @@
+\hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection}{}\section{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding\+Collection Interface Reference}
+\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection}\index{cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}}
+
+
+Collection of bindings. Typically you want one binding collection/context.  
+
+
+Inheritance diagram for cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding\+Collection\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_a7c6b93ad95ca21419be73882d1156458}{Find}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}} key, out \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding}{I\+Binding}} binding, out string error\+Message)
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_affd71123e4a9ce2af8013c57b216332c}{Exists}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}} key, out string error\+Message)
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_afff4c2ad2ff9fb25c906864bc28f036f}{Bind}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}} key, out \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding}{I\+Binding}} binding, out string error\+Message)
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_ab20c12c64a91e24e7685780dd64f1d87}{Unbind}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}} key, out string error\+Message)
+\item 
+void \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_ac77dd990cf638c604bb90646e2fed55d}{Clear}} ()
+\item 
+bool \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_a2a468c5570b780133763d9592e2c1cb5}{Bind\+Value}} (\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}} key, object value, out string error\+Message)
+\end{DoxyCompactItemize}
+\subsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_a9365956363826896a1a7caaeb494d0a1}{Count}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Collection of bindings. Typically you want one binding collection/context. 
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_afff4c2ad2ff9fb25c906864bc28f036f}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_afff4c2ad2ff9fb25c906864bc28f036f}} 
+\index{cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}!Bind@{Bind}}
+\index{Bind@{Bind}!cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}}
+\subsubsection{\texorpdfstring{Bind()}{Bind()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding\+Collection.\+Bind (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}}}]{key,  }\item[{out \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding}{I\+Binding}}}]{binding,  }\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_binding_collection_a766bda0a58edf276bb1eaf3185fa6317}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Binding\+Collection}}.
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_a2a468c5570b780133763d9592e2c1cb5}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_a2a468c5570b780133763d9592e2c1cb5}} 
+\index{cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}!BindValue@{BindValue}}
+\index{BindValue@{BindValue}!cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}}
+\subsubsection{\texorpdfstring{BindValue()}{BindValue()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding\+Collection.\+Bind\+Value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}}}]{key,  }\item[{object}]{value,  }\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_binding_collection_afb78998cb899e8a918b654505d521f7b}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Binding\+Collection}}.
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_ac77dd990cf638c604bb90646e2fed55d}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_ac77dd990cf638c604bb90646e2fed55d}} 
+\index{cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}!Clear@{Clear}}
+\index{Clear@{Clear}!cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}}
+\subsubsection{\texorpdfstring{Clear()}{Clear()}}
+{\footnotesize\ttfamily void cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding\+Collection.\+Clear (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_binding_collection_a7c3b2155a17bdb3f1d94a1e003fbb3c7}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Binding\+Collection}}.
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_affd71123e4a9ce2af8013c57b216332c}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_affd71123e4a9ce2af8013c57b216332c}} 
+\index{cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}!Exists@{Exists}}
+\index{Exists@{Exists}!cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}}
+\subsubsection{\texorpdfstring{Exists()}{Exists()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding\+Collection.\+Exists (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}}}]{key,  }\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_binding_collection_ac8b4fb2a303f8c8755d36bf90d989453}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Binding\+Collection}}.
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_a7c6b93ad95ca21419be73882d1156458}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_a7c6b93ad95ca21419be73882d1156458}} 
+\index{cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}!Find@{Find}}
+\index{Find@{Find}!cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}}
+\subsubsection{\texorpdfstring{Find()}{Find()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding\+Collection.\+Find (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}}}]{key,  }\item[{out \mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding}{I\+Binding}}}]{binding,  }\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_binding_collection_a7d08f6f549f95ec651486e5295f985c8}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Binding\+Collection}}.
+
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_ab20c12c64a91e24e7685780dd64f1d87}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_ab20c12c64a91e24e7685780dd64f1d87}} 
+\index{cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}!Unbind@{Unbind}}
+\index{Unbind@{Unbind}!cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}}
+\subsubsection{\texorpdfstring{Unbind()}{Unbind()}}
+{\footnotesize\ttfamily bool cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding\+Collection.\+Unbind (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_key}{I\+Binding\+Key}}}]{key,  }\item[{out string}]{error\+Message }\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{classcp_games_1_1core_1_1_rapid_m_v_c_1_1src_1_1_binding_collection_a09aab47e05fb2aac72f9dbcb4797a6c2}{cp\+Games.\+core.\+Rapid\+M\+V\+C.\+src.\+Binding\+Collection}}.
+
+
+
+\subsection{Property Documentation}
+\mbox{\Hypertarget{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_a9365956363826896a1a7caaeb494d0a1}\label{interfacecp_games_1_1core_1_1_rapid_m_v_c_1_1_i_binding_collection_a9365956363826896a1a7caaeb494d0a1}} 
+\index{cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}!Count@{Count}}
+\index{Count@{Count}!cpGames.core.RapidMVC.IBindingCollection@{cpGames.core.RapidMVC.IBindingCollection}}
+\subsubsection{\texorpdfstring{Count}{Count}}
+{\footnotesize\ttfamily int cp\+Games.\+core.\+Rapid\+M\+V\+C.\+I\+Binding\+Collection.\+Count\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/\+Misha/\+Documents/\+Game\+Projects/cpgames/core/\+Rapid\+M\+V\+C/\+Rapid\+M\+V\+C\+Lib/\+Rapid\+M\+V\+C/api/binding/\mbox{\hyperlink{_i_binding_collection_8cs}{I\+Binding\+Collection.\+cs}}\end{DoxyCompactItemize}

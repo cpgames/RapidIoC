@@ -18,9 +18,10 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;/doc</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\docs\RapidMVC.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,7 +34,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityExamplesDebug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\RapidMVCExamples\UnityExamples\Assets\cpGames\core\rapidMVC\lib\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;doc:RapidMVCDocs</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -74,8 +75,11 @@
     <Compile Include="api\Rapid.cs" />
     <Compile Include="api\signal\Signal.cs" />
     <Compile Include="api\view\View.cs" />
+    <Compile Include="src\view\IViewCollection.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CpReflection\CpReflectionLib\CpReflection\CpReflection.csproj">
       <Project>{427fe9b3-08bb-4f31-bd3e-a560c2b4d718}</Project>
