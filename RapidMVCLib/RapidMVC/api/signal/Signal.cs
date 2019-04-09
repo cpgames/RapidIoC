@@ -1,209 +1,144 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using cpGames.core.RapidMVC.src;
 
 namespace cpGames.core.RapidMVC
 {
-    public class Signal
+    /// <summary>
+    ///     Signals are a way to execute commands.
+    ///     To use, connect your commands to a signal and the call signal.Dispatch(parameters) to execute connected commands.
+    /// </summary>
+    public abstract class BaseSignal
     {
         #region Fields
-        public Action listener = delegate { };
-        public Action onceListener = delegate { };
+        protected readonly List<IBaseCommand> _commands = new List<IBaseCommand>();
+        protected readonly List<IBaseCommand> _onceCommands = new List<IBaseCommand>();
+        #endregion
+
+        #region Properties
+        public int CommandCount => _commands.Count + _onceCommands.Count;
         #endregion
 
         #region Methods
-        public void AddListener(Action callback)
+        public void RemoveCommand(IBaseCommand command)
         {
-            listener = AddUnique(listener, callback);
+            if (_commands.Contains(command))
+            {
+                _commands.Remove(command);
+            }
+            if (_onceCommands.Contains(command))
+            {
+                _onceCommands.Remove(command);
+            }
         }
 
-        public void AddOnce(Action callback)
+        protected virtual IBaseCommand AddCommandInternal(IBaseCommand command, bool once)
         {
-            onceListener = AddUnique(onceListener, callback);
+            var commands = once ? _onceCommands : _commands;
+            if (commands.Contains(command))
+            {
+                return null;
+            }
+            commands.Add(command);
+            return command;
+        }
+        #endregion
+    }
+
+    /// <summary>
+    ///     Signal with no parameters
+    /// </summary>
+    public class Signal : BaseSignal
+    {
+        #region Methods
+        public IBaseCommand AddCommand(Action callback, bool once = false)
+        {
+            return AddCommandInternal(new ActionCommand(callback), once);
         }
 
-        public void RemoveListener(Action callback)
+        public IBaseCommand AddCommand(ICommand command, bool once = false)
         {
-            listener -= callback;
+            return AddCommandInternal(command, once);
         }
 
         public void Dispatch()
         {
-            listener();
-            onceListener();
-            onceListener = delegate { };
-        }
-
-        private Action AddUnique(Action listeners, Action callback)
-        {
-            if (!listeners.GetInvocationList().Contains(callback))
+            foreach (var command in _commands.OfType<ICommand>())
             {
-                listeners += callback;
+                command.Execute();
             }
-            return listeners;
+            foreach (var command in _onceCommands.OfType<ICommand>())
+            {
+                command.Execute();
+                command.Release();
+            }
+            _onceCommands.Clear();
         }
         #endregion
     }
 
-    public class Signal<T>
+    /// <summary>
+    ///     Signal with one parameter
+    /// </summary>
+    public class Signal<T> : BaseSignal
     {
-        #region Fields
-        public Action<T> listener = delegate { };
-        public Action<T> onceListener = delegate { };
-        #endregion
-
         #region Methods
-        public void AddListener(Action<T> callback)
+        public IBaseCommand AddCommand(Action<T> callback, bool once = false)
         {
-            listener = AddUnique(listener, callback);
+            return AddCommandInternal(new ActionCommand<T>(callback), once);
         }
 
-        public void AddOnce(Action<T> callback)
+        public IBaseCommand AddCommand(ICommand<T> command, bool once = false)
         {
-            onceListener = AddUnique(onceListener, callback);
-        }
-
-        public void RemoveListener(Action<T> callback)
-        {
-            listener -= callback;
+            return AddCommandInternal(command, once);
         }
 
         public void Dispatch(T type1)
         {
-            listener(type1);
-            onceListener(type1);
-            onceListener = delegate { };
-        }
-
-        private Action<T> AddUnique(Action<T> listeners, Action<T> callback)
-        {
-            if (!listeners.GetInvocationList().Contains(callback))
+            foreach (var command in _commands.OfType<ICommand<T>>())
             {
-                listeners += callback;
+                command.Execute(type1);
             }
-            return listeners;
+            foreach (var command in _onceCommands.OfType<ICommand<T>>())
+            {
+                command.Execute(type1);
+                command.Release();
+            }
+            _onceCommands.Clear();
         }
         #endregion
     }
 
-    public class Signal<T, U>
+    /// <summary>
+    ///     Signal with two parameters.
+    ///     If you want to have more, I recommend creating a model and using that as a parameter.
+    /// </summary>
+    public class Signal<T, U> : BaseSignal
     {
-        #region Fields
-        public Action<T, U> listener = delegate { };
-        public Action<T, U> onceListener = delegate { };
-        #endregion
-
         #region Methods
-        public void AddListener(Action<T, U> callback)
+        public IBaseCommand AddCommand(Action<T, U> callback, bool once = false)
         {
-            listener = AddUnique(listener, callback);
+            return AddCommandInternal(new ActionCommand<T, U>(callback), once);
         }
 
-        public void AddOnce(Action<T, U> callback)
+        public IBaseCommand AddCommand(ICommand<T, U> command, bool once = false)
         {
-            onceListener = AddUnique(onceListener, callback);
-        }
-
-        public void RemoveListener(Action<T, U> callback)
-        {
-            listener -= callback;
+            return AddCommandInternal(command, once);
         }
 
         public void Dispatch(T type1, U type2)
         {
-            listener(type1, type2);
-            onceListener(type1, type2);
-            onceListener = delegate { };
-        }
-
-        private Action<T, U> AddUnique(Action<T, U> listeners, Action<T, U> callback)
-        {
-            if (!listeners.GetInvocationList().Contains(callback))
+            foreach (var command in _commands.OfType<ICommand<T, U>>())
             {
-                listeners += callback;
+                command.Execute(type1, type2);
             }
-            return listeners;
-        }
-        #endregion
-    }
-
-    public class Signal<T, U, V>
-    {
-        #region Fields
-        public Action<T, U, V> listener = delegate { };
-        public Action<T, U, V> onceListener = delegate { };
-        #endregion
-
-        #region Methods
-        public void AddListener(Action<T, U, V> callback)
-        {
-            listener = AddUnique(listener, callback);
-        }
-
-        public void AddOnce(Action<T, U, V> callback)
-        {
-            onceListener = AddUnique(onceListener, callback);
-        }
-
-        public void RemoveListener(Action<T, U, V> callback)
-        {
-            listener -= callback;
-        }
-
-        public void Dispatch(T type1, U type2, V type3)
-        {
-            listener(type1, type2, type3);
-            onceListener(type1, type2, type3);
-            onceListener = delegate { };
-        }
-
-        private Action<T, U, V> AddUnique(Action<T, U, V> listeners, Action<T, U, V> callback)
-        {
-            if (!listeners.GetInvocationList().Contains(callback))
+            foreach (var command in _onceCommands.OfType<ICommand<T, U>>())
             {
-                listeners += callback;
+                command.Execute(type1, type2);
+                command.Release();
             }
-            return listeners;
-        }
-        #endregion
-    }
-
-    public class Signal<T, U, V, W>
-    {
-        #region Fields
-        public Action<T, U, V, W> listener = delegate { };
-        public Action<T, U, V, W> onceListener = delegate { };
-        #endregion
-
-        #region Methods
-        public void AddListener(Action<T, U, V, W> callback)
-        {
-            listener = AddUnique(listener, callback);
-        }
-
-        public void AddOnce(Action<T, U, V, W> callback)
-        {
-            onceListener = AddUnique(onceListener, callback);
-        }
-
-        public void RemoveListener(Action<T, U, V, W> callback)
-        {
-            listener -= callback;
-        }
-
-        public void Dispatch(T type1, U type2, V type3, W type4)
-        {
-            listener(type1, type2, type3, type4);
-            onceListener(type1, type2, type3, type4);
-            onceListener = delegate { };
-        }
-
-        private Action<T, U, V, W> AddUnique(Action<T, U, V, W> listeners, Action<T, U, V, W> callback)
-        {
-            if (!listeners.GetInvocationList().Contains(callback))
-            {
-                listeners += callback;
-            }
-            return listeners;
+            _onceCommands.Clear();
         }
         #endregion
     }

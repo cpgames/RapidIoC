@@ -1,12 +1,12 @@
 ﻿namespace cpGames.core.RapidMVC
 {
     /// <summary>
-    /// Default View
+    ///     Default View
     /// </summary>
     public abstract class View : IView
     {
         #region Constructors
-        public View()
+        protected View()
         {
             Rapid.RegisterView(this);
         }

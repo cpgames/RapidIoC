@@ -38,7 +38,7 @@ namespace cpGames.core.RapidMVC.src
             {
                 var keyData = property.GetAttribute<InjectAttribute>().Key ?? property.PropertyType;
                 if (!Rapid.BindingKeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
-                    !Bindings.Register(key, out var binding, out errorMessage) ||
+                    !Bindings.Bind(key, out var binding, out errorMessage) ||
                     !binding.RegisterViewProperty(view, property, out errorMessage))
                 {
                     return false;
@@ -68,17 +68,56 @@ namespace cpGames.core.RapidMVC.src
             }
 
             _views.Remove(view);
-            if (_views.Count == 0)
-            {
-                DestroyedSignal.Dispatch();
-            }
+            DestroyIfEmpty();
 
+            errorMessage = string.Empty;
+            return true;
+        }
+
+        public bool Bind(IBindingKey key, out IBinding binding, out string errorMessage)
+        {
+            return Bindings.Bind(key, out binding, out errorMessage);
+        }
+
+        public bool BindValue(IBindingKey key, object value, out string errorMessage)
+        {
+            return Bindings.BindValue(key, value, out errorMessage);
+        }
+
+        public bool Unbind(IBindingKey key, out string errorMessage)
+        {
+            if (!Bindings.Unbind(key, out errorMessage))
+            {
+                return false;
+            }
+            DestroyIfEmpty();
+            return true;
+        }
+
+        public bool Destroy(out string errorMessage)
+        {
+            Bindings.Clear();
+            while (_views.Count > 0)
+            {
+                if (!UnregisterView(_views[0], out errorMessage))
+                {
+                    return false;
+                }
+            }
             errorMessage = string.Empty;
             return true;
         }
         #endregion
 
         #region Methods
+        private void DestroyIfEmpty()
+        {
+            if (_views.Count == 0 && Bindings.Count == 0 && !IsRoot)
+            {
+                DestroyedSignal.Dispatch();
+            }
+        }
+
         public override string ToString()
         {
             return string.Format("Context <{0}>", Name);

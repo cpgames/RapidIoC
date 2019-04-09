@@ -17,15 +17,18 @@
         // Check if binding with key exists.
         bool Exists(IBindingKey key, out string errorMessage);
 
-        // Remove binding by key. Return false if not found.
-        bool Remove(IBindingKey key, out string errorMessage);
-
         // Register new binding with unique key if one does not exist or return existing one.
         // Note: if registering a root binding while Root context contains a binding with matching key, this will return false.
-        bool Register(IBindingKey key, out IBinding binding, out string errorMessage);
+        bool Bind(IBindingKey key, out IBinding binding, out string errorMessage);
+
+        // Remove binding by key. Return false if not found.
+        bool Unbind(IBindingKey key, out string errorMessage);
+
+        // Remove all bindings
+        void Clear();
 
         // Update binding value by key and update all injected properties.
-        bool UpdateValue(IBindingKey key, object value, out string errorMessage);
+        bool BindValue(IBindingKey key, object value, out string errorMessage);
         #endregion
     }
 }

@@ -43,24 +43,7 @@ namespace cpGames.core.RapidMVC.src
             return false;
         }
 
-        public bool Remove(IBindingKey key, out string errorMessage)
-        {
-            if (_bindings.ContainsKey(key))
-            {
-                _bindings.Remove(key);
-                errorMessage = string.Empty;
-                return true;
-            }
-            if (!_owner.IsRoot && Rapid.Contexts.Root.Bindings.Remove(key, out errorMessage))
-            {
-                errorMessage = string.Empty;
-                return true;
-            }
-            errorMessage = string.Format("Binding with key <{0}> not found in context <{1}>.", key, _owner);
-            return false;
-        }
-
-        public bool Register(IBindingKey key, out IBinding binding, out string errorMessage)
+        public bool Bind(IBindingKey key, out IBinding binding, out string errorMessage)
         {
             if (_owner.IsRoot)
             {
@@ -70,7 +53,8 @@ namespace cpGames.core.RapidMVC.src
                     {
                         binding = null;
                         errorMessage = string.Format("Binding with key <{0}> is already registered in at least one context <{1}>, " +
-                            "it can't be bound to root context until local binding is removed.", key, context);
+                            "it can't be bound to root context until all local bindings matching these key are removed.", 
+                            key, context);
                         return false;
                     }
                 }
@@ -79,16 +63,38 @@ namespace cpGames.core.RapidMVC.src
             if (!Find(key, out binding, out errorMessage))
             {
                 binding = new Binding(key);
-                binding.RemovedSignal.AddOnce(() => _bindings.Remove(key));
+                binding.RemovedSignal.AddCommand(() => _bindings.Remove(key), true);
                 _bindings.Add(key, binding);
             }
             errorMessage = string.Empty;
             return true;
         }
 
-        public bool UpdateValue(IBindingKey key, object value, out string errorMessage)
+        public bool Unbind(IBindingKey key, out string errorMessage)
         {
-            if (!Register(key, out var binding, out errorMessage))
+            if (_bindings.ContainsKey(key))
+            {
+                _bindings.Remove(key);
+                errorMessage = string.Empty;
+                return true;
+            }
+            if (!_owner.IsRoot && Rapid.Contexts.Root.Bindings.Unbind(key, out errorMessage))
+            {
+                errorMessage = string.Empty;
+                return true;
+            }
+            errorMessage = string.Format("Binding with key <{0}> not found in context <{1}>.", key, _owner);
+            return false;
+        }
+
+        public void Clear()
+        {
+            _bindings.Clear();
+        }
+
+        public bool BindValue(IBindingKey key, object value, out string errorMessage)
+        {
+            if (!Bind(key, out var binding, out errorMessage))
             {
                 return false;
             }

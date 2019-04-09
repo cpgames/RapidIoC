@@ -38,10 +38,10 @@ namespace cpGames.core.RapidMVC.src
                 return true;
             }
             var newContext = new Context(name);
-            newContext.DestroyedSignal.AddOnce(() =>
+            newContext.DestroyedSignal.AddCommand(() =>
             {
                 _contexts.Remove(newContext.Name);
-            });
+            }, true);
             _contexts.Add(name, newContext);
             context = newContext;
             errorMessage = string.Empty;

@@ -19,7 +19,7 @@
         #region Constructors
         public TestView()
         {
-            PropertyUpdatedSignal.AddListener(key =>
+            PropertyUpdatedSignal.AddCommand(key =>
             {
                 PropertyUpdated = true;
             });

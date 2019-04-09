@@ -51,9 +51,12 @@
     <Compile Include="api\binding\IBinding.cs" />
     <Compile Include="api\binding\IBindingCollection.cs" />
     <Compile Include="api\binding\IBindingKeyFactoryCollection.cs" />
+    <Compile Include="api\command\ICommand.cs" />
     <Compile Include="api\context\IContext.cs" />
     <Compile Include="api\context\IContextCollection.cs" />
     <Compile Include="api\instantiator\IInstantiator.cs" />
+    <Compile Include="api\command\Command.cs" />
+    <Compile Include="api\view\CommandView.cs" />
     <Compile Include="api\view\IView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="api\Attributes.cs" />
@@ -64,6 +67,7 @@
     <Compile Include="src\binding\BindingKeyFactoryCollection.cs" />
     <Compile Include="src\binding\NameBindingKey.cs" />
     <Compile Include="src\binding\TypeBindingKey.cs" />
+    <Compile Include="src\command\ActionCommand.cs" />
     <Compile Include="src\context\Context.cs" />
     <Compile Include="src\context\ContextCollection.cs" />
     <Compile Include="src\instantiator\Instantiator.cs" />

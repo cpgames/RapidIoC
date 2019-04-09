@@ -16,7 +16,7 @@ namespace cpGames.core.RapidMVC
         {
             if (!Contexts.FindOrCreate(contextName, out var context, out var errorMessage) ||
                 !BindingKeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
-                !context.Bindings.UpdateValue(key, value, out errorMessage))
+                !context.BindValue(key, value, out errorMessage))
             {
                 throw new Exception(errorMessage);
             }
@@ -36,7 +36,7 @@ namespace cpGames.core.RapidMVC
         {
             if (!Contexts.Find(contextName, out var context, out var errorMessage) ||
                 !BindingKeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
-                !context.Bindings.Remove(key, out errorMessage))
+                !context.Unbind(key, out errorMessage))
             {
                 throw new Exception(errorMessage);
             }
