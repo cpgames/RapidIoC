@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace cpGames.core.RapidMVC.src
+namespace cpGames.core.RapidMVC.impl
 {
     internal class ActionCommand : Command
     {

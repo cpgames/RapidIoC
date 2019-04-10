@@ -1,8 +1,8 @@
 ﻿namespace cpGames.core.RapidMVC
 {
     /// <summary>
-    ///     Views are registered with Contexts.
-    ///     You can either derive from default View or implement your own.
+    /// Views are registered with Contexts.
+    /// You can either derive from default View or implement your own.
     /// </summary>
     public interface IView
     {

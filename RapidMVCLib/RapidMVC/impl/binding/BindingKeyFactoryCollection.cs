@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace cpGames.core.RapidMVC.src
+namespace cpGames.core.RapidMVC.impl
 {
     internal class BindingKeyFactoryCollection : IBindingKeyFactoryCollection
     {

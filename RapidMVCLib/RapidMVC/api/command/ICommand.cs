@@ -1,12 +1,15 @@
 ﻿namespace cpGames.core.RapidMVC
 {
     /// <summary>
-    ///     Commands are used to execute a single action.
-    ///     They need to be added to a signal.
+    /// Commands are used to execute actions.
+    /// They need to be added to a signal, then the signal needs to be dispatched.
     /// </summary>
     public interface IBaseCommand
     {
         #region Methods
+        /// <summary>
+        /// Release command resources after command finished executing.
+        /// </summary>
         void Release();
         #endregion
     }

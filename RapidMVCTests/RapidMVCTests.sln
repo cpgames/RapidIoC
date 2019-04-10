@@ -13,27 +13,20 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-		UnityExamplesDebug|Any CPU = UnityExamplesDebug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}.UnityExamplesDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B875965D-080E-4EAA-BF4A-5CBBD188A6DC}.UnityExamplesDebug|Any CPU.Build.0 = Debug|Any CPU
 		{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}.UnityExamplesDebug|Any CPU.ActiveCfg = UnityExamplesDebug|Any CPU
-		{A57A1B5C-FAB7-4FD8-B422-BA9B05CEFBD0}.UnityExamplesDebug|Any CPU.Build.0 = UnityExamplesDebug|Any CPU
 		{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}.Release|Any CPU.Build.0 = Release|Any CPU
-		{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}.UnityExamplesDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{427FE9B3-08BB-4F31-BD3E-A560C2B4D718}.UnityExamplesDebug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

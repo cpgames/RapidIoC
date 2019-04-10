@@ -1,33 +1,67 @@
 ﻿namespace cpGames.core.RapidMVC
 {
     /// <summary>
-    ///     Collection of bindings. Typically you want one binding collection/context.
+    /// Collection of bindings. Typically you want one binding collection/context.
     /// </summary>
     public interface IBindingCollection
     {
         #region Properties
-        // Number of bindings.
-        int Count { get; }
+        /// <summary>
+        /// Number of bindings.
+        /// </summary>
+        int BindingCount { get; }
         #endregion
 
         #region Methods
-        // Find a binding by key. Return false if not found.
-        bool Find(IBindingKey key, out IBinding binding, out string errorMessage);
+        /// <summary>
+        /// Find binding by key. Return false if not found.
+        /// </summary>
+        /// <param name="key">Unique binding key.</param>
+        /// <param name="binding">Binding instance if found, otherwise null.</param>
+        /// <param name="errorMessage">If fails or binding not found, this explains why.</param>
+        /// <returns>True if binding found, otherwise false.</returns>
+        bool FindBinding(IBindingKey key, out IBinding binding, out string errorMessage);
 
-        // Check if binding with key exists.
-        bool Exists(IBindingKey key, out string errorMessage);
+        /// <summary>
+        /// Check if binding exists.
+        /// </summary>
+        /// <param name="key">Unique binding key.</param>
+        /// <returns>True if binding exists, otherwise false.</returns>
+        bool BindingExists(IBindingKey key);
 
-        // Register new binding with unique key if one does not exist or return existing one.
-        // Note: if registering a root binding while Root context contains a binding with matching key, this will return false.
+        /// <summary>
+        /// If binding does not exist, register new binding. Otherwise return existing one.
+        /// If registering a binding with root context while at least one local context contains a binding with matching key,
+        /// this will return false.
+        /// </summary>
+        /// <param name="key">Unique binding key.</param>
+        /// <param name="binding">Binding instance if found or created, otherwise null.</param>
+        /// <param name="errorMessage">If fails, this explains why.</param>
+        /// <returns>True if success, otherwise false.</returns>
         bool Bind(IBindingKey key, out IBinding binding, out string errorMessage);
 
-        // Remove binding by key. Return false if not found.
+        /// <summary>
+        /// Remove binding by key.
+        /// </summary>
+        /// <param name="key">Unique binding key.</param>
+        /// <param name="errorMessage">If fails or binding does not exist, this explains why.</param>
+        /// <returns>True if success, otherwise false.</returns>
         bool Unbind(IBindingKey key, out string errorMessage);
 
-        // Remove all bindings
-        void Clear();
+        /// <summary>
+        /// Remove all local bindings.
+        /// </summary>
+        /// <param name="errorMessage">If fails, this explains why.</param>
+        /// <returns>True if success, otherwise false.</returns>
+        bool ClearBindings(out string errorMessage);
 
-        // Update binding value by key and update all injected properties.
+        /// <summary>
+        /// Update binding value, update all injected properties of that binding, and notify all owning views.
+        /// </summary>
+        /// <param name="key">Unique binding key.</param>
+        /// <param name="value">New value to assign to binding.</param>
+        /// <param name="errorMessage">True if success, otherwise false.</param>
+        /// <returns>True if success, otherwise false.</returns>
         bool BindValue(IBindingKey key, object value, out string errorMessage);
         #endregion
     }

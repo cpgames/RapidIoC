@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using cpGames.core.RapidMVC.src;
+using cpGames.core.RapidMVC.impl;
 
 namespace cpGames.core.RapidMVC
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 
-namespace cpGames.core.RapidMVC.src
+namespace cpGames.core.RapidMVC.impl
 {
     internal class Binding : IBinding
     {

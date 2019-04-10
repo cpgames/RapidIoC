@@ -1,9 +1,12 @@
 ﻿using System;
 using cpGames.core.CpReflection;
-using cpGames.core.RapidMVC.src;
+using cpGames.core.RapidMVC.impl;
 
 namespace cpGames.core.RapidMVC
 {
+    /// <summary>
+    /// Main point of entry to RapidMVC api.
+    /// </summary>
     public static class Rapid
     {
         #region Properties
@@ -14,7 +17,7 @@ namespace cpGames.core.RapidMVC
         #region Methods
         public static void Bind(object keyData, object value, string contextName = null)
         {
-            if (!Contexts.FindOrCreate(contextName, out var context, out var errorMessage) ||
+            if (!Contexts.FindOrCreateContext(contextName, out var context, out var errorMessage) ||
                 !BindingKeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
                 !context.BindValue(key, value, out errorMessage))
             {
@@ -34,7 +37,7 @@ namespace cpGames.core.RapidMVC
 
         public static void Unbind(object keyData, string contextName = null)
         {
-            if (!Contexts.Find(contextName, out var context, out var errorMessage) ||
+            if (!Contexts.FindContext(contextName, out var context, out var errorMessage) ||
                 !BindingKeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
                 !context.Unbind(key, out errorMessage))
             {
@@ -50,7 +53,7 @@ namespace cpGames.core.RapidMVC
         public static void RegisterView(IView view)
         {
             var contextName = view.GetType().GetAttribute<ContextAttribute>()?.Name;
-            if (!Contexts.FindOrCreate(contextName, out var context, out var errorMessage) ||
+            if (!Contexts.FindOrCreateContext(contextName, out var context, out var errorMessage) ||
                 !context.RegisterView(view, out errorMessage))
             {
                 throw new Exception(errorMessage);
@@ -60,7 +63,7 @@ namespace cpGames.core.RapidMVC
         public static void UnregisterView(IView view)
         {
             var contextName = view.GetType().GetAttribute<ContextAttribute>()?.Name;
-            if (!Contexts.Find(contextName, out var context, out var errorMessage) ||
+            if (!Contexts.FindContext(contextName, out var context, out var errorMessage) ||
                 !context.UnregisterView(view, out errorMessage))
             {
                 throw new Exception(errorMessage);

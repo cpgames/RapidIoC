@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace cpGames.core.RapidMVC.src
+namespace cpGames.core.RapidMVC.impl
 {
     public class DefaultInstantiator<T> : IInstantiator
     {

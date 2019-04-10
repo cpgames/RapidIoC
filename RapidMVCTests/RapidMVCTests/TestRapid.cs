@@ -35,7 +35,7 @@ namespace cpGames.core.RapidMVC.Tests
             Rapid.UnregisterView(view);
 
             Rapid.Unbind<Nested2>();
-            Assert.AreEqual(Rapid.Contexts.Root.Bindings.Count, 0);
+            Assert.AreEqual(Rapid.Contexts.Root.BindingCount, 0);
 
             Rapid.Unbind<Nested1>(testContextName);
             Rapid.Unbind("TestName", testContextName);

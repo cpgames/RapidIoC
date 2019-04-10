@@ -61,21 +61,22 @@
     <Compile Include="api\view\IView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="api\Attributes.cs" />
-    <Compile Include="src\binding\BInding.cs" />
-    <Compile Include="src\binding\BindingCollection.cs" />
+    <Compile Include="impl\binding\BInding.cs" />
+    <Compile Include="impl\binding\BindingCollection.cs" />
     <Compile Include="api\binding\IBindingKey.cs" />
     <Compile Include="api\binding\IBindingKeyFactory.cs" />
-    <Compile Include="src\binding\BindingKeyFactoryCollection.cs" />
-    <Compile Include="src\binding\NameBindingKey.cs" />
-    <Compile Include="src\binding\TypeBindingKey.cs" />
-    <Compile Include="src\command\ActionCommand.cs" />
-    <Compile Include="src\context\Context.cs" />
-    <Compile Include="src\context\ContextCollection.cs" />
-    <Compile Include="src\instantiator\Instantiator.cs" />
+    <Compile Include="impl\binding\BindingKeyFactoryCollection.cs" />
+    <Compile Include="impl\binding\NameBindingKey.cs" />
+    <Compile Include="impl\binding\TypeBindingKey.cs" />
+    <Compile Include="impl\command\ActionCommand.cs" />
+    <Compile Include="impl\context\Context.cs" />
+    <Compile Include="impl\context\ContextCollection.cs" />
+    <Compile Include="impl\instantiator\Instantiator.cs" />
     <Compile Include="api\Rapid.cs" />
     <Compile Include="api\signal\Signal.cs" />
     <Compile Include="api\view\View.cs" />
-    <Compile Include="src\view\IViewCollection.cs" />
+    <Compile Include="impl\view\ViewCollection.cs" />
+    <Compile Include="impl\view\IViewCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

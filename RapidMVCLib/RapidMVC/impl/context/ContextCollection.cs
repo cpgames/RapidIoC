@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace cpGames.core.RapidMVC.src
+namespace cpGames.core.RapidMVC.impl
 {
     public class ContextCollection : IContextCollection
     {
@@ -14,7 +14,7 @@ namespace cpGames.core.RapidMVC.src
         public int Count => _contexts.Count;
         public IEnumerable<IContext> Contexts => _contexts.Values;
 
-        public bool Find(string name, out IContext context, out string errorMessage)
+        public bool FindContext(string name, out IContext context, out string errorMessage)
         {
             if (string.IsNullOrEmpty(name) || name.Equals(ROOT_CONTEXT_NAME))
             {
@@ -31,9 +31,9 @@ namespace cpGames.core.RapidMVC.src
             return false;
         }
 
-        public bool FindOrCreate(string name, out IContext context, out string errorMessage)
+        public bool FindOrCreateContext(string name, out IContext context, out string errorMessage)
         {
-            if (Find(name, out context, out errorMessage))
+            if (FindContext(name, out context, out errorMessage))
             {
                 return true;
             }
@@ -48,9 +48,9 @@ namespace cpGames.core.RapidMVC.src
             return true;
         }
 
-        public bool Exists(string name)
+        public bool ContextExists(string name)
         {
-            return Find(name, out _, out _);
+            return FindContext(name, out _, out _);
         }
         #endregion
     }
