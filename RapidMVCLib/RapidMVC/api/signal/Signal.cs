@@ -62,6 +62,11 @@ namespace cpGames.core.RapidMVC
             return AddCommandInternal(command, once);
         }
 
+        public IBaseCommand AddCommand<TCommand>(bool once = false) where TCommand : ICommand
+        {
+            return AddCommandInternal(Activator.CreateInstance<TCommand>(), once);
+        }
+
         public void Dispatch()
         {
             foreach (var command in _commands.OfType<ICommand>())
@@ -92,6 +97,11 @@ namespace cpGames.core.RapidMVC
         public IBaseCommand AddCommand(ICommand<T> command, bool once = false)
         {
             return AddCommandInternal(command, once);
+        }
+
+        public IBaseCommand AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T>
+        {
+            return AddCommandInternal(Activator.CreateInstance<TCommand>(), once);
         }
 
         public void Dispatch(T type1)
@@ -125,6 +135,11 @@ namespace cpGames.core.RapidMVC
         public IBaseCommand AddCommand(ICommand<T, U> command, bool once = false)
         {
             return AddCommandInternal(command, once);
+        }
+
+        public IBaseCommand AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T, U>
+        {
+            return AddCommandInternal(Activator.CreateInstance<TCommand>(), once);
         }
 
         public void Dispatch(T type1, U type2)

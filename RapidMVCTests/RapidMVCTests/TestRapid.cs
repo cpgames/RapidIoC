@@ -86,11 +86,24 @@ namespace cpGames.core.RapidMVC.Tests
         }
 
         [TestMethod]
-        public void TestCommandView()
+        public void TestCommandViewA()
         {
             var signal = new TestSignalA();
             var command = new TestCommandViewA();
             signal.AddCommand(command);
+            signal.Dispatch();
+            Assert.AreEqual(command._value, 1);
+            Assert.IsTrue(string.IsNullOrEmpty(command.InjectedText));
+            var text = "test";
+            Rapid.Bind("InjectedText", text, testContextName);
+            Assert.AreEqual(command.InjectedText, text);
+        }
+
+        [TestMethod]
+        public void TestCommandViewB()
+        {
+            var signal = new TestSignalA();
+            var command = (TestCommandViewA)signal.AddCommand<TestCommandViewA>();
             signal.Dispatch();
             Assert.AreEqual(command._value, 1);
             Assert.IsTrue(string.IsNullOrEmpty(command.InjectedText));
