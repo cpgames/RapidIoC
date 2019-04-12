@@ -94,26 +94,45 @@ namespace cpGames.core.RapidMVC.impl
         {
             if (IsRoot)
             {
-                foreach (var context in Rapid.Contexts.Contexts)
+                foreach (var context in Rapid.Contexts.Contexts
+                    .Where(x => x.BindingExists(key)))
                 {
-                    if (context.BindingExists(key))
+                    if (!context.MoveBindingFrom(key, this, out errorMessage))
                     {
                         binding = null;
-                        errorMessage = string.Format("Binding with key <{0}> is already registered in at least one context <{1}>, " +
-                            "it can't be bound to root context until all local bindings matching these key are removed.",
-                            key, context);
                         return false;
                     }
                 }
             }
-            return 
+            return
                 !IsRoot && Rapid.Contexts.Root.FindBinding(key, false, out binding, out errorMessage) ||
                 _bindings.Bind(key, out binding, out errorMessage);
         }
 
         public bool BindValue(IBindingKey key, object value, out string errorMessage)
         {
+            if (IsRoot)
+            {
+                foreach (var context in Rapid.Contexts.Contexts
+                    .Where(x => x.BindingExists(key)))
+                {
+                    if (!context.MoveBindingFrom(key, this, out errorMessage))
+                    {
+                        return false;
+                    }
+                }
+            }
             return _bindings.BindValue(key, value, out errorMessage);
+        }
+
+        public bool MoveBindingFrom(IBindingKey key, IBindingCollection collection, out string errorMessage)
+        {
+            return _bindings.MoveBindingFrom(key, collection, out errorMessage);
+        }
+
+        public bool MoveBindingTo(IBinding binding, out string errorMessage)
+        {
+            return _bindings.MoveBindingTo(binding, out errorMessage);
         }
 
         public bool Unbind(IBindingKey key, out string errorMessage)
@@ -139,8 +158,8 @@ namespace cpGames.core.RapidMVC.impl
 
         public bool DestroyContext(out string errorMessage)
         {
-            return 
-                ClearBindings(out errorMessage) && 
+            return
+                ClearBindings(out errorMessage) &&
                 ClearViews(out errorMessage);
         }
         #endregion

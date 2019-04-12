@@ -64,6 +64,10 @@
         /// <param name="errorMessage">True if success, otherwise false.</param>
         /// <returns>True if success, otherwise false.</returns>
         bool BindValue(IBindingKey key, object value, out string errorMessage);
+
+        bool MoveBindingFrom(IBindingKey key, IBindingCollection collection, out string errorMessage);
+
+        bool MoveBindingTo(IBinding binding, out string errorMessage);
         #endregion
     }
 }

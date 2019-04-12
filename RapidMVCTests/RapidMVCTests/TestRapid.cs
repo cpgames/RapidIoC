@@ -9,24 +9,21 @@ namespace cpGames.core.RapidMVC.Tests
         [TestMethod]
         public void ComprehensiveBindingTest()
         {
-            var testValue1 = "I am a test";
-            var testValue2 = "I am updated test";
-
-            Rapid.Bind("TestName", testValue1, Globals.TEST_CONTEXT_NAME);
+            Rapid.Bind("TestName", Globals.TEST_STR_VAL_1, Globals.TEST_CONTEXT_NAME);
             Rapid.Bind<Nested1>(Globals.TEST_CONTEXT_NAME);
             Rapid.Bind<Nested2>();
 
             var view = new TestView();
 
-            Assert.IsTrue(view.Name.Equals(testValue1));
+            Assert.IsTrue(view.Name.Equals(Globals.TEST_STR_VAL_1));
             Assert.IsNotNull(view.Nested1);
             Assert.IsNotNull(view.Nested2);
             Assert.AreEqual(Rapid.Contexts.Count, 1);
             Assert.IsFalse(view.PropertyUpdated);
 
-            Rapid.Bind("TestName", testValue2, Globals.TEST_CONTEXT_NAME);
+            Rapid.Bind("TestName", Globals.TEST_STR_VAL_2, Globals.TEST_CONTEXT_NAME);
             Assert.IsTrue(view.PropertyUpdated);
-            Assert.IsTrue(view.Name.Equals(testValue2));
+            Assert.IsTrue(view.Name.Equals(Globals.TEST_STR_VAL_2));
 
             Rapid.UnregisterView(view);
 
@@ -35,6 +32,22 @@ namespace cpGames.core.RapidMVC.Tests
 
             Rapid.Unbind<Nested1>(Globals.TEST_CONTEXT_NAME);
             Rapid.Unbind("TestName", Globals.TEST_CONTEXT_NAME);
+            Assert.AreEqual(Rapid.Contexts.Count, 0);
+        }
+
+        [TestMethod]
+        public void BindingMoveTest()
+        {
+            // inject views with local binding of "TestName"
+            var view1 = new TestView();
+            var view2 = new TestView();
+            // inject global binding for "TestName", all local bindings should be moved to Root context
+            Rapid.Bind("TestName", Globals.TEST_STR_VAL_1);
+            Assert.IsTrue(view1.Name.Equals(Globals.TEST_STR_VAL_1));
+            Assert.IsTrue(view2.Name.Equals(Globals.TEST_STR_VAL_1));
+            Rapid.Unbind("TestName");
+            view1.UnregisterFromContext();
+            view2.UnregisterFromContext();
             Assert.AreEqual(Rapid.Contexts.Count, 0);
         }
 
@@ -134,7 +147,7 @@ namespace cpGames.core.RapidMVC.Tests
             var view = new TestViewWithSignal();
             Assert.AreEqual(view.n, 0);
             var signal = new Signal<int>();
-            Rapid.Bind("TestSignal", signal, Globals.TEST_CONTEXT_NAME);
+            Rapid.Bind("TestSignal", signal);
             signal.Dispatch(5);
             Assert.AreEqual(view.n, 5);
             Rapid.Unbind("TestSignal", Globals.TEST_CONTEXT_NAME);

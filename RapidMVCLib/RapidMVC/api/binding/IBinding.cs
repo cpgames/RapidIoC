@@ -57,6 +57,8 @@ namespace cpGames.core.RapidMVC
         /// <param name="errorMessage">If fails, this explains why.</param>
         /// <returns>False if view instance was not registered, otherwise true.</returns>
         bool Unsubscribe(IView view, out string errorMessage);
+
+        bool Join(IBinding binding, out string errorMessage);
         #endregion
     }
 }

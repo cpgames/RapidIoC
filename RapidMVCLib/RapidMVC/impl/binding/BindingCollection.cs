@@ -35,7 +35,17 @@ namespace cpGames.core.RapidMVC.impl
             if (!FindBinding(key, false, out binding, out errorMessage))
             {
                 binding = new Binding(key);
-                binding.RemovedSignal.AddCommand(() => _discardedBindings.Remove(key), true);
+                binding.RemovedSignal.AddCommand(() =>
+                {
+                    if (_discardedBindings.ContainsKey(key))
+                    {
+                        _discardedBindings.Remove(key);
+                    }
+                    if (_bindings.ContainsKey(key))
+                    {
+                        _bindings.Remove(key);
+                    }
+                }, true);
                 _bindings.Add(key, binding);
             }
             errorMessage = string.Empty;
@@ -78,9 +88,32 @@ namespace cpGames.core.RapidMVC.impl
             {
                 return false;
             }
+            binding.Discarded = false;
             binding.Value = value;
             errorMessage = string.Empty;
             return true;
+        }
+
+        public bool MoveBindingFrom(IBindingKey key, IBindingCollection collection, out string errorMessage)
+        {
+            if (!FindBinding(key, false, out var binding, out errorMessage))
+            {
+                return false;
+            }
+            if (!collection.MoveBindingTo(binding, out errorMessage))
+            {
+                return false;
+            }
+            binding.RemovedSignal.ClearCommands();
+            _bindings.Remove(key);
+            return true;
+        }
+
+        public bool MoveBindingTo(IBinding binding, out string errorMessage)
+        {
+            return
+                Bind(binding.Key, out var localBinding, out errorMessage) &&
+                localBinding.Join(binding, out errorMessage);
         }
         #endregion
     }

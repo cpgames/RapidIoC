@@ -6,8 +6,8 @@ using cpGames.core.RapidMVC.impl;
 namespace cpGames.core.RapidMVC
 {
     /// <summary>
-    ///     Signals are a way to execute commands.
-    ///     To use, connect your commands to a signal and the call signal.Dispatch(parameters) to execute connected commands.
+    /// Signals are a way to execute commands.
+    /// To use, connect your commands to a signal and the call signal.Dispatch(parameters) to execute connected commands.
     /// </summary>
     public abstract class BaseSignal
     {
@@ -38,6 +38,20 @@ namespace cpGames.core.RapidMVC
             return false;
         }
 
+        public void ClearCommands()
+        {
+            ClearCommandsInternal(_commands);
+            ClearCommandsInternal(_onceCommands);
+        }
+
+        private void ClearCommandsInternal(List<IBaseCommand> commands)
+        {
+            while (commands.Count > 0)
+            {
+                RemoveCommand(commands[0]);
+            }
+        }
+
         protected virtual IBaseCommand AddCommandInternal(IBaseCommand command, bool once)
         {
             var commands = once ? _onceCommands : _commands;
@@ -52,7 +66,7 @@ namespace cpGames.core.RapidMVC
     }
 
     /// <summary>
-    ///     Signal with no parameters
+    /// Signal with no parameters
     /// </summary>
     public class Signal : BaseSignal
     {
@@ -89,7 +103,7 @@ namespace cpGames.core.RapidMVC
     }
 
     /// <summary>
-    ///     Signal with one parameter
+    /// Signal with one parameter
     /// </summary>
     public class Signal<T> : BaseSignal
     {
@@ -126,8 +140,8 @@ namespace cpGames.core.RapidMVC
     }
 
     /// <summary>
-    ///     Signal with two parameters.
-    ///     If you want to have more, I recommend creating a model and using that as a parameter.
+    /// Signal with two parameters.
+    /// If you want to have more, I recommend creating a model and using that as a parameter.
     /// </summary>
     public class Signal<T, U> : BaseSignal
     {

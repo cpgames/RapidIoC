@@ -32,15 +32,10 @@ namespace cpGames.core.RapidMVC.impl
         public bool Empty => _subscribers.Count == 0;
         public Signal RemovedSignal { get; } = new Signal();
         public Signal ValueUpdatedSignal { get; } = new Signal();
-        public bool Discarded { get; set; }
+        public bool Discarded { get; set; } = true;
 
         public bool Subscribe(IView view, PropertyInfo property, out string errorMessage)
         {
-            if (Discarded)
-            {
-                errorMessage = string.Format("Binding <{0}> is discarded and no new subscribers can be added.", Key);
-                return false;
-            }
             if (_subscribers.ContainsKey(view))
             {
                 errorMessage = string.Format("View <{0}> already binded property <{1}>.", view, property.Name);
@@ -66,9 +61,29 @@ namespace cpGames.core.RapidMVC.impl
             }
             UnregisterPotentialSignalMap(view, property);
             _subscribers.Remove(view);
-            if (Discarded)
+            if (Discarded && Empty)
             {
                 RemovedSignal.Dispatch();
+            }
+            errorMessage = string.Empty;
+            return true;
+        }
+
+        public bool Join(IBinding binding, out string errorMessage)
+        {
+            var bindingImpl = (Binding)binding;
+            foreach (var subscriber in bindingImpl._subscribers)
+            {
+                if (_subscribers.ContainsKey(subscriber.Key))
+                {
+                    errorMessage = string.Format("Can not join binding <{0}> with <{1}>, encountered duplicate subscriber <{2}>.",
+                        binding.Key, Key, subscriber.Key);
+                    return false;
+                }
+                if (!Subscribe(subscriber.Key, subscriber.Value, out errorMessage))
+                {
+                    return false;
+                }
             }
             errorMessage = string.Empty;
             return true;
