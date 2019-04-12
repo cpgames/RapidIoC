@@ -146,7 +146,7 @@ namespace cpGames.core.RapidMVC.Tests
         {
             var view = new TestViewWithSignal();
             Assert.AreEqual(view.n, 0);
-            var signal = new Signal<int>();
+            var signal = new TestSignalB();
             Rapid.Bind("TestSignal", signal);
             signal.Dispatch(5);
             Assert.AreEqual(view.n, 5);

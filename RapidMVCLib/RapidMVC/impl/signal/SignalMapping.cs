@@ -204,6 +204,10 @@ namespace cpGames.core.RapidMVC.impl
         {
             var type = view.GetType();
             var signalType = signal.GetType();
+            while (signalType.BaseType != typeof(BaseSignal))
+            {
+                signalType = signalType.BaseType;
+            }
             var methodName = "On" + baseName;
             var method = type.GetMethods(BINDING_FLAGS)
                 .Where(x => x.GetParameters().Length == 1)
@@ -233,6 +237,10 @@ namespace cpGames.core.RapidMVC.impl
         {
             var type = view.GetType();
             var signalType = signal.GetType();
+            while (signalType.BaseType != typeof(BaseSignal))
+            {
+                signalType = signalType.BaseType;
+            }
             var methodName = "On" + baseName;
             var method = type.GetMethods(BINDING_FLAGS)
                 .Where(x => x.GetParameters().Length == 2)
