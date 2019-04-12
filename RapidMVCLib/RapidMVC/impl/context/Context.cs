@@ -30,16 +30,18 @@ namespace cpGames.core.RapidMVC.impl
             {
                 return false;
             }
+
             foreach (var property in view.GetType().GetProperties().Where(x => x.HasAttribute<InjectAttribute>()))
             {
                 var keyData = property.GetAttribute<InjectAttribute>().Key ?? property.PropertyType;
                 if (!Rapid.BindingKeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
                     !Bind(key, out var binding, out errorMessage) ||
-                    !binding.RegisterViewProperty(view, property, out errorMessage))
+                    !binding.Subscribe(view, property, out errorMessage))
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -49,12 +51,13 @@ namespace cpGames.core.RapidMVC.impl
             {
                 return false;
             }
+
             foreach (var property in view.GetType().GetProperties().Where(x => x.HasAttribute<InjectAttribute>()))
             {
                 var keyData = property.GetAttribute<InjectAttribute>().Key ?? property.PropertyType;
                 if (!Rapid.BindingKeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
-                    !FindBinding(key, out var binding, out errorMessage) ||
-                    !binding.UnregisterView(view, out errorMessage))
+                    !FindBinding(key, true, out var binding, out errorMessage) ||
+                    !binding.Unsubscribe(view, out errorMessage))
                 {
                     return false;
                 }
@@ -73,11 +76,11 @@ namespace cpGames.core.RapidMVC.impl
             return true;
         }
 
-        public bool FindBinding(IBindingKey key, out IBinding binding, out string errorMessage)
+        public bool FindBinding(IBindingKey key, bool includeDiscarded, out IBinding binding, out string errorMessage)
         {
             return
-                !IsRoot && Rapid.Contexts.Root.FindBinding(key, out binding, out errorMessage) ||
-                _bindings.FindBinding(key, out binding, out errorMessage);
+                !IsRoot && Rapid.Contexts.Root.FindBinding(key, includeDiscarded, out binding, out errorMessage) ||
+                _bindings.FindBinding(key, includeDiscarded, out binding, out errorMessage);
         }
 
         public bool BindingExists(IBindingKey key)
@@ -104,7 +107,7 @@ namespace cpGames.core.RapidMVC.impl
                 }
             }
             return 
-                !IsRoot && Rapid.Contexts.Root.FindBinding(key, out binding, out errorMessage) ||
+                !IsRoot && Rapid.Contexts.Root.FindBinding(key, false, out binding, out errorMessage) ||
                 _bindings.Bind(key, out binding, out errorMessage);
         }
 

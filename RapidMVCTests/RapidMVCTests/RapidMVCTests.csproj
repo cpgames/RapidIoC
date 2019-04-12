@@ -54,6 +54,7 @@
     <Compile Include="TestView.cs" />
     <Compile Include="TestRapid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestViewWithSignal.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -17,10 +17,11 @@
         /// Find binding by key. Return false if not found.
         /// </summary>
         /// <param name="key">Unique binding key.</param>
+        /// <param name="includeDiscarded">Search discarded bucket as well.</param>
         /// <param name="binding">Binding instance if found, otherwise null.</param>
         /// <param name="errorMessage">If fails or binding not found, this explains why.</param>
         /// <returns>True if binding found, otherwise false.</returns>
-        bool FindBinding(IBindingKey key, out IBinding binding, out string errorMessage);
+        bool FindBinding(IBindingKey key, bool includeDiscarded, out IBinding binding, out string errorMessage);
 
         /// <summary>
         /// Check if binding exists.

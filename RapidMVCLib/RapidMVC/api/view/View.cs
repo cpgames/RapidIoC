@@ -1,7 +1,11 @@
-﻿namespace cpGames.core.RapidMVC
+﻿using System.Collections.Generic;
+using cpGames.core.RapidMVC.impl;
+
+namespace cpGames.core.RapidMVC
 {
+    /// <inheritdoc cref="IView" />
     /// <summary>
-    ///     Default View
+    /// Default View
     /// </summary>
     public abstract class View : IView
     {
@@ -14,6 +18,12 @@
 
         #region IView Members
         public Signal<IBindingKey> PropertyUpdatedSignal { get; } = new Signal<IBindingKey>();
+        public List<ISignalMapping> SignalMappings { get; } = new List<ISignalMapping>();
+
+        public void UnregisterFromContext()
+        {
+            Rapid.UnregisterView(this);
+        }
         #endregion
     }
 }

@@ -5,7 +5,7 @@
         #region IBaseCommand Members
         public virtual void Release()
         {
-            Rapid.UnregisterView(this);
+            UnregisterFromContext();
         }
         #endregion
     }

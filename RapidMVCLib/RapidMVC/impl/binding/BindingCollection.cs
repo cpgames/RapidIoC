@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace cpGames.core.RapidMVC.impl
 {
@@ -6,14 +7,16 @@ namespace cpGames.core.RapidMVC.impl
     {
         #region Fields
         private readonly Dictionary<IBindingKey, IBinding> _bindings = new Dictionary<IBindingKey, IBinding>();
+        private readonly Dictionary<IBindingKey, IBinding> _discardedBindings = new Dictionary<IBindingKey, IBinding>();
         #endregion
 
         #region IBindingCollection Members
         public int BindingCount => _bindings.Count;
 
-        public bool FindBinding(IBindingKey key, out IBinding binding, out string errorMessage)
+        public bool FindBinding(IBindingKey key, bool includeDiscarded, out IBinding binding, out string errorMessage)
         {
-            if (!_bindings.TryGetValue(key, out binding))
+            if (!_bindings.TryGetValue(key, out binding) &&
+                (!includeDiscarded || !_discardedBindings.TryGetValue(key, out binding)))
             {
                 errorMessage = string.Format("Binding with key <{0}> not found.", key);
                 return false;
@@ -29,10 +32,10 @@ namespace cpGames.core.RapidMVC.impl
 
         public bool Bind(IBindingKey key, out IBinding binding, out string errorMessage)
         {
-            if (!FindBinding(key, out binding, out errorMessage))
+            if (!FindBinding(key, false, out binding, out errorMessage))
             {
                 binding = new Binding(key);
-                binding.RemovedSignal.AddCommand(() => _bindings.Remove(key), true);
+                binding.RemovedSignal.AddCommand(() => _discardedBindings.Remove(key), true);
                 _bindings.Add(key, binding);
             }
             errorMessage = string.Empty;
@@ -41,10 +44,14 @@ namespace cpGames.core.RapidMVC.impl
 
         public bool Unbind(IBindingKey key, out string errorMessage)
         {
-            if (!_bindings.ContainsKey(key))
+            if (!FindBinding(key, true, out var binding, out errorMessage))
             {
-                errorMessage = string.Format("Binding with key <{0}> not found.", key);
                 return false;
+            }
+            if (!binding.Empty)
+            {
+                binding.Discarded = true;
+                _discardedBindings.Add(key, binding);
             }
             _bindings.Remove(key);
             errorMessage = string.Empty;
@@ -53,7 +60,14 @@ namespace cpGames.core.RapidMVC.impl
 
         public bool ClearBindings(out string errorMessage)
         {
-            _bindings.Clear();
+            var bindingKeys = _bindings.Keys.ToList();
+            foreach (var key in bindingKeys)
+            {
+                if (!Unbind(key, out errorMessage))
+                {
+                    return false;
+                }
+            }
             errorMessage = string.Empty;
             return true;
         }

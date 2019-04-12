@@ -20,7 +20,7 @@ namespace cpGames.core.RapidMVC
         object Value { get; set; }
 
         /// <summary>
-        /// If value is null, it is considered empty. It will be cleaned up if no views are registered with it.
+        /// If there are no subscribers, this is true.
         /// </summary>
         bool Empty { get; }
 
@@ -33,6 +33,11 @@ namespace cpGames.core.RapidMVC
         /// When value is updated, this signal is emitted.
         /// </summary>
         Signal ValueUpdatedSignal { get; }
+
+        /// <summary>
+        /// If unbinded, but still has some subscribers left, it is moved to discarded list and no new subscribers can be added.
+        /// </summary>
+        bool Discarded { get; set; }
         #endregion
 
         #region Methods
@@ -43,7 +48,7 @@ namespace cpGames.core.RapidMVC
         /// <param name="property">PropertyInfo of the the property.</param>
         /// <param name="errorMessage">If fails, this explains why.</param>
         /// <returns>False if view instance was already binded, otherwise true.</returns>
-        bool RegisterViewProperty(IView view, PropertyInfo property, out string errorMessage);
+        bool Subscribe(IView view, PropertyInfo property, out string errorMessage);
 
         /// <summary>
         /// Unregister view.
@@ -51,7 +56,7 @@ namespace cpGames.core.RapidMVC
         /// <param name="view">View instance to unregister.</param>
         /// <param name="errorMessage">If fails, this explains why.</param>
         /// <returns>False if view instance was not registered, otherwise true.</returns>
-        bool UnregisterView(IView view, out string errorMessage);
+        bool Unsubscribe(IView view, out string errorMessage);
         #endregion
     }
 }

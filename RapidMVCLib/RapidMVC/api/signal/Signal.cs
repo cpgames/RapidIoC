@@ -21,16 +21,21 @@ namespace cpGames.core.RapidMVC
         #endregion
 
         #region Methods
-        public void RemoveCommand(IBaseCommand command)
+        public bool RemoveCommand(IBaseCommand command)
         {
-            if (_commands.Contains(command))
+            return RemoveCommand(command, _commands) ||
+                RemoveCommand(command, _onceCommands);
+        }
+
+        private bool RemoveCommand(IBaseCommand command, List<IBaseCommand> commands)
+        {
+            if (commands.Contains(command))
             {
-                _commands.Remove(command);
+                commands.Remove(command);
+                command.Release();
+                return true;
             }
-            if (_onceCommands.Contains(command))
-            {
-                _onceCommands.Remove(command);
-            }
+            return false;
         }
 
         protected virtual IBaseCommand AddCommandInternal(IBaseCommand command, bool once)
