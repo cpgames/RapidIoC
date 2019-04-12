@@ -1,5 +1,4 @@
 ﻿using System;
-using cpGames.core.CpReflection;
 using cpGames.core.RapidMVC.impl;
 
 namespace cpGames.core.RapidMVC
@@ -52,8 +51,7 @@ namespace cpGames.core.RapidMVC
 
         public static void RegisterView(IView view)
         {
-            var contextName = view.GetType().GetAttribute<ContextAttribute>()?.Name;
-            if (!Contexts.FindOrCreateContext(contextName, out var context, out var errorMessage) ||
+            if (!Contexts.FindOrCreateContext(view.ContextName, out var context, out var errorMessage) ||
                 !context.RegisterView(view, out errorMessage))
             {
                 throw new Exception(errorMessage);
@@ -62,8 +60,7 @@ namespace cpGames.core.RapidMVC
 
         public static void UnregisterView(IView view)
         {
-            var contextName = view.GetType().GetAttribute<ContextAttribute>()?.Name;
-            if (!Contexts.FindContext(contextName, out var context, out var errorMessage) ||
+            if (!Contexts.FindContext(view.ContextName, out var context, out var errorMessage) ||
                 !context.UnregisterView(view, out errorMessage))
             {
                 throw new Exception(errorMessage);

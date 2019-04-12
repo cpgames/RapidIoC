@@ -5,10 +5,6 @@ namespace cpGames.core.RapidMVC.Tests
     [TestClass]
     public class TestRapid
     {
-        #region Fields
-        private const string testContextName = "TestContext";
-        #endregion
-
         #region Methods
         [TestMethod]
         public void ComprehensiveBindingTest()
@@ -16,8 +12,8 @@ namespace cpGames.core.RapidMVC.Tests
             var testValue1 = "I am a test";
             var testValue2 = "I am updated test";
 
-            Rapid.Bind("TestName", testValue1, testContextName);
-            Rapid.Bind<Nested1>(testContextName);
+            Rapid.Bind("TestName", testValue1, Globals.TEST_CONTEXT_NAME);
+            Rapid.Bind<Nested1>(Globals.TEST_CONTEXT_NAME);
             Rapid.Bind<Nested2>();
 
             var view = new TestView();
@@ -28,7 +24,7 @@ namespace cpGames.core.RapidMVC.Tests
             Assert.AreEqual(Rapid.Contexts.Count, 1);
             Assert.IsFalse(view.PropertyUpdated);
 
-            Rapid.Bind("TestName", testValue2, testContextName);
+            Rapid.Bind("TestName", testValue2, Globals.TEST_CONTEXT_NAME);
             Assert.IsTrue(view.PropertyUpdated);
             Assert.IsTrue(view.Name.Equals(testValue2));
 
@@ -37,8 +33,8 @@ namespace cpGames.core.RapidMVC.Tests
             Rapid.Unbind<Nested2>();
             Assert.AreEqual(Rapid.Contexts.Root.BindingCount, 0);
 
-            Rapid.Unbind<Nested1>(testContextName);
-            Rapid.Unbind("TestName", testContextName);
+            Rapid.Unbind<Nested1>(Globals.TEST_CONTEXT_NAME);
+            Rapid.Unbind("TestName", Globals.TEST_CONTEXT_NAME);
             Assert.AreEqual(Rapid.Contexts.Count, 0);
         }
 
@@ -95,9 +91,9 @@ namespace cpGames.core.RapidMVC.Tests
             Assert.AreEqual(command._value, 1);
             Assert.IsTrue(string.IsNullOrEmpty(command.InjectedText));
             var text = "test";
-            Rapid.Bind("InjectedText", text, testContextName);
+            Rapid.Bind("InjectedText", text, Globals.TEST_CONTEXT_NAME);
             Assert.AreEqual(command.InjectedText, text);
-            Rapid.Unbind("InjectedText", testContextName);
+            Rapid.Unbind("InjectedText", Globals.TEST_CONTEXT_NAME);
             Assert.IsTrue(signal.RemoveCommand(command));
             Assert.AreEqual(Rapid.Contexts.Count, 0);
         }
@@ -111,9 +107,9 @@ namespace cpGames.core.RapidMVC.Tests
             Assert.AreEqual(command._value, 1);
             Assert.IsTrue(string.IsNullOrEmpty(command.InjectedText));
             var text = "test";
-            Rapid.Bind("InjectedText", text, testContextName);
+            Rapid.Bind("InjectedText", text, Globals.TEST_CONTEXT_NAME);
             Assert.AreEqual(command.InjectedText, text);
-            Rapid.Unbind("InjectedText", testContextName);
+            Rapid.Unbind("InjectedText", Globals.TEST_CONTEXT_NAME);
             signal.RemoveCommand(command);
             Assert.AreEqual(Rapid.Contexts.Count, 0);
         }
@@ -122,12 +118,12 @@ namespace cpGames.core.RapidMVC.Tests
         public void TestSignalMapping()
         {
             var signal = new Signal<int>();
-            Rapid.Bind("TestSignal", signal, testContextName);
+            Rapid.Bind("TestSignal", signal, Globals.TEST_CONTEXT_NAME);
             var view = new TestViewWithSignal();
             Assert.AreEqual(view.n, 0);
             signal.Dispatch(5);
             Assert.AreEqual(view.n, 5);
-            Rapid.Unbind("TestSignal", testContextName);
+            Rapid.Unbind("TestSignal", Globals.TEST_CONTEXT_NAME);
             view.UnregisterFromContext();
             Assert.AreEqual(Rapid.Contexts.Count, 0);
         }
@@ -138,10 +134,10 @@ namespace cpGames.core.RapidMVC.Tests
             var view = new TestViewWithSignal();
             Assert.AreEqual(view.n, 0);
             var signal = new Signal<int>();
-            Rapid.Bind("TestSignal", signal, testContextName);
+            Rapid.Bind("TestSignal", signal, Globals.TEST_CONTEXT_NAME);
             signal.Dispatch(5);
             Assert.AreEqual(view.n, 5);
-            Rapid.Unbind("TestSignal", testContextName);
+            Rapid.Unbind("TestSignal", Globals.TEST_CONTEXT_NAME);
             view.UnregisterFromContext();
             Assert.AreEqual(Rapid.Contexts.Count, 0);
         }

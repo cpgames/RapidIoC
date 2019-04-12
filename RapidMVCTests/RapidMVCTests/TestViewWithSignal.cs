@@ -1,6 +1,5 @@
 ﻿namespace cpGames.core.RapidMVC.Tests
 {
-    [Context("TestContext")]
     public class TestViewWithSignal : View
     {
         #region Fields
@@ -8,6 +7,7 @@
         #endregion
 
         #region Properties
+        public override string ContextName => Globals.TEST_CONTEXT_NAME;
         [Inject("TestSignal")] public Signal<int> TestSignal { get; set; }
         #endregion
 

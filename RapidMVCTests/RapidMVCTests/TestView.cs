@@ -1,6 +1,5 @@
 ﻿namespace cpGames.core.RapidMVC.Tests
 {
-    [Context("TestContext")]
     public class TestView : View
     {
         #region Properties
@@ -14,6 +13,8 @@
         public Nested2 Nested2 { get; set; }
 
         public bool PropertyUpdated { get; set; }
+
+        public override string ContextName => Globals.TEST_CONTEXT_NAME;
         #endregion
 
         #region Constructors

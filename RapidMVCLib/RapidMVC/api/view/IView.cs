@@ -11,6 +11,8 @@ namespace cpGames.core.RapidMVC
     public interface IView
     {
         #region Properties
+        string ContextName { get; }
+
         /// <summary>
         /// A property belonging to this view with specific key was updated.
         /// </summary>

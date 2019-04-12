@@ -25,26 +25,4 @@ namespace cpGames.core.RapidMVC
         }
         #endregion
     }
-
-    /// <summary>
-    /// Add this to your view to determine context to register a view with.
-    /// If missing, view will register with Root context.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class ContextAttribute : Attribute
-    {
-        #region Properties
-        /// <summary>
-        /// Optional context name. Root context if missing.
-        /// </summary>
-        public string Name { get; }
-        #endregion
-
-        #region Constructors
-        public ContextAttribute(string name)
-        {
-            Name = name;
-        }
-        #endregion
-    }
 }

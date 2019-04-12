@@ -1,14 +1,17 @@
 ﻿namespace cpGames.core.RapidMVC.Tests
 {
-    [Context("TestContext")]
     public class TestCommandViewA : CommandView
     {
         #region Fields
         public int _value;
         #endregion
 
+        #region Properties
         [Inject("InjectedText")]
         public string InjectedText { get; set; }
+
+        public override string ContextName => Globals.TEST_CONTEXT_NAME;
+        #endregion
 
         #region Methods
         public override void Execute()
@@ -18,11 +21,14 @@
         #endregion
     }
 
-    [Context("TestContext")]
     public class TestCommandViewB : CommandView<int>
     {
         #region Fields
         public int _value;
+        #endregion
+
+        #region Properties
+        public override string ContextName => Globals.TEST_CONTEXT_NAME;
         #endregion
 
         #region Methods
@@ -33,12 +39,15 @@
         #endregion
     }
 
-    [Context("TestContext")]
     public class TestCommandViewC : CommandView<int, string>
     {
         #region Fields
         public int _value;
         public string _text = "";
+        #endregion
+
+        #region Properties
+        public override string ContextName => Globals.TEST_CONTEXT_NAME;
         #endregion
 
         #region Methods

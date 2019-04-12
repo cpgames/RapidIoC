@@ -49,6 +49,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Globals.cs" />
     <Compile Include="TestCommandView.cs" />
     <Compile Include="TestSignal.cs" />
     <Compile Include="TestView.cs" />
