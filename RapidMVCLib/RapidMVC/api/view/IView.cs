@@ -26,6 +26,11 @@ namespace cpGames.core.RapidMVC
 
         #region Methods
         /// <summary>
+        /// Register view with context, call this whenever view is created or initialized.
+        /// </summary>
+        void RegisterWithContext();
+        
+        /// <summary>
         /// Unregister view from context, call this whenever view is destroyed.
         /// </summary>
         void UnregisterFromContext();

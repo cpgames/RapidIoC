@@ -134,22 +134,23 @@ namespace cpGames.core.RapidMVC.impl
         #region Methods
         public static void RegisterSignalMap(this IView view, PropertyInfo signalProperty)
         {
-            var signalValue = (BaseSignal)signalProperty.GetValue(view, null);
-            if (signalValue == null)
+            var signal = (BaseSignal)signalProperty.GetValue(view, null);
+            if (signal == null)
             {
                 return;
             }
             var baseName = SignalToBaseName(signalProperty.Name);
-            switch (signalProperty.PropertyType.GetGenericArguments().Length)
+            var signalType = GetSignalType(signal);
+            switch (signalType.GetGenericArguments().Length)
             {
                 case 0:
-                    MapSignalWithNoParameters(view, signalValue, baseName);
+                    MapSignalWithNoParameters(view, signal, baseName);
                     break;
                 case 1:
-                    MapSignalWithOneParameter(view, signalValue, baseName);
+                    MapSignalWithOneParameter(view, signal, baseName);
                     break;
                 case 2:
-                    MapSignalWithTwoParameters(view, signalValue, baseName);
+                    MapSignalWithTwoParameters(view, signal, baseName);
                     break;
             }
         }
@@ -203,11 +204,7 @@ namespace cpGames.core.RapidMVC.impl
             string baseName)
         {
             var type = view.GetType();
-            var signalType = signal.GetType();
-            while (signalType.BaseType != typeof(BaseSignal))
-            {
-                signalType = signalType.BaseType;
-            }
+            var signalType = GetSignalType(signal);
             var methodName = "On" + baseName;
             var method = type.GetMethods(BINDING_FLAGS)
                 .Where(x => x.GetParameters().Length == 1)
@@ -236,11 +233,7 @@ namespace cpGames.core.RapidMVC.impl
             string baseName)
         {
             var type = view.GetType();
-            var signalType = signal.GetType();
-            while (signalType.BaseType != typeof(BaseSignal))
-            {
-                signalType = signalType.BaseType;
-            }
+            var signalType = GetSignalType(signal);
             var methodName = "On" + baseName;
             var method = type.GetMethods(BINDING_FLAGS)
                 .Where(x => x.GetParameters().Length == 2)
@@ -273,6 +266,16 @@ namespace cpGames.core.RapidMVC.impl
                 baseName = baseName.Substring(0, baseName.Length - 6);
             }
             return baseName;
+        }
+
+        private static Type GetSignalType(BaseSignal signal)
+        {
+            var signalType = signal.GetType();
+            while (signalType.BaseType != typeof(BaseSignal))
+            {
+                signalType = signalType.BaseType;
+            }
+            return signalType;
         }
         #endregion
     }

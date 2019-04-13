@@ -107,7 +107,7 @@ namespace cpGames.core.RapidMVC.Tests
             Rapid.Bind("InjectedText", text, Globals.TEST_CONTEXT_NAME);
             Assert.AreEqual(command.InjectedText, text);
             Rapid.Unbind("InjectedText", Globals.TEST_CONTEXT_NAME);
-            Assert.IsTrue(signal.RemoveCommand(command));
+            signal.RemoveCommand(command);
             Assert.AreEqual(Rapid.Contexts.Count, 0);
         }
 
@@ -144,15 +144,33 @@ namespace cpGames.core.RapidMVC.Tests
         [TestMethod]
         public void TestSignalMappingDynamic()
         {
-            var view = new TestViewWithSignal();
-            Assert.AreEqual(view.n, 0);
             var signal = new TestSignalB();
             Rapid.Bind("TestSignal", signal);
+            var view = new TestViewWithSignal();
+            Assert.AreEqual(view.n, 0);
             signal.Dispatch(5);
             Assert.AreEqual(view.n, 5);
             Rapid.Unbind("TestSignal", Globals.TEST_CONTEXT_NAME);
             view.UnregisterFromContext();
             Assert.AreEqual(Rapid.Contexts.Count, 0);
+        }
+
+        [TestMethod]
+        public void TestSignalDispatchWhileModifyingCommandList()
+        {
+            var n = 0;
+            var signal = new TestSignalA();
+            signal.AddCommand(() =>
+            {
+                signal.AddCommand(() =>
+                {
+                    n = 5;
+                });
+            });
+            signal.Dispatch();
+            Assert.AreEqual(n, 0);
+            signal.Dispatch();
+            Assert.AreEqual(n, 5);
         }
         #endregion
     }

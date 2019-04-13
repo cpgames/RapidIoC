@@ -12,7 +12,7 @@ namespace cpGames.core.RapidMVC
         #region Constructors
         protected View()
         {
-            Rapid.RegisterView(this);
+            RegisterWithContext();
         }
         #endregion
 
@@ -20,6 +20,11 @@ namespace cpGames.core.RapidMVC
         public abstract string ContextName { get; }
         public Signal<IBindingKey> PropertyUpdatedSignal { get; } = new Signal<IBindingKey>();
         public List<ISignalMapping> SignalMappings { get; } = new List<ISignalMapping>();
+
+        public void RegisterWithContext()
+        {
+            Rapid.RegisterView(this);
+        }
 
         public void UnregisterFromContext()
         {

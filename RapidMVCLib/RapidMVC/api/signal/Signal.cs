@@ -14,6 +14,11 @@ namespace cpGames.core.RapidMVC
         #region Fields
         protected readonly List<IBaseCommand> _commands = new List<IBaseCommand>();
         protected readonly List<IBaseCommand> _onceCommands = new List<IBaseCommand>();
+        protected readonly List<IBaseCommand> _commandsToAdd = new List<IBaseCommand>();
+        protected readonly List<IBaseCommand> _onceCommandsToAdd = new List<IBaseCommand>();
+        protected readonly List<IBaseCommand> _commandsToRemove = new List<IBaseCommand>();
+        protected readonly List<IBaseCommand> _onceCommandsToRemove = new List<IBaseCommand>();
+        private bool _dispatching;
         #endregion
 
         #region Properties
@@ -21,27 +26,41 @@ namespace cpGames.core.RapidMVC
         #endregion
 
         #region Methods
-        public bool RemoveCommand(IBaseCommand command)
+        public void RemoveCommand(IBaseCommand command)
         {
-            return RemoveCommand(command, _commands) ||
+            if (_dispatching)
+            {
+                _commandsToRemove.Add(command);
+                _onceCommandsToRemove.Add(command);
+            }
+            else
+            {
+                RemoveCommand(command, _commands);
                 RemoveCommand(command, _onceCommands);
+            }
         }
 
-        private bool RemoveCommand(IBaseCommand command, List<IBaseCommand> commands)
+        private void RemoveCommand(IBaseCommand command, List<IBaseCommand> commands)
         {
             if (commands.Contains(command))
             {
                 commands.Remove(command);
                 command.Release();
-                return true;
             }
-            return false;
         }
 
         public void ClearCommands()
         {
-            ClearCommandsInternal(_commands);
-            ClearCommandsInternal(_onceCommands);
+            if (_dispatching)
+            {
+                _commandsToRemove.AddRange(_commands);
+                _onceCommandsToRemove.AddRange(_onceCommands);
+            }
+            else
+            {
+                ClearCommandsInternal(_commands);
+                ClearCommandsInternal(_onceCommands);
+            }
         }
 
         private void ClearCommandsInternal(List<IBaseCommand> commands)
@@ -54,13 +73,61 @@ namespace cpGames.core.RapidMVC
 
         protected virtual IBaseCommand AddCommandInternal(IBaseCommand command, bool once)
         {
-            var commands = once ? _onceCommands : _commands;
+            List<IBaseCommand> commands;
+            if (_dispatching)
+            {
+                commands = once ? _onceCommandsToAdd : _commandsToAdd;
+            }
+            else
+            {
+                commands = once ? _onceCommands : _commands;
+            }
             if (commands.Contains(command))
             {
                 return null;
             }
             commands.Add(command);
             return command;
+        }
+
+        protected void DispatchBegin()
+        {
+            _dispatching = true;
+        }
+
+        protected void DispatchEnd()
+        {
+            AppendCommands(_commandsToAdd, _commands);
+            AppendCommands(_onceCommandsToAdd, _onceCommands);
+            RemoveCommands(_commandsToRemove, _commands);
+            RemoveCommands(_onceCommandsToRemove, _onceCommands);
+            _dispatching = false;
+        }
+
+        private void AppendCommands(List<IBaseCommand> source, List<IBaseCommand> target)
+        {
+            foreach (var command in source)
+            {
+                if (target.Contains(command))
+                {
+                    continue;
+                }
+                target.Add(command);
+            }
+            source.Clear();
+        }
+
+        private void RemoveCommands(List<IBaseCommand> source, List<IBaseCommand> target)
+        {
+            foreach (var command in source)
+            {
+                if (!target.Contains(command))
+                {
+                    continue;
+                }
+                target.Remove(command);
+            }
+            source.Clear();
         }
         #endregion
     }
@@ -88,6 +155,7 @@ namespace cpGames.core.RapidMVC
 
         public void Dispatch()
         {
+            DispatchBegin();
             foreach (var command in _commands.OfType<ICommand>())
             {
                 command.Execute();
@@ -98,6 +166,7 @@ namespace cpGames.core.RapidMVC
                 command.Release();
             }
             _onceCommands.Clear();
+            DispatchEnd();
         }
         #endregion
     }
@@ -125,6 +194,7 @@ namespace cpGames.core.RapidMVC
 
         public void Dispatch(T type1)
         {
+            DispatchBegin();
             foreach (var command in _commands.OfType<ICommand<T>>())
             {
                 command.Execute(type1);
@@ -135,6 +205,7 @@ namespace cpGames.core.RapidMVC
                 command.Release();
             }
             _onceCommands.Clear();
+            DispatchEnd();
         }
         #endregion
     }
@@ -163,6 +234,7 @@ namespace cpGames.core.RapidMVC
 
         public void Dispatch(T type1, U type2)
         {
+            DispatchBegin();
             foreach (var command in _commands.OfType<ICommand<T, U>>())
             {
                 command.Execute(type1, type2);
@@ -173,6 +245,7 @@ namespace cpGames.core.RapidMVC
                 command.Release();
             }
             _onceCommands.Clear();
+            DispatchEnd();
         }
         #endregion
     }
