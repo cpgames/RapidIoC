@@ -24,6 +24,13 @@
         /// it will be automatically deleted and this signal will be dispatched.
         /// </summary>
         Signal DestroyedSignal { get; }
+
+        /// <summary>
+        /// Check if local binding exists.
+        /// </summary>
+        /// <param name="key">Unique binding key.</param>
+        /// <returns>True if binding exists, otherwise false.</returns>
+        bool LocalBindingExists(IBindingKey key);
         #endregion
 
         #region Methods

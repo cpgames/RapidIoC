@@ -95,7 +95,7 @@ namespace cpGames.core.RapidMVC.impl
             if (IsRoot)
             {
                 foreach (var context in Rapid.Contexts.Contexts
-                    .Where(x => x.BindingExists(key)))
+                    .Where(x => x.LocalBindingExists(key)))
                 {
                     if (!context.MoveBindingFrom(key, this, out errorMessage))
                     {
@@ -114,7 +114,7 @@ namespace cpGames.core.RapidMVC.impl
             if (IsRoot)
             {
                 foreach (var context in Rapid.Contexts.Contexts
-                    .Where(x => x.BindingExists(key)))
+                    .Where(x => x.LocalBindingExists(key)))
                 {
                     if (!context.MoveBindingFrom(key, this, out errorMessage))
                     {
@@ -154,6 +154,11 @@ namespace cpGames.core.RapidMVC.impl
             }
             DestroyIfEmpty();
             return true;
+        }
+
+        public bool LocalBindingExists(IBindingKey key)
+        {
+            return _bindings.BindingExists(key);
         }
 
         public bool DestroyContext(out string errorMessage)
