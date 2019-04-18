@@ -58,4 +58,21 @@
         }
         #endregion
     }
+
+    public class TestCommandViewD : CommandView
+    {
+        #region Properties
+        [Inject("InjectedValue")]
+        public int Value { get; set; }
+
+        public override string ContextName => Globals.TEST_CONTEXT_NAME;
+        #endregion
+
+        #region Methods
+        public override void Execute()
+        {
+            Rapid.Bind("InjectedValue", Value + 1, Globals.TEST_CONTEXT_NAME);
+        }
+        #endregion
+    }
 }

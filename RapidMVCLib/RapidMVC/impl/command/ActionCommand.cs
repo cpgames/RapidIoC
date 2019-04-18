@@ -2,7 +2,9 @@
 
 namespace cpGames.core.RapidMVC.impl
 {
-    internal class ActionCommand : Command
+    internal interface IActionCommand : IBaseCommand { }
+
+    internal class ActionCommand : Command, IActionCommand
     {
         #region Fields
         private readonly Action _action;
@@ -23,7 +25,7 @@ namespace cpGames.core.RapidMVC.impl
         #endregion
     }
 
-    public class ActionCommand<T> : Command<T>
+    public class ActionCommand<T> : Command<T>, IActionCommand
     {
         #region Fields
         private readonly Action<T> _action;
@@ -44,7 +46,7 @@ namespace cpGames.core.RapidMVC.impl
         #endregion
     }
 
-    public class ActionCommand<T, U> : Command<T, U>
+    public class ActionCommand<T, U> : Command<T, U>, IActionCommand
     {
         #region Fields
         private readonly Action<T, U> _action;

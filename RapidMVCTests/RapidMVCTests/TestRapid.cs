@@ -128,6 +128,24 @@ namespace cpGames.core.RapidMVC.Tests
         }
 
         [TestMethod]
+        public void TestCommandDuplicate()
+        {
+            Rapid.Bind("InjectedValue", 0, Globals.TEST_CONTEXT_NAME);
+            var signal = new TestSignalA();
+            signal.AddCommand<TestCommandViewD>();
+            signal.AddCommand<TestCommandViewD>();
+            Assert.AreEqual(signal.CommandCount, 1);
+            signal.Dispatch();
+            Assert.IsTrue(Rapid.Contexts.FindContext(Globals.TEST_CONTEXT_NAME, out var context, out _));
+            Assert.IsTrue(Rapid.BindingKeyFactoryCollection.Create("InjectedValue", out var key, out _));
+            Assert.IsTrue(context.FindBinding(key, false, out var binding, out _));
+            Assert.AreEqual(binding.Value, 1);
+            signal.ClearCommands();
+            Rapid.Unbind("InjectedValue", Globals.TEST_CONTEXT_NAME);
+            Assert.AreEqual(Rapid.Contexts.Count, 0);
+        }
+
+        [TestMethod]
         public void TestSignalMapping()
         {
             var signal = new Signal<int>();

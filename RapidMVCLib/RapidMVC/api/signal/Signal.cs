@@ -82,8 +82,10 @@ namespace cpGames.core.RapidMVC
             {
                 commands = once ? _onceCommands : _commands;
             }
-            if (commands.Contains(command))
+            if (commands.Any(x => ReferenceEquals(x, command) ||
+                !(x is IActionCommand) && x.GetType() == command.GetType()))
             {
+                command.Release();
                 return null;
             }
             commands.Add(command);
