@@ -11,14 +11,14 @@ namespace cpGames.core.RapidMVC.impl
         #endregion
 
         #region Constructors
-        public Binding(IBindingKey key)
+        public Binding(IKey key)
         {
             Key = key;
         }
         #endregion
 
         #region IBinding Members
-        public IBindingKey Key { get; }
+        public IKey Key { get; }
         public object Value
         {
             get => _value;
@@ -46,7 +46,6 @@ namespace cpGames.core.RapidMVC.impl
             {
                 property.SetValue(view, Value, null);
                 RegisterPotentialSignalMap(view, property);
-                view.PropertyUpdatedSignal.Dispatch(Key);
             }
             errorMessage = string.Empty;
             return true;
@@ -101,7 +100,6 @@ namespace cpGames.core.RapidMVC.impl
                 UnregisterPotentialSignalMap(view, property);
                 propertyMap.Value.SetValue(propertyMap.Key, Value, null);
                 RegisterPotentialSignalMap(view, property);
-                propertyMap.Key.PropertyUpdatedSignal.Dispatch(Key);
                 ValueUpdatedSignal.Dispatch();
             }
         }

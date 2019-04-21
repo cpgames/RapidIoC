@@ -10,9 +10,9 @@ namespace cpGames.core.RapidMVC
     {
         #region Properties
         /// <summary>
-        /// Unique binding key.
+        /// Unique key.
         /// </summary>
-        IBindingKey Key { get; }
+        IKey Key { get; }
 
         /// <summary>
         /// Value dynamically set to all registered properties.

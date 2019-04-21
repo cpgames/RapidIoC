@@ -3,7 +3,7 @@
     public class TestView : View
     {
         #region Properties
-        [Inject("TestName")]
+        [Inject(Globals.INJECT_KEY1)]
         public string Name { get; set; }
 
         [Inject]
@@ -11,20 +11,8 @@
 
         [Inject]
         public Nested2 Nested2 { get; set; }
-
-        public bool PropertyUpdated { get; set; }
-
+        
         public override string ContextName => Globals.TEST_CONTEXT_NAME;
-        #endregion
-
-        #region Constructors
-        public TestView()
-        {
-            PropertyUpdatedSignal.AddCommand(key =>
-            {
-                PropertyUpdated = true;
-            });
-        }
         #endregion
 
         #region Methods

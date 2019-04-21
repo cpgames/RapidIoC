@@ -2,10 +2,25 @@
 {
     public abstract class BaseCommandView : View, IBaseCommand
     {
+        #region Fields
+        private int _connections;
+        #endregion
+
         #region IBaseCommand Members
+        public virtual void Connect()
+        {
+            if (_connections++ == 0)
+            {
+                RegisterWithContext();
+            }
+        }
+
         public virtual void Release()
         {
-            UnregisterFromContext();
+            if (--_connections == 0)
+            {
+                UnregisterFromContext();
+            }
         }
         #endregion
     }

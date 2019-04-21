@@ -1,47 +1,38 @@
-﻿using System;
-
-namespace cpGames.core.RapidMVC.impl
+﻿namespace cpGames.core.RapidMVC.impl
 {
-    internal class NameBindingKeyFactory : IBindingKeyFactory
+    internal class NameKeyFactory : IKeyFactory
     {
-        #region IBindingKeyFactory Members
-        public bool Create(object keyData, out IBindingKey key, out string errorMessage)
+        #region IKeyFactory Members
+        public bool Create(object keyData, out IKey key, out string errorMessage)
         {
             key = null;
+            errorMessage = string.Empty;
             if (keyData is string stringKeyData)
             {
-                try
-                {
-                    key = new NameBindingKey(stringKeyData);
-                }
-                catch (Exception e)
-                {
-                    key = null;
-                    errorMessage = e.Message;
-                    return false;
-                }
+                key = new NameKey(stringKeyData);
+                return true;
             }
-            errorMessage = string.Empty;
-            return true;
+            errorMessage = "keyData type is not supported.";
+            return false;
         }
         #endregion
     }
 
-    internal class NameBindingKey : IBindingKey
+    internal class NameKey : IKey
     {
         #region Properties
         public string Name { get; }
         #endregion
 
         #region Constructors
-        public NameBindingKey(string name)
+        public NameKey(string name)
         {
             Name = name;
         }
         #endregion
 
         #region Methods
-        protected bool Equals(NameBindingKey other)
+        protected bool Equals(NameKey other)
         {
             return string.Equals(Name, other.Name);
         }
@@ -60,7 +51,7 @@ namespace cpGames.core.RapidMVC.impl
             {
                 return false;
             }
-            return Equals((NameBindingKey)obj);
+            return Equals((NameKey)obj);
         }
 
         public override int GetHashCode()
@@ -68,19 +59,19 @@ namespace cpGames.core.RapidMVC.impl
             return Name != null ? Name.GetHashCode() : 0;
         }
 
-        public static bool operator ==(NameBindingKey lhs, IBindingKey rhs)
+        public static bool operator ==(NameKey lhs, IKey rhs)
         {
             return lhs?.Equals(rhs) ?? ReferenceEquals(rhs, null);
         }
 
-        public static bool operator !=(NameBindingKey lhs, IBindingKey rhs)
+        public static bool operator !=(NameKey lhs, IKey rhs)
         {
             return !(lhs == rhs);
         }
 
         public override string ToString()
         {
-            return string.Format("NameBindingKey:{0}", Name);
+            return string.Format("NameKey:{0}", Name);
         }
         #endregion
     }

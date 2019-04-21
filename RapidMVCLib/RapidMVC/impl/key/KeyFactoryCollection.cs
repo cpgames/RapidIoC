@@ -4,33 +4,36 @@ using System.Linq;
 
 namespace cpGames.core.RapidMVC.impl
 {
-    internal class BindingKeyFactoryCollection : IBindingKeyFactoryCollection
+    internal class KeyFactoryCollection : IKeyFactoryCollection
     {
         #region Fields
-        private readonly List<IBindingKeyFactory> _factories = new List<IBindingKeyFactory>();
+        private readonly List<IKeyFactory> _factories = new List<IKeyFactory>();
         #endregion
 
         #region Constructors
-        public BindingKeyFactoryCollection()
+        public KeyFactoryCollection()
         {
-            if (!AddFactory(new NameBindingKeyFactory(), out var errorMessage) ||
-                !AddFactory(new TypeBindingKeyFactory(), out errorMessage))
+            if (!AddFactory(new NameKeyFactory(), out var errorMessage) ||
+                !AddFactory(new TypeKeyFactory(), out errorMessage) ||
+                !AddFactory(new UidKeyFactory(), out errorMessage))
             {
                 throw new Exception(errorMessage);
             }
         }
         #endregion
 
-        #region IBindingKeyFactoryCollection Members
-        public bool Create(object keyData, out IBindingKey key, out string errorMessage)
+        #region IKeyFactoryCollection Members
+        public bool Create(object keyData, out IKey key, out string errorMessage)
         {
+            if (keyData is IKey)
+            {
+                key = (IKey)keyData;
+                errorMessage = string.Empty;
+                return true;
+            }
             foreach (var factory in _factories)
             {
-                if (!factory.Create(keyData, out key, out errorMessage))
-                {
-                    return false;
-                }
-                if (key != null)
+                if (factory.Create(keyData, out key, out errorMessage))
                 {
                     return true;
                 }
@@ -40,7 +43,7 @@ namespace cpGames.core.RapidMVC.impl
             return false;
         }
 
-        public bool AddFactory(IBindingKeyFactory factory, out string errorMessage)
+        public bool AddFactory(IKeyFactory factory, out string errorMessage)
         {
             if (_factories.Any(x => x.GetType() == factory.GetType()))
             {

@@ -1,11 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using cpGames.core.CpReflection;
 
 namespace cpGames.core.RapidMVC.impl
 {
+    /// <summary>
+    /// Signal mapping automatically connects injected signals to matching listener member methods.
+    /// Signal mapping works by extracting the name of a signal property and finding a method that
+    /// matches the name pattern and parameters of a signal.
+    /// To be able to automap, signal property must be named with "Signal" suffix, e.g. LevelLoadedSignal.
+    /// Method must contain same base name, but instead have "On" prefix, e.g. OnLevelLoaded.
+    /// </summary>
     public interface ISignalMapping
     {
         #region Properties
@@ -17,19 +23,16 @@ namespace cpGames.core.RapidMVC.impl
         #endregion
     }
 
-    internal class SignalMap : ISignalMapping
+    internal abstract class BaseSignalMap : ISignalMapping
     {
-        #region Fields
-        private readonly Signal _signal;
-        private readonly List<Command> _commands;
+        #region Properties
+        protected abstract BaseSignal Signal { get; }
         #endregion
 
         #region Constructors
-        public SignalMap(string name, Signal signal)
+        protected BaseSignalMap(string name)
         {
             Name = name;
-            _signal = signal;
-            _commands = new List<Command>();
         }
         #endregion
 
@@ -38,7 +41,25 @@ namespace cpGames.core.RapidMVC.impl
 
         public void Unregister()
         {
-            _commands.ForEach(x => _signal.RemoveCommand(x));
+            Signal.ClearCommands();
+        }
+        #endregion
+    }
+
+    internal class SignalMap : BaseSignalMap
+    {
+        #region Fields
+        private readonly Signal _signal;
+        #endregion
+
+        #region Properties
+        protected override BaseSignal Signal => _signal;
+        #endregion
+
+        #region Constructors
+        public SignalMap(string name, Signal signal) : base(name)
+        {
+            _signal = signal;
         }
         #endregion
 
@@ -46,33 +67,24 @@ namespace cpGames.core.RapidMVC.impl
         public void RegisterCommand(Command command)
         {
             _signal.AddCommand(command);
-            _commands.Add(command);
         }
         #endregion
     }
 
-    internal class SignalMap<T> : ISignalMapping
+    internal class SignalMap<T> : BaseSignalMap
     {
         #region Fields
         private readonly Signal<T> _signal;
-        private readonly List<Command<T>> _commands;
+        #endregion
+
+        #region Properties
+        protected override BaseSignal Signal => _signal;
         #endregion
 
         #region Constructors
-        public SignalMap(string name, Signal<T> signal)
+        public SignalMap(string name, Signal<T> signal) : base(name)
         {
-            Name = name;
             _signal = signal;
-            _commands = new List<Command<T>>();
-        }
-        #endregion
-
-        #region ISignalMapping Members
-        public string Name { get; }
-
-        public void Unregister()
-        {
-            _commands.ForEach(x => _signal.RemoveCommand(x));
         }
         #endregion
 
@@ -80,41 +92,31 @@ namespace cpGames.core.RapidMVC.impl
         public void RegisterCommand(Command<T> command)
         {
             _signal.AddCommand(command);
-            _commands.Add(command);
         }
         #endregion
     }
 
-    internal class SignalMap<T1, T2> : ISignalMapping
+    internal class SignalMap<T1, T2> : BaseSignalMap
     {
         #region Fields
         private readonly Signal<T1, T2> _signal;
-        private readonly List<Command<T1, T2>> _commands;
+        #endregion
+
+        #region Properties
+        protected override BaseSignal Signal => _signal;
         #endregion
 
         #region Constructors
-        public SignalMap(string name, Signal<T1, T2> signal)
+        public SignalMap(string name, Signal<T1, T2> signal) : base(name)
         {
-            Name = name;
             _signal = signal;
-            _commands = new List<Command<T1, T2>>();
-        }
-        #endregion
-
-        #region ISignalMapping Members
-        public string Name { get; }
-
-        public void Unregister()
-        {
-            _commands.ForEach(x => _signal.RemoveCommand(x));
         }
         #endregion
 
         #region Methods
-        public void RegisterCommand(Command<T1, T2> command)
+        public void RegisterCommand(IKey key, Command<T1, T2> command)
         {
             _signal.AddCommand(command);
-            _commands.Add(command);
         }
         #endregion
     }

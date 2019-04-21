@@ -6,14 +6,14 @@ namespace cpGames.core.RapidMVC.impl
     internal class BindingCollection : IBindingCollection
     {
         #region Fields
-        private readonly Dictionary<IBindingKey, IBinding> _bindings = new Dictionary<IBindingKey, IBinding>();
-        private readonly Dictionary<IBindingKey, IBinding> _discardedBindings = new Dictionary<IBindingKey, IBinding>();
+        private readonly Dictionary<IKey, IBinding> _bindings = new Dictionary<IKey, IBinding>();
+        private readonly Dictionary<IKey, IBinding> _discardedBindings = new Dictionary<IKey, IBinding>();
         #endregion
 
         #region IBindingCollection Members
         public int BindingCount => _bindings.Count;
 
-        public bool FindBinding(IBindingKey key, bool includeDiscarded, out IBinding binding, out string errorMessage)
+        public bool FindBinding(IKey key, bool includeDiscarded, out IBinding binding, out string errorMessage)
         {
             if (!_bindings.TryGetValue(key, out binding) &&
                 (!includeDiscarded || !_discardedBindings.TryGetValue(key, out binding)))
@@ -25,12 +25,12 @@ namespace cpGames.core.RapidMVC.impl
             return true;
         }
 
-        public bool BindingExists(IBindingKey key)
+        public bool BindingExists(IKey key)
         {
             return _bindings.ContainsKey(key);
         }
 
-        public bool Bind(IBindingKey key, out IBinding binding, out string errorMessage)
+        public bool Bind(IKey key, out IBinding binding, out string errorMessage)
         {
             if (!FindBinding(key, false, out binding, out errorMessage))
             {
@@ -45,14 +45,14 @@ namespace cpGames.core.RapidMVC.impl
                     {
                         _bindings.Remove(key);
                     }
-                }, true);
+                }, key, true);
                 _bindings.Add(key, binding);
             }
             errorMessage = string.Empty;
             return true;
         }
 
-        public bool Unbind(IBindingKey key, out string errorMessage)
+        public bool Unbind(IKey key, out string errorMessage)
         {
             if (!FindBinding(key, true, out var binding, out errorMessage))
             {
@@ -82,7 +82,7 @@ namespace cpGames.core.RapidMVC.impl
             return true;
         }
 
-        public bool BindValue(IBindingKey key, object value, out string errorMessage)
+        public bool BindValue(IKey key, object value, out string errorMessage)
         {
             if (!Bind(key, out var binding, out errorMessage))
             {
@@ -94,7 +94,7 @@ namespace cpGames.core.RapidMVC.impl
             return true;
         }
 
-        public bool MoveBindingFrom(IBindingKey key, IBindingCollection collection, out string errorMessage)
+        public bool MoveBindingFrom(IKey key, IBindingCollection collection, out string errorMessage)
         {
             if (!FindBinding(key, false, out var binding, out errorMessage))
             {

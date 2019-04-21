@@ -8,7 +8,7 @@
 
         #region Properties
         public override string ContextName => Globals.TEST_CONTEXT_NAME;
-        [Inject("TestSignal")] public Signal<int> TestSignal { get; set; }
+        [Inject(Globals.INJECT_KEY1)] public Signal<int> TestSignal { get; set; }
         #endregion
 
         #region Listeners

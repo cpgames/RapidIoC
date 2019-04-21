@@ -28,9 +28,9 @@
         /// <summary>
         /// Check if local binding exists.
         /// </summary>
-        /// <param name="key">Unique binding key.</param>
+        /// <param name="key">Unique key.</param>
         /// <returns>True if binding exists, otherwise false.</returns>
-        bool LocalBindingExists(IBindingKey key);
+        bool LocalBindingExists(IKey key);
         #endregion
 
         #region Methods

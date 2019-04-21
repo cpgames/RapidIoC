@@ -2,46 +2,39 @@
 
 namespace cpGames.core.RapidMVC
 {
-    public class TypeBindingKeyFactory : IBindingKeyFactory
+    public class TypeKeyFactory : IKeyFactory
     {
-        #region IBindingKeyFactory Members
-        public bool Create(object keyData, out IBindingKey key, out string errorMessage)
+        #region IKeyFactory Members
+        public bool Create(object keyData, out IKey key, out string errorMessage)
         {
             key = null;
+            errorMessage = string.Empty;
             if (keyData is Type typeKeyData)
             {
-                try
-                {
-                    key = new TypeBindingKey(typeKeyData);
-                }
-                catch (Exception e)
-                {
-                    key = null;
-                    errorMessage = e.Message;
-                    return false;
-                }
+                key = new TypeKey(typeKeyData);
+                return true;
             }
-            errorMessage = string.Empty;
-            return true;
+            errorMessage = "keyData type is not supported.";
+            return false;
         }
         #endregion
     }
 
-    public class TypeBindingKey : IBindingKey
+    public class TypeKey : IKey
     {
         #region Properties
         public Type Type { get; }
         #endregion
 
         #region Constructors
-        public TypeBindingKey(Type type)
+        public TypeKey(Type type)
         {
             Type = type;
         }
         #endregion
 
         #region Methods
-        protected bool Equals(TypeBindingKey other)
+        protected bool Equals(TypeKey other)
         {
             return Type == other.Type;
         }
@@ -60,7 +53,7 @@ namespace cpGames.core.RapidMVC
             {
                 return false;
             }
-            return Equals((TypeBindingKey)obj);
+            return Equals((TypeKey)obj);
         }
 
         public override int GetHashCode()
@@ -68,19 +61,19 @@ namespace cpGames.core.RapidMVC
             return Type != null ? Type.GetHashCode() : 0;
         }
 
-        public static bool operator ==(TypeBindingKey lhs, IBindingKey rhs)
+        public static bool operator ==(TypeKey lhs, IKey rhs)
         {
             return lhs?.Equals(rhs) ?? ReferenceEquals(rhs, null);
         }
 
-        public static bool operator !=(TypeBindingKey lhs, IBindingKey rhs)
+        public static bool operator !=(TypeKey lhs, IKey rhs)
         {
             return !(lhs == rhs);
         }
 
         public override string ToString()
         {
-            return string.Format("TypeBindingKey:{0}", Type.Name);
+            return string.Format("TypeKey:{0}", Type.Name);
         }
         #endregion
     }

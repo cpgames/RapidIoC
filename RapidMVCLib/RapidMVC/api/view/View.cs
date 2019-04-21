@@ -9,16 +9,8 @@ namespace cpGames.core.RapidMVC
     /// </summary>
     public abstract class View : IView
     {
-        #region Constructors
-        protected View()
-        {
-            RegisterWithContext();
-        }
-        #endregion
-
         #region IView Members
         public abstract string ContextName { get; }
-        public Signal<IBindingKey> PropertyUpdatedSignal { get; } = new Signal<IBindingKey>();
         public List<ISignalMapping> SignalMappings { get; } = new List<ISignalMapping>();
 
         public void RegisterWithContext()

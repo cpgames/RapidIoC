@@ -34,7 +34,7 @@ namespace cpGames.core.RapidMVC.impl
             foreach (var property in view.GetType().GetProperties().Where(x => x.HasAttribute<InjectAttribute>()))
             {
                 var keyData = property.GetAttribute<InjectAttribute>().Key ?? property.PropertyType;
-                if (!Rapid.BindingKeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
+                if (!Rapid.KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
                     !Bind(key, out var binding, out errorMessage) ||
                     !binding.Subscribe(view, property, out errorMessage))
                 {
@@ -55,7 +55,7 @@ namespace cpGames.core.RapidMVC.impl
             foreach (var property in view.GetType().GetProperties().Where(x => x.HasAttribute<InjectAttribute>()))
             {
                 var keyData = property.GetAttribute<InjectAttribute>().Key ?? property.PropertyType;
-                if (!Rapid.BindingKeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
+                if (!Rapid.KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
                     !FindBinding(key, true, out var binding, out errorMessage) ||
                     !binding.Unsubscribe(view, out errorMessage))
                 {
@@ -76,21 +76,21 @@ namespace cpGames.core.RapidMVC.impl
             return true;
         }
 
-        public bool FindBinding(IBindingKey key, bool includeDiscarded, out IBinding binding, out string errorMessage)
+        public bool FindBinding(IKey key, bool includeDiscarded, out IBinding binding, out string errorMessage)
         {
             return
                 !IsRoot && Rapid.Contexts.Root.FindBinding(key, includeDiscarded, out binding, out errorMessage) ||
                 _bindings.FindBinding(key, includeDiscarded, out binding, out errorMessage);
         }
 
-        public bool BindingExists(IBindingKey key)
+        public bool BindingExists(IKey key)
         {
             return
                 !IsRoot && Rapid.Contexts.Root.BindingExists(key) ||
                 _bindings.BindingExists(key);
         }
 
-        public bool Bind(IBindingKey key, out IBinding binding, out string errorMessage)
+        public bool Bind(IKey key, out IBinding binding, out string errorMessage)
         {
             if (IsRoot)
             {
@@ -109,7 +109,7 @@ namespace cpGames.core.RapidMVC.impl
                 _bindings.Bind(key, out binding, out errorMessage);
         }
 
-        public bool BindValue(IBindingKey key, object value, out string errorMessage)
+        public bool BindValue(IKey key, object value, out string errorMessage)
         {
             if (IsRoot)
             {
@@ -125,7 +125,7 @@ namespace cpGames.core.RapidMVC.impl
             return _bindings.BindValue(key, value, out errorMessage);
         }
 
-        public bool MoveBindingFrom(IBindingKey key, IBindingCollection collection, out string errorMessage)
+        public bool MoveBindingFrom(IKey key, IBindingCollection collection, out string errorMessage)
         {
             return _bindings.MoveBindingFrom(key, collection, out errorMessage);
         }
@@ -135,7 +135,7 @@ namespace cpGames.core.RapidMVC.impl
             return _bindings.MoveBindingTo(binding, out errorMessage);
         }
 
-        public bool Unbind(IBindingKey key, out string errorMessage)
+        public bool Unbind(IKey key, out string errorMessage)
         {
             if (!IsRoot && Rapid.Contexts.Root.Unbind(key, out errorMessage) ||
                 _bindings.Unbind(key, out errorMessage))
@@ -156,7 +156,7 @@ namespace cpGames.core.RapidMVC.impl
             return true;
         }
 
-        public bool LocalBindingExists(IBindingKey key)
+        public bool LocalBindingExists(IKey key)
         {
             return _bindings.BindingExists(key);
         }

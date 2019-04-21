@@ -1,14 +1,18 @@
 ﻿namespace cpGames.core.RapidMVC.Tests
 {
-    public class TestCommandViewA : CommandView
+    public class CommandData
     {
         #region Fields
-        public int _value;
+        public int n;
+        public string t = string.Empty;
         #endregion
+    }
 
+    public class TestCommandViewA : CommandView
+    {
         #region Properties
-        [Inject("InjectedText")]
-        public string InjectedText { get; set; }
+        [Inject(Globals.INJECT_KEY1)]
+        public CommandData CommandData { get; set; }
 
         public override string ContextName => Globals.TEST_CONTEXT_NAME;
         #endregion
@@ -16,62 +20,40 @@
         #region Methods
         public override void Execute()
         {
-            _value++;
+            CommandData.n++;
         }
         #endregion
     }
 
     public class TestCommandViewB : CommandView<int>
     {
-        #region Fields
-        public int _value;
-        #endregion
-
         #region Properties
+        [Inject(Globals.INJECT_KEY1)]
+        public CommandData CommandData { get; set; }
         public override string ContextName => Globals.TEST_CONTEXT_NAME;
         #endregion
 
         #region Methods
         public override void Execute(int value)
         {
-            _value += value;
+            CommandData.n += value;
         }
         #endregion
     }
 
     public class TestCommandViewC : CommandView<int, string>
     {
-        #region Fields
-        public int _value;
-        public string _text = "";
-        #endregion
-
         #region Properties
+        [Inject(Globals.INJECT_KEY1)]
+        public CommandData CommandData { get; set; }
         public override string ContextName => Globals.TEST_CONTEXT_NAME;
         #endregion
 
         #region Methods
         public override void Execute(int value, string text)
         {
-            _value += value;
-            _text = text;
-        }
-        #endregion
-    }
-
-    public class TestCommandViewD : CommandView
-    {
-        #region Properties
-        [Inject("InjectedValue")]
-        public int Value { get; set; }
-
-        public override string ContextName => Globals.TEST_CONTEXT_NAME;
-        #endregion
-
-        #region Methods
-        public override void Execute()
-        {
-            Rapid.Bind("InjectedValue", Value + 1, Globals.TEST_CONTEXT_NAME);
+            CommandData.n += value;
+            CommandData.t = text;
         }
         #endregion
     }

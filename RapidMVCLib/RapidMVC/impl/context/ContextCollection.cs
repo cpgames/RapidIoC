@@ -41,7 +41,7 @@ namespace cpGames.core.RapidMVC.impl
             newContext.DestroyedSignal.AddCommand(() =>
             {
                 _contexts.Remove(newContext.Name);
-            }, true);
+            }, name, true);
             _contexts.Add(name, newContext);
             context = newContext;
             errorMessage = string.Empty;

@@ -14,11 +14,6 @@ namespace cpGames.core.RapidMVC
         string ContextName { get; }
 
         /// <summary>
-        /// A property belonging to this view with specific key was updated.
-        /// </summary>
-        Signal<IBindingKey> PropertyUpdatedSignal { get; }
-
-        /// <summary>
         /// Automatically mapped signals to listeners. Used for internal use.
         /// </summary>
         List<ISignalMapping> SignalMappings { get; }

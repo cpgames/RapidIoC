@@ -9,7 +9,7 @@ namespace cpGames.core.RapidMVC
     public static class Rapid
     {
         #region Properties
-        public static IBindingKeyFactoryCollection BindingKeyFactoryCollection { get; } = new BindingKeyFactoryCollection();
+        public static IKeyFactoryCollection KeyFactoryCollection { get; } = new KeyFactoryCollection();
         public static IContextCollection Contexts { get; } = new ContextCollection();
         #endregion
 
@@ -17,7 +17,7 @@ namespace cpGames.core.RapidMVC
         public static void Bind(object keyData, object value, string contextName = null)
         {
             if (!Contexts.FindOrCreateContext(contextName, out var context, out var errorMessage) ||
-                !BindingKeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
+                !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
                 !context.BindValue(key, value, out errorMessage))
             {
                 throw new Exception(errorMessage);
@@ -37,7 +37,7 @@ namespace cpGames.core.RapidMVC
         public static void Unbind(object keyData, string contextName = null)
         {
             if (!Contexts.FindContext(contextName, out var context, out var errorMessage) ||
-                !BindingKeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
+                !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
                 !context.Unbind(key, out errorMessage))
             {
                 throw new Exception(errorMessage);
