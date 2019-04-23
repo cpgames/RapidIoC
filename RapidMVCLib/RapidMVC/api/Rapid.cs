@@ -49,6 +49,22 @@ namespace cpGames.core.RapidMVC
             Unbind(typeof(T), contextName);
         }
 
+        public static object GetBindingValue(object keyData, string contextName = null)
+        {
+            if (!Contexts.FindContext(contextName, out var context, out var errorMessage) ||
+                !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
+                !context.FindBinding(key, false, out var binding, out errorMessage))
+            {
+                throw new Exception(errorMessage);
+            }
+            return binding.Value;
+        }
+
+        public static T GetBindingValue<T>(string contextName = null)
+        {
+            return (T)GetBindingValue(typeof(T), contextName);
+        }
+
         public static void RegisterView(IView view)
         {
             if (!Contexts.FindOrCreateContext(view.ContextName, out var context, out var errorMessage) ||
