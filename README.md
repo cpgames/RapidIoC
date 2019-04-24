@@ -7,6 +7,6 @@ The framework is written with game developers in mind, specifically Unity3D, see
 * Light and thin. RapidMVC does not rely on any 3rd party code, it is under 600 lines of code, and it produces only 3 dlls which can be imported into your project.
 * Last but not least, it's free and opensource. Code is well documented, and can be modified to your specific needs.
 
-[RapidMVC HowTo](https://github.com/cpgames/RapidMVC/wiki/RapidMVC-HowTo)
+[RapidMVC Documentation](https://github.com/cpgames/RapidMVC/wiki/Contents)
 
 [Doxygen Docs](https://cpgames.github.io/RapidMVC/html/index.html)
