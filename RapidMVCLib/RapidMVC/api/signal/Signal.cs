@@ -11,19 +11,19 @@ namespace cpGames.core.RapidMVC
     public class Signal : BaseSignal
     {
         #region Methods
-        public void AddCommand(Action callback, object keyData = null, bool once = false)
+        public IKey AddCommand(Action callback, object keyData = null, bool once = false)
         {
-            AddCommandInternal(new ActionCommand(callback), keyData, once);
+            return AddCommandInternal(new ActionCommand(callback), keyData, once);
         }
 
-        public void AddCommand(ICommand command, object keyData = null, bool once = false)
+        public IKey AddCommand(ICommand command, object keyData = null, bool once = false)
         {
-            AddCommandInternal(command, keyData, once);
+            return AddCommandInternal(command, keyData, once);
         }
 
-        public void AddCommand<TCommand>(bool once = false) where TCommand : ICommand
+        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommand
         {
-            AddCommandInternal<TCommand>(once);
+            return AddCommandInternal<TCommand>(once);
         }
 
         public void Dispatch()
@@ -45,19 +45,19 @@ namespace cpGames.core.RapidMVC
     public class Signal<T> : BaseSignal
     {
         #region Methods
-        public void AddCommand(Action<T> callback, object keyData = null, bool once = false)
+        public IKey AddCommand(Action<T> callback, object keyData = null, bool once = false)
         {
-            AddCommandInternal(new ActionCommand<T>(callback), keyData, once);
+            return AddCommandInternal(new ActionCommand<T>(callback), keyData, once);
         }
 
-        public void AddCommand(ICommand<T> command, object keyData = null, bool once = false)
+        public IKey AddCommand(ICommand<T> command, object keyData = null, bool once = false)
         {
-            AddCommandInternal(command, keyData, once);
+            return AddCommandInternal(command, keyData, once);
         }
 
-        public void AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T>
+        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T>
         {
-            AddCommandInternal<TCommand>(once);
+            return AddCommandInternal<TCommand>(once);
         }
 
         public void Dispatch(T type1)
@@ -80,19 +80,19 @@ namespace cpGames.core.RapidMVC
     public class Signal<T, U> : BaseSignal
     {
         #region Methods
-        public void AddCommand(Action<T, U> callback, object keyData = null, bool once = false)
+        public IKey AddCommand(Action<T, U> callback, object keyData = null, bool once = false)
         {
-            AddCommandInternal(new ActionCommand<T, U>(callback), keyData, once);
+            return AddCommandInternal(new ActionCommand<T, U>(callback), keyData, once);
         }
 
-        public void AddCommand(ICommand<T, U> command, object keyData = null, bool once = false)
+        public IKey AddCommand(ICommand<T, U> command, object keyData = null, bool once = false)
         {
-            AddCommandInternal(command, keyData, once);
+            return AddCommandInternal(command, keyData, once);
         }
 
-        public void AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T, U>
+        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T, U>
         {
-            AddCommandInternal<TCommand>(once);
+            return AddCommandInternal<TCommand>(once);
         }
 
         public void Dispatch(T type1, U type2)

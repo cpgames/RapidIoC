@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using cpGames.core.CpReflection;
@@ -25,6 +26,10 @@ namespace cpGames.core.RapidMVC.impl
 
     internal abstract class BaseSignalMap : ISignalMapping
     {
+        #region Fields
+        protected readonly List<IKey> _localCommands = new List<IKey>();
+        #endregion
+
         #region Properties
         protected abstract BaseSignal Signal { get; }
         #endregion
@@ -41,7 +46,10 @@ namespace cpGames.core.RapidMVC.impl
 
         public void Unregister()
         {
-            Signal.ClearCommands();
+            foreach (var command in _localCommands)
+            {
+                Signal.RemoveCommand(command);
+            }
         }
         #endregion
     }
@@ -66,7 +74,7 @@ namespace cpGames.core.RapidMVC.impl
         #region Methods
         public void RegisterCommand(Command command)
         {
-            _signal.AddCommand(command);
+            _localCommands.Add(_signal.AddCommand(command));
         }
         #endregion
     }
@@ -91,7 +99,7 @@ namespace cpGames.core.RapidMVC.impl
         #region Methods
         public void RegisterCommand(Command<T> command)
         {
-            _signal.AddCommand(command);
+            _localCommands.Add(_signal.AddCommand(command));
         }
         #endregion
     }
@@ -114,9 +122,9 @@ namespace cpGames.core.RapidMVC.impl
         #endregion
 
         #region Methods
-        public void RegisterCommand(IKey key, Command<T1, T2> command)
+        public void RegisterCommand(Command<T1, T2> command)
         {
-            _signal.AddCommand(command);
+            _localCommands.Add(_signal.AddCommand(command));
         }
         #endregion
     }

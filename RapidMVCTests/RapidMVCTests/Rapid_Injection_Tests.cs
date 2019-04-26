@@ -51,6 +51,18 @@ namespace cpGames.core.RapidMVC.Tests
         }
 
         [TestMethod]
+        public void Binding_Reverse_Move_Test()
+        {
+            Rapid.Bind(Globals.INJECT_KEY1, Globals.TEST_STR_VAL_1);
+            var view1 = new TestView();
+            view1.RegisterWithContext();
+            Assert.IsTrue(view1.Name.Equals(Globals.TEST_STR_VAL_1));
+            Rapid.Unbind(Globals.INJECT_KEY1);
+            view1.UnregisterFromContext();
+            Assert.AreEqual(Rapid.Contexts.Count, 0);
+        }
+
+        [TestMethod]
         public void GetBindingValue_Test()
         {
             Rapid.Bind(Globals.INJECT_KEY1, Globals.TEST_STR_VAL_1, Globals.TEST_CONTEXT_NAME);

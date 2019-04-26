@@ -99,16 +99,17 @@ namespace cpGames.core.RapidMVC
             return true;
         }
 
-        protected void AddCommandInternal<TCommand>(bool once) where TCommand : IBaseCommand
+        protected IKey AddCommandInternal<TCommand>(bool once) where TCommand : IBaseCommand
         {
             if (!Rapid.KeyFactoryCollection.Create(typeof(TCommand), out var key, out var errorMessage) ||
                 !AddCommandInternal(key, once, out errorMessage))
             {
                 throw new Exception(errorMessage);
             }
+            return key;
         }
 
-        protected void AddCommandInternal(IBaseCommand command, object keyData, bool once)
+        protected IKey AddCommandInternal(IBaseCommand command, object keyData, bool once)
         {
             keyData = keyData ?? _uidGenerator;
             if (!Rapid.KeyFactoryCollection.Create(keyData, out var key, out var errorMessage) ||
@@ -116,6 +117,7 @@ namespace cpGames.core.RapidMVC
             {
                 throw new Exception(errorMessage);
             }
+            return key;
         }
 
         private bool AddCommandInternal(IBaseCommand command, IKey key, bool once, out string errorMessage)
