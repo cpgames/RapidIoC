@@ -1,5 +1,5 @@
 # RapidIoC
-RapidIoC is light DI framework written in C#. It's goal is to improve code quality, provide better encapsulation and decoupling, and in general provide a skeleton for building complex projects. It is heavily inspired by [StrangeIoC](https://github.com/strangeioc/strangeioc), but hopefully improves on certain aspects.
+RapidIoC is light DI framework written in C#. It's goal is to improve code quality, provide better encapsulation and decoupling, and in general provide a skeleton for building complex projects. It is inspired by [StrangeIoC](https://github.com/strangeioc/strangeioc), but hopefully improves on certain aspects.
 
 The framework is written with game developers in mind, specifically Unity3D, see [RapidIoC Unity3D integration](https://github.com/cpgames/RapidIoCUnity) (although can probably be used for other applications as well). It tries to accomplish the following:
 * Fast integration and development (hence name "Rapid"). Given the limited time game programmers have to refactor and clean their code and the need to prototype and iterate fast, RapidIoC provides quick and easy solutions for both prototyping, and development.
