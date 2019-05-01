@@ -9,4 +9,4 @@ The framework is written with game developers in mind, specifically Unity3D, see
 
 [RapidIoC Documentation](https://github.com/cpgames/RapidIoC/wiki)
 
-[Doxygen Docs](https://cpgames.github.io/RapidIoC/html/index.html)
+[Doxygen Docs](https://cpgames.github.io/RapidIoC_dox/html/index.html)
