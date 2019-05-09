@@ -1,5 +1,5 @@
 # RapidIoC
-RapidIoC is a lightweight Inversion of Control/Dependency Injection framework written in C#. It helps improve code quality, simplify code maintenance and extendibility. Additionally, its provides a solid foundation for architecting more complex projects. The framework is written with game developers in mind, specifically Unity3D, see [RapidIoC for Unity](https://github.com/cpgames/RapidIoCUnity) (although can easily be used for other applications as well).
+RapidIoC is a lightweight Inversion of Control/Dependency Injection framework written in C#. It helps improve code quality, simplify code maintenance and extendibility. Additionally, its provides a solid foundation for architecting complex projects. The framework is written with game developers in mind, specifically Unity3D, see [RapidIoC for Unity](https://github.com/cpgames/RapidIoCUnity) (although can easily be used for other applications as well).
 
 While developing RapidIoC, we've tried to accomplish the following:
 * **Fast integration and development** (hence name "Rapid"). Given the limited time game programmers have to refactor and clean their code and the need to prototype and iterate fast, RapidIoC provides quick and easy solutions for both prototyping, and development.
