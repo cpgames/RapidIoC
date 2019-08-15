@@ -12,5 +12,3 @@ What is Inversion of Control and Dependency Injection, and how it can benefit yo
 RapidIoC is inspired by [StrangeIoC](http://strangeioc.github.io/strangeioc/exec.html) (they also have good explanation of IoC concepts).
 
 [RapidIoC Documentation](https://github.com/cpgames/RapidIoC/wiki)
-
-[Doxygen Docs](https://cpgames.github.io/RapidIoC_dox/html/index.html)
