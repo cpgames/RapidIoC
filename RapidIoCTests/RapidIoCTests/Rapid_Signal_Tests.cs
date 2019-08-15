@@ -200,6 +200,25 @@ namespace cpGames.core.RapidIoC.Tests
             Assert.AreEqual(b, 2);
             Assert.AreEqual(c, 3);
         }
+
+        [TestMethod]
+        public void Command_Connect_Test()
+        {
+            var commandData = new CommandData();
+            Rapid.Bind(Globals.INJECT_KEY1, commandData, Globals.TEST_CONTEXT_NAME);
+            var signal = new TestSignalD();
+            signal.AddCommand<TestCommandViewD>();
+            Assert.AreEqual(commandData.set, false);
+            signal.ClearCommands();
+
+            commandData.n = 1;
+            signal.AddCommand<TestCommandViewD>();
+            Assert.AreEqual(commandData.set, true);
+
+            Rapid.Unbind(Globals.INJECT_KEY1, Globals.TEST_CONTEXT_NAME);
+            signal.ClearCommands();
+            Assert.AreEqual(Rapid.Contexts.Count, 0);
+        }
         #endregion
     }
 }

@@ -1,6 +1,0 @@
-[submodule "CpReflection"]
-	path = CpReflection
-	url = https://github.com/cpgames/CpReflection.git
-[submodule "CpCodeExtensions"]
-	path = CpCodeExtensions
-	url = https://github.com/cpgames/CpCodeExtensions.git

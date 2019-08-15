@@ -49,25 +49,15 @@ namespace cpGames.core.RapidIoC
             Unbind(typeof(T), contextName);
         }
 
-        public static IBinding GetBinding(object keyData, string contextName = null)
+        public static object GetBindingValue(object keyData, string contextName = null)
         {
             if (!Contexts.FindContext(contextName, out var context, out var errorMessage) ||
                 !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
-                !context.Bind(key, out var binding, out errorMessage))
+                !context.FindBinding(key, false, out var binding, out errorMessage))
             {
                 throw new Exception(errorMessage);
             }
-            return binding;
-        }
-
-        public static IBinding GetBinding<T>(string contextName = null)
-        {
-            return GetBinding(typeof(T), contextName);
-        }
-
-        public static object GetBindingValue(object keyData, string contextName = null)
-        {
-            return GetBinding(keyData, contextName).Value;
+            return binding.Value;
         }
 
         public static T GetBindingValue<T>(string contextName = null)

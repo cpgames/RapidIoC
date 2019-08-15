@@ -5,4 +5,6 @@
     public class TestSignalB : Signal<int> { }
 
     public class TestSignalC : Signal<int, string> { }
+
+    public class TestSignalD : Signal<bool> { }
 }
