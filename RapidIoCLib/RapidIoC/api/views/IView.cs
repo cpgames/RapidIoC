@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using cpGames.core.RapidIoC.impl;
-
-namespace cpGames.core.RapidIoC
+﻿namespace cpGames.core.RapidIoC
 {
     /// <summary>
     /// Views are registered with Contexts.
@@ -12,11 +9,6 @@ namespace cpGames.core.RapidIoC
     {
         #region Properties
         string ContextName { get; }
-
-        /// <summary>
-        /// Automatically mapped signals to listeners. Used for internal use.
-        /// </summary>
-        List<ISignalMapping> SignalMappings { get; }
         #endregion
 
         #region Methods
@@ -24,7 +16,7 @@ namespace cpGames.core.RapidIoC
         /// Register view with context, call this whenever view is created or initialized.
         /// </summary>
         void RegisterWithContext();
-        
+
         /// <summary>
         /// Unregister view from context, call this whenever view is destroyed.
         /// </summary>
