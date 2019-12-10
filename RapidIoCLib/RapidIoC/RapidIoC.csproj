@@ -60,7 +60,12 @@
     <Compile Include="api\instantiators\IInstantiator.cs" />
     <Compile Include="api\commands\Command.cs" />
     <Compile Include="api\signals\BaseSignal.cs" />
+    <Compile Include="api\states\IContext.cs" />
+    <Compile Include="api\states\IState.cs" />
+    <Compile Include="api\states\StateContextMethods.cs" />
+    <Compile Include="api\states\StateContextModelView.cs" />
     <Compile Include="api\views\IView.cs" />
+    <Compile Include="api\views\ModelView.cs" />
     <Compile Include="impl\keys\UidKey.cs" />
     <Compile Include="impl\signals\SignalMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,11 +86,19 @@
     <Compile Include="api\views\View.cs" />
     <Compile Include="impl\views\ViewCollection.cs" />
     <Compile Include="impl\views\IViewCollection.cs" />
-    <Compile Include="utils\ReflectionCommon.cs" />
-    <Compile Include="utils\UidGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\zLib\zLib\zLib.csproj">
+      <Project>{C32DB84E-82B7-4CED-A37A-3B84F70C08EB}</Project>
+      <Name>zLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy RapidIoC.dll %25PA_ROOT%25\ClientA\Assets\_ProjectA\_lib\ /Y
+copy RapidIoC.pdb %25PA_ROOT%25\ClientA\Assets\_ProjectA\_lib\ /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>
