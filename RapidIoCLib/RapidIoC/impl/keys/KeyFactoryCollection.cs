@@ -15,7 +15,8 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (!AddFactory(new NameKeyFactory(), out var errorMessage) ||
                 !AddFactory(new TypeKeyFactory(), out errorMessage) ||
-                !AddFactory(new UidKeyFactory(), out errorMessage))
+                !AddFactory(new UidKeyFactory(), out errorMessage) ||
+                !AddFactory(new InstanceKeyFactory(), out errorMessage))
             {
                 throw new Exception(errorMessage);
             }

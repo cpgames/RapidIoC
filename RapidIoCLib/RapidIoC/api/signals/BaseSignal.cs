@@ -102,7 +102,7 @@ namespace cpGames.core.RapidIoC
         protected IKey AddCommandInternal<TCommand>(bool once) where TCommand : IBaseCommand
         {
             if (!Rapid.KeyFactoryCollection.Create(typeof(TCommand), out var key, out var errorMessage) ||
-                !AddCommandInternal(key, once, out errorMessage))
+                !AddCommandInternal((IBaseCommand)Activator.CreateInstance(((TypeKey)key).Type), key, once, out errorMessage))
             {
                 throw new Exception(errorMessage);
             }
@@ -130,28 +130,12 @@ namespace cpGames.core.RapidIoC
             {
                 _commandsToRemove.Add(key);
             }
-            var commands = _dispatching ? _commandsToAdd : _commands;
-            commands.Add(key, command);
-            errorMessage = string.Empty;
-            return true;
-        }
-
-        private bool AddCommandInternal(IKey key, bool once, out string errorMessage)
-        {
-            if (!ValidateKey(key, out errorMessage))
-            {
-                return false;
-            }
-            if (once)
-            {
-                _commandsToRemove.Add(key);
-            }
             if (_commandsToAdd.ContainsKey(key))
             {
                 errorMessage = string.Format("Command with key <{0}> is already scheduled to add.", key);
                 return false;
             }
-            var command = (IBaseCommand)Activator.CreateInstance(((TypeKey)key).Type);
+
             var commands = _dispatching ? _commandsToAdd : _commands;
             commands.Add(key, command);
             command.Connect();

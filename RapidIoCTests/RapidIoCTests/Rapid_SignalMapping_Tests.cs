@@ -13,10 +13,12 @@ namespace cpGames.core.RapidIoC.Tests
             Rapid.Bind(Globals.INJECT_KEY1, signal, Globals.TEST_CONTEXT_NAME);
             var view = new TestViewWithSignal();
             view.RegisterWithContext();
+            Assert.AreEqual(signal.CommandCount, 1);
             signal.Dispatch(5);
             Assert.AreEqual(view.n, 5);
             Rapid.Unbind(Globals.INJECT_KEY1, Globals.TEST_CONTEXT_NAME);
             view.UnregisterFromContext();
+            Assert.AreEqual(signal.CommandCount, 0);
             Assert.AreEqual(Rapid.Contexts.Count, 0);
         }
 

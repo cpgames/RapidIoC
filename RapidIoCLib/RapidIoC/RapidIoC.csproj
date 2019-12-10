@@ -66,8 +66,9 @@
     <Compile Include="api\states\StateContextModelView.cs" />
     <Compile Include="api\views\IView.cs" />
     <Compile Include="api\views\ModelView.cs" />
+    <Compile Include="impl\keys\InstanceKey.cs" />
     <Compile Include="impl\keys\UidKey.cs" />
-    <Compile Include="impl\signals\SignalMapping.cs" />
+    <Compile Include="impl\views\ViewExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="api\Attributes.cs" />
     <Compile Include="impl\bindings\BInding.cs" />

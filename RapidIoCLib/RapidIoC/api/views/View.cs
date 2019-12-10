@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using cpGames.core.RapidIoC.impl;
-
-namespace cpGames.core.RapidIoC
+﻿namespace cpGames.core.RapidIoC
 {
     /// <inheritdoc cref="IView" />
     /// <summary>
@@ -11,7 +8,6 @@ namespace cpGames.core.RapidIoC
     {
         #region IView Members
         public abstract string ContextName { get; }
-        public List<ISignalMapping> SignalMappings { get; } = new List<ISignalMapping>();
 
         public void RegisterWithContext()
         {

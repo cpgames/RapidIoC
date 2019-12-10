@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using cpGames.core.CpReflection;
 
 namespace cpGames.core.RapidIoC.impl
 {
@@ -31,10 +30,9 @@ namespace cpGames.core.RapidIoC.impl
                 return false;
             }
 
-            foreach (var property in view.GetType().GetProperties().Where(x => x.HasAttribute<InjectAttribute>()))
+            foreach (var property in view.GetInjectedProperties())
             {
-                var keyData = property.GetAttribute<InjectAttribute>().Key ?? property.PropertyType;
-                if (!Rapid.KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
+                if (!property.GetInjectionKey(out var key, out errorMessage) ||
                     !Bind(key, out var binding, out errorMessage) ||
                     !binding.Subscribe(view, property, out errorMessage))
                 {
@@ -52,10 +50,9 @@ namespace cpGames.core.RapidIoC.impl
                 return false;
             }
 
-            foreach (var property in view.GetType().GetProperties().Where(x => x.HasAttribute<InjectAttribute>()))
+            foreach (var property in view.GetInjectedProperties())
             {
-                var keyData = property.GetAttribute<InjectAttribute>().Key ?? property.PropertyType;
-                if (!Rapid.KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
+                if (!property.GetInjectionKey(out var key, out errorMessage) ||
                     !FindBinding(key, true, out var binding, out errorMessage) ||
                     !binding.Unsubscribe(view, out errorMessage))
                 {

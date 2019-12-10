@@ -108,11 +108,8 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (property.PropertyType.IsSubclassOf(typeof(BaseSignal)))
             {
-                var value = property.GetValue(view, null);
-                if (value != null)
-                {
-                    view.UnregisterSignalMap(property);
-                }
+                var value = (BaseSignal)property.GetValue(view, null);
+                value?.RemoveCommand(view);
             }
         }
 
@@ -120,7 +117,7 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (property.PropertyType.IsSubclassOf(typeof(BaseSignal)) && Value != null)
             {
-                view.RegisterSignalMap(property);
+                view.ConnectSignalProperty(property);
             }
         }
         #endregion
