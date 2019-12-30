@@ -25,4 +25,7 @@ namespace cpGames.core.RapidIoC
         }
         #endregion
     }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class IgnoreSignalMapAttribute : Attribute { }
 }

@@ -108,8 +108,11 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (property.PropertyType.IsSubclassOf(typeof(BaseSignal)))
             {
-                var value = (BaseSignal)property.GetValue(view, null);
-                value?.RemoveCommand(view);
+                var signal = (BaseSignal)property.GetValue(view, null);
+                if (signal != null && signal.HasKey(view))
+                {
+                    signal.RemoveCommand(view);
+                }
             }
         }
 

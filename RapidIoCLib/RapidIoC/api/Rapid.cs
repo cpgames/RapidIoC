@@ -29,9 +29,11 @@ namespace cpGames.core.RapidIoC
             Bind(typeof(T), value, contextName);
         }
 
-        public static void Bind<T>(string contextName = null)
+        public static T Bind<T>(string contextName = null)
         {
-            Bind<T>(new DefaultInstantiator<T>().Create(), contextName);
+            var value = new DefaultInstantiator<T>().Create();
+            Bind<T>(value, contextName);
+            return (T)value;
         }
 
         public static void Unbind(object keyData, string contextName = null)

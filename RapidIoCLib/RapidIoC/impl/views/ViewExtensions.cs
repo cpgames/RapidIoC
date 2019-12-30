@@ -6,8 +6,6 @@ using cpGames.core.CpReflection;
 
 namespace cpGames.core.RapidIoC.impl
 {
-    internal class IgnoreSignalMapAttribute : Attribute { }
-
     internal static class ViewExtensions
     {
         #region Fields

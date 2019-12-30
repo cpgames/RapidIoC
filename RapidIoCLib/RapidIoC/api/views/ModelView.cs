@@ -1,6 +1,6 @@
 ﻿namespace cpGames.core.RapidIoC
 {
-    public abstract class ModelView<TModel>
+    public abstract class ModelView<TModel> : View, IModelView
     {
         #region Fields
         protected TModel _model;
@@ -13,7 +13,7 @@
             set
             {
                 _model = value;
-                UpdateModel();
+                UpdateModelInternal();
             }
         }
         #endregion
@@ -27,7 +27,18 @@
         }
         #endregion
 
+        #region IModelView Members
+        public bool HasModel => _model != null;
+        public Signal ModelSetSignal { get; } = new Signal();
+        #endregion
+
         #region Methods
+        private void UpdateModelInternal()
+        {
+            UpdateModel();
+            ModelSetSignal.Dispatch();
+        }
+
         protected virtual void UpdateModel() { }
         #endregion
     }
