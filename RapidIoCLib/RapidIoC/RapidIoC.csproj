@@ -68,6 +68,8 @@
     <Compile Include="api\views\IView.cs" />
     <Compile Include="api\views\ModelView.cs" />
     <Compile Include="impl\keys\InstanceKey.cs" />
+    <Compile Include="impl\keys\EnumKey.cs" />
+    <Compile Include="impl\keys\ByteKey.cs" />
     <Compile Include="impl\keys\UidKey.cs" />
     <Compile Include="impl\views\ViewExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
