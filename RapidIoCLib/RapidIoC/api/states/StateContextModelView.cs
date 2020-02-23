@@ -1,7 +1,7 @@
 ﻿namespace cpGames.core.RapidIoC
 {
-    public class ContextModelView<T_MODEL, T_STATE> :
-        ModelView<T_MODEL>,
+    public class ContextView<T_MODEL, T_STATE> :
+        View<T_MODEL>,
         IContext<T_STATE> where T_STATE : IStateBase
     {
         #region Fields
@@ -43,8 +43,8 @@
         #endregion
     }
 
-    public class StateModelView<T_MODEL, T_CONTEXT> :
-        ModelView<T_MODEL>, IState<T_CONTEXT>
+    public class StateView<T_MODEL, T_CONTEXT> :
+        View<T_MODEL>, IState<T_CONTEXT>
         where T_CONTEXT : IContextBase
     {
         #region Fields
@@ -86,8 +86,8 @@
         #endregion
     }
 
-    public class StateContextModelView<T_MODEL, T_STATE, T_CONTEXT> :
-        ContextModelView<T_MODEL, T_STATE>, IState<T_CONTEXT>
+    public class StateContextView<T_MODEL, T_STATE, T_CONTEXT> :
+        ContextView<T_MODEL, T_STATE>, IState<T_CONTEXT>
         where T_STATE : IStateBase
         where T_CONTEXT : IContextBase
     {

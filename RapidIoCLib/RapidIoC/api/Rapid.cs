@@ -24,16 +24,23 @@ namespace cpGames.core.RapidIoC
             }
         }
 
-        public static void Bind<T>(object value, string contextName = null)
+        public static void Bind<TKeyData>(object value, string contextName = null)
         {
-            Bind(typeof(T), value, contextName);
+            Bind(typeof(TKeyData), value, contextName);
         }
 
-        public static T Bind<T>(string contextName = null)
+        public static TKeyDataValue Bind<TKeyDataValue>(string contextName = null)
         {
-            var value = new DefaultInstantiator<T>().Create();
-            Bind<T>(value, contextName);
-            return (T)value;
+            var value = new DefaultInstantiator<TKeyDataValue>().Create();
+            Bind<TKeyDataValue>(value, contextName);
+            return (TKeyDataValue)value;
+        }
+
+        public static TValue Bind<TKeyDataInterface, TValue>(string contextName = null) where TValue : TKeyDataInterface
+        {
+            var value = new DefaultInstantiator<TValue>().Create();
+            Bind<TKeyDataInterface>(value, contextName);
+            return (TValue)value;
         }
 
         public static void Unbind(object keyData, string contextName = null)
@@ -70,6 +77,31 @@ namespace cpGames.core.RapidIoC
         public static object GetBindingValue(object keyData, string contextName = null)
         {
             return GetBinding(keyData, contextName).Value;
+        }
+
+        public static bool TryGetBindingValue<TValue>(object keyData, out TValue value, out string errorMessage, string contextName = null)
+        {
+            if (!Contexts.FindContext(contextName, out var context, out errorMessage) ||
+                !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
+                !context.FindBinding(key, false, out var binding, out errorMessage))
+            {
+                value = default;
+                return false;
+            }
+            if (binding.Value is TValue)
+            {
+                value = (TValue)binding.Value;
+                return true;
+            }
+            value = default;
+            errorMessage = string.Format("Binding with key <{0}> exists, but of wrong type: <{1}>. <{2} expected.",
+                keyData, binding.Value.GetType().Name, typeof(TValue).Name);
+            return false;
+        }
+
+        public static T GetBindingValue<T>(object keyData, string contextName = null)
+        {
+            return (T)GetBindingValue(keyData, contextName);
         }
 
         public static T GetBindingValue<T>(string contextName = null)

@@ -23,4 +23,13 @@
         void UnregisterFromContext();
         #endregion
     }
+
+    public interface IView<TModel> : IView
+    {
+        #region Properties
+        TModel Model { get; set; }
+        bool HasModel { get; }
+        Signal ModelSetSignal { get; }
+        #endregion
+    }
 }

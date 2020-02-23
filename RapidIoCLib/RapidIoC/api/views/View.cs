@@ -20,4 +20,38 @@
         }
         #endregion
     }
+
+    public abstract class View<TModel> : View, IView<TModel>
+    {
+        #region Fields
+        protected TModel _model;
+        #endregion
+
+        #region Properties
+        public virtual TModel Model
+        {
+            get => _model;
+            set
+            {
+                _model = value;
+                UpdateModelInternal();
+            }
+        }
+        #endregion
+
+        #region IView Members
+        public bool HasModel => _model != null;
+        public Signal ModelSetSignal { get; } = new Signal();
+        #endregion
+
+        #region Methods
+        private void UpdateModelInternal()
+        {
+            UpdateModel();
+            ModelSetSignal.Dispatch();
+        }
+
+        protected virtual void UpdateModel() { }
+        #endregion
+    }
 }
