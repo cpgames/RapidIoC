@@ -7,6 +7,7 @@ namespace cpGames.core.RapidIoC
         #region Fields
         private bool _executing;
         internal bool _retain;
+        protected internal readonly object _syncRoot = new object();
         #endregion
 
         #region IBaseCommand Members
@@ -46,7 +47,10 @@ namespace cpGames.core.RapidIoC
 
         protected void Retain()
         {
-            _retain = true;
+            lock (_syncRoot)
+            {
+                _retain = true;
+            }
         }
         #endregion
     }
@@ -56,11 +60,14 @@ namespace cpGames.core.RapidIoC
         #region ICommand Members
         public void Execute()
         {
-            BeginExecute();
-            ExecuteInternal();
-            if (!_retain)
+            lock (_syncRoot)
             {
-                EndExecute();
+                BeginExecute();
+                ExecuteInternal();
+                if (!_retain)
+                {
+                    EndExecute();
+                }
             }
         }
         #endregion
@@ -75,12 +82,15 @@ namespace cpGames.core.RapidIoC
         #region ICommand<TModel> Members
         public void Execute(TModel model)
         {
-            BeginExecute();
-            Model = model;
-            ExecuteInternal();
-            if (!_retain)
+            lock (_syncRoot)
             {
-                EndExecute();
+                BeginExecute();
+                Model = model;
+                ExecuteInternal();
+                if (!_retain)
+                {
+                    EndExecute();
+                }
             }
         }
         #endregion
@@ -96,13 +106,16 @@ namespace cpGames.core.RapidIoC
         #region ICommand<TModel1,TModel2> Members
         public void Execute(TModel1 model1, TModel2 model2)
         {
-            BeginExecute();
-            Model1 = model1;
-            Model2 = model2;
-            ExecuteInternal();
-            if (!_retain)
+            lock (_syncRoot)
             {
-                EndExecute();
+                BeginExecute();
+                Model1 = model1;
+                Model2 = model2;
+                ExecuteInternal();
+                if (!_retain)
+                {
+                    EndExecute();
+                }
             }
         }
         #endregion

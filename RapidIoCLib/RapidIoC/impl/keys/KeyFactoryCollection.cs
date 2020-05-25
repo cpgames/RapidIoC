@@ -34,11 +34,18 @@ namespace cpGames.core.RapidIoC.impl
                 errorMessage = string.Empty;
                 return true;
             }
-            foreach (var factory in _factories)
+
+            lock (_factories)
             {
-                if (factory.Create(keyData, out key, out errorMessage))
+                foreach (var factory in _factories)
                 {
-                    return true;
+                    lock (factory)
+                    {
+                        if (factory.Create(keyData, out key, out errorMessage))
+                        {
+                            return true;
+                        }
+                    }
                 }
             }
             key = null;
@@ -48,12 +55,15 @@ namespace cpGames.core.RapidIoC.impl
 
         public bool AddFactory(IKeyFactory factory, out string errorMessage)
         {
-            if (_factories.Any(x => x.GetType() == factory.GetType()))
+            lock (_factories)
             {
-                errorMessage = string.Format("Factory of type <{0}> already exists.", factory.GetType().Name);
-                return false;
+                if (_factories.Any(x => x.GetType() == factory.GetType()))
+                {
+                    errorMessage = string.Format("Factory of type <{0}> already exists.", factory.GetType().Name);
+                    return false;
+                }
+                _factories.Add(factory);
             }
-            _factories.Add(factory);
             errorMessage = string.Empty;
             return true;
         }

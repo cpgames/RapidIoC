@@ -56,12 +56,15 @@ namespace cpGames.core.RapidIoC
         /// </summary>
         public void Dispatch()
         {
-            DispatchBegin();
-            foreach (var command in Commands.OfType<ICommand>())
+            lock (_syncRoot)
             {
-                command.Execute();
+                DispatchBegin();
+                foreach (var command in Commands.OfType<ICommand>())
+                {
+                    command.Execute();
+                }
+                DispatchEnd();
             }
-            DispatchEnd();
         }
         #endregion
     }
@@ -119,12 +122,15 @@ namespace cpGames.core.RapidIoC
         /// <param name="type1">First parameter data to pass to commands</param>
         public void Dispatch(T type1)
         {
-            DispatchBegin();
-            foreach (var command in Commands.OfType<ICommand<T>>())
+            lock (_syncRoot)
             {
-                command.Execute(type1);
+                DispatchBegin();
+                foreach (var command in Commands.OfType<ICommand<T>>())
+                {
+                    command.Execute(type1);
+                }
+                DispatchEnd();
             }
-            DispatchEnd();
         }
         #endregion
     }
@@ -184,12 +190,15 @@ namespace cpGames.core.RapidIoC
         /// <param name="type2">Second parameter data to pass to commands</param>
         public void Dispatch(T type1, U type2)
         {
-            DispatchBegin();
-            foreach (var command in Commands.OfType<ICommand<T, U>>())
+            lock (_syncRoot)
             {
-                command.Execute(type1, type2);
+                DispatchBegin();
+                foreach (var command in Commands.OfType<ICommand<T, U>>())
+                {
+                    command.Execute(type1, type2);
+                }
+                DispatchEnd();
             }
-            DispatchEnd();
         }
         #endregion
     }

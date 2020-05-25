@@ -17,6 +17,7 @@ namespace cpGames.core.RapidIoC
         private readonly List<IKey> _commandsToRemove = new List<IKey>();
         private readonly UidGenerator _uidGenerator = new UidGenerator();
         private bool _dispatching;
+        protected internal readonly object _syncRoot = new object();
         #endregion
 
         #region Properties
@@ -27,7 +28,10 @@ namespace cpGames.core.RapidIoC
         #region Methods
         public bool HasKey(object keyData)
         {
-            return Rapid.KeyFactoryCollection.Create(keyData, out var key, out _) && (_commands.ContainsKey(key) || _commandsToAdd.ContainsKey(key));
+            lock (_syncRoot)
+            {
+                return Rapid.KeyFactoryCollection.Create(keyData, out var key, out _) && (_commands.ContainsKey(key) || _commandsToAdd.ContainsKey(key));
+            }
         }
 
         public void RemoveCommand(object keyData)
@@ -46,59 +50,68 @@ namespace cpGames.core.RapidIoC
 
         protected bool RemoveCommandInternal(IKey key, out string errorMessage)
         {
-            if (!_commands.TryGetValue(key, out var command))
+            lock (_syncRoot)
             {
-                errorMessage = string.Format("Command with key <{0}> not found.", key);
-                return false;
-            }
-            if (_dispatching)
-            {
-                if (_commandsToRemove.Contains(key))
+                if (!_commands.TryGetValue(key, out var command))
                 {
-                    errorMessage = string.Format("Command with key <{0}> is already scheduled for removal.", key);
+                    errorMessage = string.Format("Command with key <{0}> not found.", key);
                     return false;
                 }
-                _commandsToRemove.Add(key);
-                errorMessage = string.Empty;
-                return true;
+                if (_dispatching)
+                {
+                    if (_commandsToRemove.Contains(key))
+                    {
+                        errorMessage = string.Format("Command with key <{0}> is already scheduled for removal.", key);
+                        return false;
+                    }
+                    _commandsToRemove.Add(key);
+                    errorMessage = string.Empty;
+                    return true;
+                }
+                command.Release();
+                if (key is UidKey uidKey)
+                {
+                    _uidGenerator.RemoveUid(uidKey.Uid);
+                }
+                _commands.Remove(key);
             }
-            command.Release();
-            if (key is UidKey uidKey)
-            {
-                _uidGenerator.RemoveUid(uidKey.Uid);
-            }
-            _commands.Remove(key);
             errorMessage = string.Empty;
             return true;
         }
 
         public void ClearCommands()
         {
-            while (_commands.Count > 0)
+            lock (_syncRoot)
             {
-                if (!RemoveCommandInternal(_commands.Keys.First(), out var errorMessage))
+                while (_commands.Count > 0)
                 {
-                    throw new Exception(errorMessage);
+                    if (!RemoveCommandInternal(_commands.Keys.First(), out var errorMessage))
+                    {
+                        throw new Exception(errorMessage);
+                    }
                 }
             }
         }
 
         private bool ValidateKey(IKey key, out string errorMessage)
         {
-            if (_commands.ContainsKey(key))
+            lock (_syncRoot)
             {
-                errorMessage = string.Format("Command with key <{0}> already added.", key);
-                return false;
-            }
-            if (_commandsToRemove.Contains(key))
-            {
-                errorMessage = string.Format("Command with key <{0}> is already scheduled for removal.", key);
-                return false;
-            }
-            if (_commandsToAdd.ContainsKey(key))
-            {
-                errorMessage = string.Format("Command with key <{0}> is already scheduled to add.", key);
-                return false;
+                if (_commands.ContainsKey(key))
+                {
+                    errorMessage = string.Format("Command with key <{0}> already added.", key);
+                    return false;
+                }
+                if (_commandsToRemove.Contains(key))
+                {
+                    errorMessage = string.Format("Command with key <{0}> is already scheduled for removal.", key);
+                    return false;
+                }
+                if (_commandsToAdd.ContainsKey(key))
+                {
+                    errorMessage = string.Format("Command with key <{0}> is already scheduled to add.", key);
+                    return false;
+                }
             }
             errorMessage = string.Empty;
             return true;
@@ -127,23 +140,26 @@ namespace cpGames.core.RapidIoC
 
         private bool AddCommandInternal(IBaseCommand command, IKey key, bool once, out string errorMessage)
         {
-            if (!ValidateKey(key, out errorMessage))
+            lock (_syncRoot)
             {
-                return false;
-            }
-            if (once)
-            {
-                _commandsToRemove.Add(key);
-            }
-            if (_commandsToAdd.ContainsKey(key))
-            {
-                errorMessage = string.Format("Command with key <{0}> is already scheduled to add.", key);
-                return false;
-            }
+                if (!ValidateKey(key, out errorMessage))
+                {
+                    return false;
+                }
+                if (once)
+                {
+                    _commandsToRemove.Add(key);
+                }
+                if (_commandsToAdd.ContainsKey(key))
+                {
+                    errorMessage = string.Format("Command with key <{0}> is already scheduled to add.", key);
+                    return false;
+                }
 
-            var commands = _dispatching ? _commandsToAdd : _commands;
-            commands.Add(key, command);
-            command.Connect();
+                var commands = _dispatching ? _commandsToAdd : _commands;
+                commands.Add(key, command);
+                command.Connect();
+            }
             errorMessage = string.Empty;
             return true;
         }
@@ -155,21 +171,23 @@ namespace cpGames.core.RapidIoC
 
         protected void DispatchEnd()
         {
-            foreach (var key in _commandsToRemove)
+            lock (_syncRoot)
             {
-                var command = _commands[key];
-                command.Release();
-                _commands.Remove(key);
-            }
-            _commandsToRemove.Clear();
+                foreach (var key in _commandsToRemove)
+                {
+                    var command = _commands[key];
+                    command.Release();
+                    _commands.Remove(key);
+                }
+                _commandsToRemove.Clear();
 
-            foreach (var kvp in _commandsToAdd)
-            {
-                _commands.Add(kvp.Key, kvp.Value);
+                foreach (var kvp in _commandsToAdd)
+                {
+                    _commands.Add(kvp.Key, kvp.Value);
+                }
+                _commandsToAdd.Clear();
+                _dispatching = false;
             }
-            _commandsToAdd.Clear();
-
-            _dispatching = false;
         }
         #endregion
     }

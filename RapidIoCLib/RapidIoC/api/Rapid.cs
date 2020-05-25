@@ -8,6 +8,8 @@ namespace cpGames.core.RapidIoC
     /// </summary>
     public static class Rapid
     {
+        private static readonly object _syncRoot = new object();
+
         #region Properties
         public static IKeyFactoryCollection KeyFactoryCollection { get; } = new KeyFactoryCollection();
         public static IContextCollection Contexts { get; } = new ContextCollection();
@@ -16,11 +18,14 @@ namespace cpGames.core.RapidIoC
         #region Methods
         public static void Bind(object keyData, object value, string contextName = null)
         {
-            if (!Contexts.FindOrCreateContext(contextName, out var context, out var errorMessage) ||
-                !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
-                !context.BindValue(key, value, out errorMessage))
+            lock (_syncRoot)
             {
-                throw new Exception(errorMessage);
+                if (!Contexts.FindOrCreateContext(contextName, out var context, out var errorMessage) ||
+                    !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
+                    !context.BindValue(key, value, out errorMessage))
+                {
+                    throw new Exception(errorMessage);
+                }
             }
         }
 
@@ -45,11 +50,14 @@ namespace cpGames.core.RapidIoC
 
         public static void Unbind(object keyData, string contextName = null)
         {
-            if (!Contexts.FindContext(contextName, out var context, out var errorMessage) ||
+            lock (_syncRoot)
+            {
+                if (!Contexts.FindContext(contextName, out var context, out var errorMessage) ||
                 !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
                 !context.Unbind(key, out errorMessage))
-            {
-                throw new Exception(errorMessage);
+                {
+                    throw new Exception(errorMessage);
+                }
             }
         }
 
@@ -60,13 +68,16 @@ namespace cpGames.core.RapidIoC
 
         public static IBinding GetBinding(object keyData, string contextName = null)
         {
-            if (!Contexts.FindContext(contextName, out var context, out var errorMessage) ||
+            lock (_syncRoot)
+            {
+                if (!Contexts.FindContext(contextName, out var context, out var errorMessage) ||
                 !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
                 !context.Bind(key, out var binding, out errorMessage))
-            {
-                throw new Exception(errorMessage);
+                {
+                    throw new Exception(errorMessage);
+                }
+                return binding;
             }
-            return binding;
         }
 
         public static IBinding GetBinding<T>(string contextName = null)
@@ -81,22 +92,25 @@ namespace cpGames.core.RapidIoC
 
         public static bool TryGetBindingValue<TValue>(object keyData, out TValue value, out string errorMessage, string contextName = null)
         {
-            if (!Contexts.FindContext(contextName, out var context, out errorMessage) ||
+            lock (_syncRoot)
+            {
+                if (!Contexts.FindContext(contextName, out var context, out errorMessage) ||
                 !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
                 !context.FindBinding(key, false, out var binding, out errorMessage))
-            {
+                {
+                    value = default;
+                    return false;
+                }
+                if (binding.Value is TValue)
+                {
+                    value = (TValue)binding.Value;
+                    return true;
+                }
                 value = default;
+                errorMessage = string.Format("Binding with key <{0}> exists, but of wrong type: <{1}>. <{2} expected.",
+                    keyData, binding.Value.GetType().Name, typeof(TValue).Name);
                 return false;
             }
-            if (binding.Value is TValue)
-            {
-                value = (TValue)binding.Value;
-                return true;
-            }
-            value = default;
-            errorMessage = string.Format("Binding with key <{0}> exists, but of wrong type: <{1}>. <{2} expected.",
-                keyData, binding.Value.GetType().Name, typeof(TValue).Name);
-            return false;
         }
 
         public static T GetBindingValue<T>(object keyData, string contextName = null)
@@ -111,19 +125,25 @@ namespace cpGames.core.RapidIoC
 
         public static void RegisterView(IView view)
         {
-            if (!Contexts.FindOrCreateContext(view.ContextName, out var context, out var errorMessage) ||
-                !context.RegisterView(view, out errorMessage))
+            lock (_syncRoot)
             {
-                throw new Exception(errorMessage);
+                if (!Contexts.FindOrCreateContext(view.ContextName, out var context, out var errorMessage) ||
+                !context.RegisterView(view, out errorMessage))
+                {
+                    throw new Exception(errorMessage);
+                }
             }
         }
 
         public static void UnregisterView(IView view)
         {
-            if (!Contexts.FindContext(view.ContextName, out var context, out var errorMessage) ||
-                !context.UnregisterView(view, out errorMessage))
+            lock (_syncRoot)
             {
-                throw new Exception(errorMessage);
+                if (!Contexts.FindContext(view.ContextName, out var context, out var errorMessage) ||
+                !context.UnregisterView(view, out errorMessage))
+                {
+                    throw new Exception(errorMessage);
+                }
             }
         }
         #endregion
