@@ -18,6 +18,7 @@ namespace cpGames.core.RapidIoC.impl
                 !AddFactory(new UidKeyFactory(), out errorMessage) ||
                 !AddFactory(new ByteKeyFactory(), out errorMessage) ||
                 !AddFactory(new EnumKeyFactory(), out errorMessage) ||
+                !AddFactory(new CompositeKeyFactory(), out errorMessage) ||
                 !AddFactory(new InstanceKeyFactory(), out errorMessage))
             {
                 throw new Exception(errorMessage);
