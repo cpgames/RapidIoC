@@ -34,10 +34,10 @@ namespace cpGames.core.RapidIoC
             }
         }
 
-        public void RemoveCommand(object keyData)
+        public void RemoveCommand(object keyData, bool silent = false)
         {
             if (!Rapid.KeyFactoryCollection.Create(keyData, out var key, out var errorMessage) ||
-                !RemoveCommandInternal(key, out errorMessage))
+                !RemoveCommandInternal(key, silent, out errorMessage))
             {
                 throw new Exception(errorMessage);
             }
@@ -48,12 +48,17 @@ namespace cpGames.core.RapidIoC
             RemoveCommand(typeof(TCommand));
         }
 
-        protected bool RemoveCommandInternal(IKey key, out string errorMessage)
+        protected bool RemoveCommandInternal(IKey key, bool silent, out string errorMessage)
         {
             lock (_syncRoot)
             {
                 if (!_commands.TryGetValue(key, out var command))
                 {
+                    if (silent)
+                    {
+                        errorMessage = string.Empty;
+                        return true;
+                    }
                     errorMessage = string.Format("Command with key <{0}> not found.", key);
                     return false;
                 }
@@ -61,6 +66,11 @@ namespace cpGames.core.RapidIoC
                 {
                     if (_commandsToRemove.Contains(key))
                     {
+                        if (silent)
+                        {
+                            errorMessage = string.Empty;
+                            return true;
+                        }
                         errorMessage = string.Format("Command with key <{0}> is already scheduled for removal.", key);
                         return false;
                     }
@@ -85,7 +95,7 @@ namespace cpGames.core.RapidIoC
             {
                 while (_commands.Count > 0)
                 {
-                    if (!RemoveCommandInternal(_commands.Keys.First(), out var errorMessage))
+                    if (!RemoveCommandInternal(_commands.Keys.First(), false, out var errorMessage))
                     {
                         throw new Exception(errorMessage);
                     }
