@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using cpGames.core.RapidIoC.impl;
 
 namespace cpGames.core.RapidIoC
@@ -59,9 +58,13 @@ namespace cpGames.core.RapidIoC
             lock (_syncRoot)
             {
                 DispatchBegin();
-                foreach (var command in Commands.OfType<ICommand>())
+                foreach (var kvp in Commands)
                 {
-                    command.Execute();
+                    if (!IsScheduledForRemoval(kvp.Key) &&
+                        kvp.Value.Command is ICommand command)
+                    {
+                        command.Execute();
+                    }
                 }
                 DispatchEnd();
             }
@@ -125,9 +128,13 @@ namespace cpGames.core.RapidIoC
             lock (_syncRoot)
             {
                 DispatchBegin();
-                foreach (var command in Commands.OfType<ICommand<T>>())
+                foreach (var kvp in Commands)
                 {
-                    command.Execute(type1);
+                    if (!IsScheduledForRemoval(kvp.Key) &&
+                        kvp.Value.Command is ICommand<T> command)
+                    {
+                        command.Execute(type1);
+                    }
                 }
                 DispatchEnd();
             }
@@ -193,9 +200,13 @@ namespace cpGames.core.RapidIoC
             lock (_syncRoot)
             {
                 DispatchBegin();
-                foreach (var command in Commands.OfType<ICommand<T, U>>())
+                foreach (var kvp in Commands)
                 {
-                    command.Execute(type1, type2);
+                    if (!IsScheduledForRemoval(kvp.Key) &&
+                        kvp.Value.Command is ICommand<T, U> command)
+                    {
+                        command.Execute(type1, type2);
+                    }
                 }
                 DispatchEnd();
             }

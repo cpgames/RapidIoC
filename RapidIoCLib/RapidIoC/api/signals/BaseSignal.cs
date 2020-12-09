@@ -11,21 +11,37 @@ namespace cpGames.core.RapidIoC
     /// </summary>
     public abstract class BaseSignal
     {
+        public class CommandData
+        {
+            public IBaseCommand Command { get; }
+            public bool Once { get; }
+
+            public CommandData(IBaseCommand command, bool once)
+            {
+                this.Command = command;
+                this.Once = once;
+            }
+        }
         #region Fields
-        private readonly Dictionary<IKey, IBaseCommand> _commands = new Dictionary<IKey, IBaseCommand>();
-        private readonly Dictionary<IKey, IBaseCommand> _commandsToAdd = new Dictionary<IKey, IBaseCommand>();
-        private readonly List<IKey> _commandsToRemove = new List<IKey>();
+        private readonly Dictionary<IKey, CommandData> _commands = new Dictionary<IKey, CommandData>();
+        private readonly Dictionary<IKey, CommandData> _commandsToAdd = new Dictionary<IKey, CommandData>();
+        private readonly HashSet<IKey> _commandsToRemove = new HashSet<IKey>();
         private readonly UidGenerator _uidGenerator = new UidGenerator();
         private bool _dispatching;
         protected internal readonly object _syncRoot = new object();
         #endregion
 
         #region Properties
-        public IEnumerable<IBaseCommand> Commands => _commands.Values;
+        public IEnumerable<KeyValuePair<IKey, CommandData>> Commands => _commands;
         public int CommandCount => _commands.Count;
         #endregion
 
         #region Methods
+        public bool IsScheduledForRemoval(IKey key)
+        {
+            return _commandsToRemove.Contains(key);
+        }
+
         public bool HasKey(object keyData)
         {
             lock (_syncRoot)
@@ -52,7 +68,7 @@ namespace cpGames.core.RapidIoC
         {
             lock (_syncRoot)
             {
-                if (!_commands.TryGetValue(key, out var command))
+                if (!_commands.TryGetValue(key, out var commandData))
                 {
                     if (silent)
                     {
@@ -64,7 +80,7 @@ namespace cpGames.core.RapidIoC
                 }
                 if (_dispatching)
                 {
-                    if (_commandsToRemove.Contains(key))
+                    if (!_commandsToRemove.Add(key))
                     {
                         if (silent)
                         {
@@ -74,11 +90,10 @@ namespace cpGames.core.RapidIoC
                         errorMessage = string.Format("Command with key <{0}> is already scheduled for removal.", key);
                         return false;
                     }
-                    _commandsToRemove.Add(key);
                     errorMessage = string.Empty;
                     return true;
                 }
-                command.Release();
+                commandData.Command.Release();
                 if (key is UidKey uidKey)
                 {
                     _uidGenerator.RemoveUid(uidKey.Uid);
@@ -156,18 +171,14 @@ namespace cpGames.core.RapidIoC
                 {
                     return false;
                 }
-                if (once)
-                {
-                    _commandsToRemove.Add(key);
-                }
                 if (_commandsToAdd.ContainsKey(key))
                 {
                     errorMessage = string.Format("Command with key <{0}> is already scheduled to add.", key);
                     return false;
                 }
-
+                var commandData = new CommandData(command, once);
                 var commands = _dispatching ? _commandsToAdd : _commands;
-                commands.Add(key, command);
+                commands.Add(key, commandData);
                 command.Connect();
             }
             errorMessage = string.Empty;
@@ -183,10 +194,17 @@ namespace cpGames.core.RapidIoC
         {
             lock (_syncRoot)
             {
+                foreach (var kvp in Commands)
+                {
+                    if (kvp.Value.Once)
+                    {
+                        _commandsToRemove.Add(kvp.Key);
+                    }
+                }
                 foreach (var key in _commandsToRemove)
                 {
                     var command = _commands[key];
-                    command.Release();
+                    command.Command.Release();
                     _commands.Remove(key);
                 }
                 _commandsToRemove.Clear();
