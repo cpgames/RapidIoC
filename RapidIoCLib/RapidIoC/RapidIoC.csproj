@@ -102,6 +102,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy RapidIoC.dll %25PA_ROOT%25\ClientA\Assets\_ProjectA\_lib\ /Y
-copy RapidIoC.pdb %25PA_ROOT%25\ClientA\Assets\_ProjectA\_lib\ /Y</PostBuildEvent>
+copy RapidIoC.pdb %25PA_ROOT%25\ClientA\Assets\_ProjectA\_lib\ /Y
+copy RapidIoC.dll %25PA_ROOT%25\AIClient\Assets\_aiClient\_lib\ /Y
+copy RapidIoC.pdb %25PA_ROOT%25\AIClient\Assets\_aiClient\_lib\ /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
