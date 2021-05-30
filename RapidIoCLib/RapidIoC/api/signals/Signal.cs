@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using cpGames.core.RapidIoC.impl;
 
 namespace cpGames.core.RapidIoC
@@ -9,6 +10,8 @@ namespace cpGames.core.RapidIoC
     /// </summary>
     public class Signal : BaseSignal
     {
+        private int _dispatchQueue = 0;
+
         #region Methods
         /// <summary>
         /// Add command with an action callback
@@ -57,16 +60,27 @@ namespace cpGames.core.RapidIoC
         {
             lock (_syncRoot)
             {
-                DispatchBegin();
-                foreach (var kvp in Commands)
+                if (!DispatchBegin())
                 {
-                    if (!IsScheduledForRemoval(kvp.Key) &&
-                        kvp.Value.Command is ICommand command)
+                    _dispatchQueue++;
+                }
+                else
+                {
+                    foreach (var kvp in Commands)
                     {
-                        command.Execute();
+                        if (!IsScheduledForRemoval(kvp.Key) &&
+                            kvp.Value.Command is ICommand command)
+                        {
+                            command.Execute();
+                        }
+                    }
+                    DispatchEnd();
+                    if (_dispatchQueue > 0)
+                    {
+                        _dispatchQueue--;
+                        Dispatch();
                     }
                 }
-                DispatchEnd();
             }
         }
         #endregion
@@ -78,6 +92,7 @@ namespace cpGames.core.RapidIoC
     /// </summary>
     public class Signal<T> : BaseSignal
     {
+        private readonly Queue<T> _dispatchQueue = new Queue<T>();
         #region Methods
         /// <summary>
         /// Add command with an action callback
@@ -127,16 +142,26 @@ namespace cpGames.core.RapidIoC
         {
             lock (_syncRoot)
             {
-                DispatchBegin();
-                foreach (var kvp in Commands)
+                if (!DispatchBegin())
                 {
-                    if (!IsScheduledForRemoval(kvp.Key) &&
-                        kvp.Value.Command is ICommand<T> command)
+                    _dispatchQueue.Enqueue(type1);
+                }
+                else
+                {
+                    foreach (var kvp in Commands)
                     {
-                        command.Execute(type1);
+                        if (!IsScheduledForRemoval(kvp.Key) &&
+                            kvp.Value.Command is ICommand<T> command)
+                        {
+                            command.Execute(type1);
+                        }
+                    }
+                    DispatchEnd();
+                    if (_dispatchQueue.Count > 0)
+                    {
+                        Dispatch(_dispatchQueue.Dequeue());
                     }
                 }
-                DispatchEnd();
             }
         }
         #endregion
@@ -149,6 +174,8 @@ namespace cpGames.core.RapidIoC
     /// </summary>
     public class Signal<T, U> : BaseSignal
     {
+        private readonly Queue<KeyValuePair<T, U>> _dispatchQueue = new Queue<KeyValuePair<T, U>>();
+
         #region Methods
         /// <summary>
         /// Add command with an action callback
@@ -199,16 +226,27 @@ namespace cpGames.core.RapidIoC
         {
             lock (_syncRoot)
             {
-                DispatchBegin();
-                foreach (var kvp in Commands)
+                if (!DispatchBegin())
                 {
-                    if (!IsScheduledForRemoval(kvp.Key) &&
-                        kvp.Value.Command is ICommand<T, U> command)
+                    _dispatchQueue.Enqueue(new KeyValuePair<T, U>(type1, type2));
+                }
+                else
+                {
+                    foreach (var kvp in Commands)
                     {
-                        command.Execute(type1, type2);
+                        if (!IsScheduledForRemoval(kvp.Key) &&
+                            kvp.Value.Command is ICommand<T, U> command)
+                        {
+                            command.Execute(type1, type2);
+                        }
+                    }
+                    DispatchEnd(); 
+                    if (_dispatchQueue.Count > 0)
+                    {
+                        var kvp = _dispatchQueue.Dequeue();
+                        Dispatch(kvp.Key, kvp.Value);
                     }
                 }
-                DispatchEnd();
             }
         }
         #endregion

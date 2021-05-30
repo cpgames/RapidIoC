@@ -185,9 +185,14 @@ namespace cpGames.core.RapidIoC
             return true;
         }
 
-        protected void DispatchBegin()
+        protected bool DispatchBegin()
         {
+            if (_dispatching)
+            {
+                return false;
+            }
             _dispatching = true;
+            return true;
         }
 
         protected void DispatchEnd()
