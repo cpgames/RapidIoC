@@ -52,19 +52,35 @@
   <ItemGroup>
     <Compile Include="api\bindings\IBinding.cs" />
     <Compile Include="api\bindings\IBindingCollection.cs" />
+    <Compile Include="api\commands\BaseCommand.cs" />
+    <Compile Include="api\commands\BaseCommandView.cs" />
+    <Compile Include="api\commands\CommandResult.cs" />
+    <Compile Include="api\commands\CommandResultOut.cs" />
+    <Compile Include="api\commands\CommandResultOutView.cs" />
+    <Compile Include="api\commands\CommandResultView.cs" />
     <Compile Include="api\commands\CommandView.cs" />
+    <Compile Include="api\commands\IBaseCommand.cs" />
+    <Compile Include="api\commands\ICommandResult.cs" />
+    <Compile Include="api\commands\ICommandResultOut.cs" />
     <Compile Include="api\keys\IKeyFactoryCollection.cs" />
     <Compile Include="api\commands\ICommand.cs" />
     <Compile Include="api\contexts\IContext.cs" />
     <Compile Include="api\contexts\IContextCollection.cs" />
     <Compile Include="api\instantiators\IInstantiator.cs" />
     <Compile Include="api\commands\Command.cs" />
-    <Compile Include="api\signals\BaseSignal.cs" />
+    <Compile Include="api\signals\SignalBase.cs" />
+    <Compile Include="api\signals\signalsWithResult\SignalBoolOut.cs" />
+    <Compile Include="api\signals\signalsWithResult\SignalBool.cs" />
+    <Compile Include="api\signals\SignalResultOut.cs" />
+    <Compile Include="api\signals\SignalResult.cs" />
     <Compile Include="api\states\IContext.cs" />
     <Compile Include="api\states\IState.cs" />
     <Compile Include="api\states\StateContextMethods.cs" />
     <Compile Include="api\states\StateContextModelView.cs" />
     <Compile Include="api\views\IView.cs" />
+    <Compile Include="impl\commands\ActionResultCommand.cs" />
+    <Compile Include="impl\commands\ActionResultOutCommand.cs" />
+    <Compile Include="impl\commands\IActionCommand.cs" />
     <Compile Include="impl\keys\InstanceKey.cs" />
     <Compile Include="impl\keys\EnumKey.cs" />
     <Compile Include="impl\keys\ByteKey.cs" />
@@ -99,9 +115,10 @@
       <Name>zLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy RapidIoC.dll %25PA_ROOT%25\packages\CpCore\Assets\CpCore\Runtime\lib\  /Y
-copy RapidIoC.pdb %25PA_ROOT%25\packages\CpCore\Assets\CpCore\Runtime\lib\ /Y</PostBuildEvent>
+    <PostBuildEvent>copy RapidIoC.dll %25PA_ROOT%25\Shared\CpCore\Assets\CpCore\Runtime\lib\  /Y
+copy RapidIoC.pdb %25PA_ROOT%25\Shared\CpCore\Assets\CpCore\Runtime\lib\ /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

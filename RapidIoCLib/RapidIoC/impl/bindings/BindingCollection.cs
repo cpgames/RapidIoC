@@ -60,7 +60,7 @@ namespace cpGames.core.RapidIoC.impl
             }
             if (!binding.Empty)
             {
-                if (binding.Value is BaseSignal signal)
+                if (binding.Value is SignalBase signal)
                 {
                     signal.ClearCommands();
                 }

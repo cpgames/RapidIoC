@@ -38,10 +38,10 @@ namespace cpGames.core.RapidIoC.impl
             return baseName;
         }
 
-        private static Type GetSignalType(BaseSignal signal)
+        private static Type GetSignalType(SignalBase signal)
         {
             var signalType = signal.GetType();
-            while (signalType.BaseType != typeof(BaseSignal))
+            while (signalType.BaseType != typeof(SignalBase))
             {
                 signalType = signalType.BaseType;
             }
@@ -50,7 +50,7 @@ namespace cpGames.core.RapidIoC.impl
 
         public static void ConnectSignalProperty(this IView view, PropertyInfo signalProperty)
         {
-            var signal = (BaseSignal)signalProperty.GetValue(view, null);
+            var signal = (SignalBase)signalProperty.GetValue(view, null);
             if (signal == null)
             {
                 return;
@@ -73,7 +73,7 @@ namespace cpGames.core.RapidIoC.impl
 
         private static void ConnectSignalWithNoParameters(
             IView view,
-            BaseSignal signal,
+            SignalBase signal,
             string baseName)
         {
             var type = view.GetType();
@@ -94,7 +94,7 @@ namespace cpGames.core.RapidIoC.impl
 
         private static void ConnectSignalWithOneParameter(
             IView view,
-            BaseSignal signal,
+            SignalBase signal,
             string baseName)
         {
             var type = view.GetType();
@@ -119,7 +119,7 @@ namespace cpGames.core.RapidIoC.impl
 
         private static void ConnectSignalWithTwoParameters(
             IView view,
-            BaseSignal signal,
+            SignalBase signal,
             string baseName)
         {
             var type = view.GetType();

@@ -9,19 +9,26 @@ namespace cpGames.core.RapidIoC
     /// Signals are a way to execute commands.
     /// To use, connect your commands to a signal and the call signal.Dispatch(parameters) to execute connected commands.
     /// </summary>
-    public abstract class BaseSignal
+    public abstract class SignalBase
     {
+        #region Nested type: CommandData
         public class CommandData
         {
+            #region Properties
             public IBaseCommand Command { get; }
             public bool Once { get; }
+            #endregion
 
+            #region Constructors
             public CommandData(IBaseCommand command, bool once)
             {
-                this.Command = command;
-                this.Once = once;
+                Command = command;
+                Once = once;
             }
+            #endregion
         }
+        #endregion
+
         #region Fields
         private readonly Dictionary<IKey, CommandData> _commands = new Dictionary<IKey, CommandData>();
         private readonly Dictionary<IKey, CommandData> _commandsToAdd = new Dictionary<IKey, CommandData>();
@@ -171,11 +178,6 @@ namespace cpGames.core.RapidIoC
                 {
                     return false;
                 }
-                if (_commandsToAdd.ContainsKey(key))
-                {
-                    errorMessage = string.Format("Command with key <{0}> is already scheduled to add.", key);
-                    return false;
-                }
                 var commandData = new CommandData(command, once);
                 var commands = _dispatching ? _commandsToAdd : _commands;
                 commands.Add(key, commandData);
@@ -220,6 +222,29 @@ namespace cpGames.core.RapidIoC
                 }
                 _commandsToAdd.Clear();
                 _dispatching = false;
+            }
+        }
+        #endregion
+    }
+
+    public abstract class SignalBaseResult<T_Result> : SignalBase
+    {
+        #region Properties
+        public virtual T_Result DefaultResult => default;
+        public virtual T_Result TargetResult => default;
+        public virtual bool StopOnResult => false;
+        #endregion
+
+        #region Methods
+        public abstract bool ResultEquals(T_Result a, T_Result b);
+
+        public abstract T_Result ResultAggregate(T_Result a, T_Result b);
+
+        protected new void DispatchBegin()
+        {
+            if (!base.DispatchBegin())
+            {
+                throw new Exception($"{GetType().Name} is already dispatching, recursive execution for this Signal type is not supported.");
             }
         }
         #endregion

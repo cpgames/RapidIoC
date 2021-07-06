@@ -4,11 +4,11 @@ using cpGames.core.RapidIoC.impl;
 
 namespace cpGames.core.RapidIoC
 {
-    /// <inheritdoc cref="BaseSignal" />
+    /// <inheritdoc cref="SignalBase" />
     /// <summary>
     /// Signal with no parameters
     /// </summary>
-    public class Signal : BaseSignal
+    public class Signal : SignalBase
     {
         private int _dispatchQueue = 0;
 
@@ -86,13 +86,13 @@ namespace cpGames.core.RapidIoC
         #endregion
     }
 
-    /// <inheritdoc cref="BaseSignal" />
+    /// <inheritdoc cref="SignalBase" />
     /// <summary>
     /// Signal with one parameter
     /// </summary>
-    public class Signal<T> : BaseSignal
+    public class Signal<T_In> : SignalBase
     {
-        private readonly Queue<T> _dispatchQueue = new Queue<T>();
+        private readonly Queue<T_In> _dispatchQueue = new Queue<T_In>();
         #region Methods
         /// <summary>
         /// Add command with an action callback
@@ -101,9 +101,9 @@ namespace cpGames.core.RapidIoC
         /// <param name="keyData">Unique key data to bind command to, passing null will generate random Uid key</param>
         /// <param name="once">If true, command will be removed after first execution</param>
         /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand(Action<T> callback, object keyData = null, bool once = false)
+        public IKey AddCommand(Action<T_In> callback, object keyData = null, bool once = false)
         {
-            return AddCommandInternal(new ActionCommand<T>(callback), keyData, once);
+            return AddCommandInternal(new ActionCommand<T_In>(callback), keyData, once);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace cpGames.core.RapidIoC
         /// <param name="keyData">Unique key data to bind command to, passing null will generate random Uid key</param>
         /// <param name="once">If true, command will be removed after first execution</param>
         /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand(ICommand<T> command, object keyData = null, bool once = false)
+        public IKey AddCommand(ICommand<T_In> command, object keyData = null, bool once = false)
         {
             return AddCommandInternal(command, keyData, once);
         }
@@ -125,7 +125,7 @@ namespace cpGames.core.RapidIoC
         /// <typeparam name="TCommand">Type of command object to instantiate</typeparam>
         /// <param name="once">If true, command will be removed after first execution</param>
         /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T>
+        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T_In>
         {
             return AddCommandInternal<TCommand>(once);
         }
@@ -137,23 +137,23 @@ namespace cpGames.core.RapidIoC
         /// note2: if one or more commands contains logic to remove commands from this signal, they will be removed
         /// after this dispatch, and WILL be executed in this cycle
         /// </summary>
-        /// <param name="type1">First parameter data to pass to commands</param>
-        public void Dispatch(T type1)
+        /// <param name="in">First parameter data to pass to commands</param>
+        public void Dispatch(T_In @in)
         {
             lock (_syncRoot)
             {
                 if (!DispatchBegin())
                 {
-                    _dispatchQueue.Enqueue(type1);
+                    _dispatchQueue.Enqueue(@in);
                 }
                 else
                 {
                     foreach (var kvp in Commands)
                     {
                         if (!IsScheduledForRemoval(kvp.Key) &&
-                            kvp.Value.Command is ICommand<T> command)
+                            kvp.Value.Command is ICommand<T_In> command)
                         {
-                            command.Execute(type1);
+                            command.Execute(@in);
                         }
                     }
                     DispatchEnd();
@@ -167,14 +167,14 @@ namespace cpGames.core.RapidIoC
         #endregion
     }
 
-    /// <inheritdoc cref="BaseSignal" />
+    /// <inheritdoc cref="SignalBase" />
     /// <summary>
     /// Signal with two parameters.
     /// If you want to have more, I recommend creating a model and using that as a single-parameter signal.
     /// </summary>
-    public class Signal<T, U> : BaseSignal
+    public class Signal<T_In1, T_In2> : SignalBase
     {
-        private readonly Queue<KeyValuePair<T, U>> _dispatchQueue = new Queue<KeyValuePair<T, U>>();
+        private readonly Queue<KeyValuePair<T_In1, T_In2>> _dispatchQueue = new Queue<KeyValuePair<T_In1, T_In2>>();
 
         #region Methods
         /// <summary>
@@ -184,9 +184,9 @@ namespace cpGames.core.RapidIoC
         /// <param name="keyData">Unique key data to bind command to, passing null will generate random Uid key</param>
         /// <param name="once">If true, command will be removed after first execution</param>
         /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand(Action<T, U> callback, object keyData = null, bool once = false)
+        public IKey AddCommand(Action<T_In1, T_In2> callback, object keyData = null, bool once = false)
         {
-            return AddCommandInternal(new ActionCommand<T, U>(callback), keyData, once);
+            return AddCommandInternal(new ActionCommand<T_In1, T_In2>(callback), keyData, once);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace cpGames.core.RapidIoC
         /// <param name="keyData">Unique key data to bind command to, passing null will generate random Uid key</param>
         /// <param name="once">If true, command will be removed after first execution</param>
         /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand(ICommand<T, U> command, object keyData = null, bool once = false)
+        public IKey AddCommand(ICommand<T_In1, T_In2> command, object keyData = null, bool once = false)
         {
             return AddCommandInternal(command, keyData, once);
         }
@@ -208,7 +208,7 @@ namespace cpGames.core.RapidIoC
         /// <typeparam name="TCommand">Type of command object to instantiate</typeparam>
         /// <param name="once">If true, command will be removed after first execution</param>
         /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T, U>
+        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T_In1, T_In2>
         {
             return AddCommandInternal<TCommand>(once);
         }
@@ -220,24 +220,24 @@ namespace cpGames.core.RapidIoC
         /// note2: if one or more commands contains logic to remove commands from this signal, they will be removed
         /// after this dispatch, and WILL be executed in this cycle
         /// </summary>
-        /// <param name="type1">First parameter data to pass to commands</param>
-        /// <param name="type2">Second parameter data to pass to commands</param>
-        public void Dispatch(T type1, U type2)
+        /// <param name="in1">First parameter data to pass to commands</param>
+        /// <param name="in2">Second parameter data to pass to commands</param>
+        public void Dispatch(T_In1 in1, T_In2 in2)
         {
             lock (_syncRoot)
             {
                 if (!DispatchBegin())
                 {
-                    _dispatchQueue.Enqueue(new KeyValuePair<T, U>(type1, type2));
+                    _dispatchQueue.Enqueue(new KeyValuePair<T_In1, T_In2>(in1, in2));
                 }
                 else
                 {
                     foreach (var kvp in Commands)
                     {
                         if (!IsScheduledForRemoval(kvp.Key) &&
-                            kvp.Value.Command is ICommand<T, U> command)
+                            kvp.Value.Command is ICommand<T_In1, T_In2> command)
                         {
-                            command.Execute(type1, type2);
+                            command.Execute(in1, in2);
                         }
                     }
                     DispatchEnd(); 

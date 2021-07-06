@@ -106,9 +106,9 @@ namespace cpGames.core.RapidIoC.impl
 
         private void UnregisterPotentialSignalMap(IView view, PropertyInfo property)
         {
-            if (property.PropertyType.IsSubclassOf(typeof(BaseSignal)))
+            if (property.PropertyType.IsSubclassOf(typeof(SignalBase)))
             {
-                var signal = (BaseSignal)property.GetValue(view, null);
+                var signal = (SignalBase)property.GetValue(view, null);
                 if (signal != null && signal.HasKey(view))
                 {
                     signal.RemoveCommand(view);
@@ -118,7 +118,7 @@ namespace cpGames.core.RapidIoC.impl
 
         private void RegisterPotentialSignalMap(IView view, PropertyInfo property)
         {
-            if (property.PropertyType.IsSubclassOf(typeof(BaseSignal)) && Value != null)
+            if (property.PropertyType.IsSubclassOf(typeof(SignalBase)) && Value != null)
             {
                 view.ConnectSignalProperty(property);
             }
