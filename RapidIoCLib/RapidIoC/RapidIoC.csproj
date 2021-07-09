@@ -69,6 +69,7 @@
     <Compile Include="api\instantiators\IInstantiator.cs" />
     <Compile Include="api\commands\Command.cs" />
     <Compile Include="api\signals\SignalBase.cs" />
+    <Compile Include="api\signals\signalsWithResult\SignalBoolOutString.cs" />
     <Compile Include="api\signals\signalsWithResult\SignalBoolOut.cs" />
     <Compile Include="api\signals\signalsWithResult\SignalBool.cs" />
     <Compile Include="api\signals\SignalResultOut.cs" />
