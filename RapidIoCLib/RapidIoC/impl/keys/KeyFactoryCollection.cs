@@ -27,6 +27,31 @@ namespace cpGames.core.RapidIoC.impl
         #endregion
 
         #region IKeyFactoryCollection Members
+        public bool Create(object keyData, out IKey key)
+        {
+            if (keyData is IKey)
+            {
+                key = (IKey)keyData;
+                return true;
+            }
+
+            lock (_factories)
+            {
+                foreach (var factory in _factories)
+                {
+                    lock (factory)
+                    {
+                        if (factory.Create(keyData, out key))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            key = null;
+            return false;
+        }
+
         public bool Create(object keyData, out IKey key, out string errorMessage)
         {
             if (keyData is IKey)
@@ -54,13 +79,26 @@ namespace cpGames.core.RapidIoC.impl
             return false;
         }
 
+        public bool AddFactory(IKeyFactory factory)
+        {
+            lock (_factories)
+            {
+                if (_factories.Any(x => x.GetType() == factory.GetType()))
+                {
+                    return false;
+                }
+                _factories.Add(factory);
+            }
+            return true;
+        }
+
         public bool AddFactory(IKeyFactory factory, out string errorMessage)
         {
             lock (_factories)
             {
                 if (_factories.Any(x => x.GetType() == factory.GetType()))
                 {
-                    errorMessage = string.Format("Factory of type <{0}> already exists.", factory.GetType().Name);
+                    errorMessage = $"Factory of type <{factory.GetType().Name}> already exists.";
                     return false;
                 }
                 _factories.Add(factory);

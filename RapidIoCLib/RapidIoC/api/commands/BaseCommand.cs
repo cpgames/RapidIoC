@@ -3,9 +3,17 @@
     public abstract class BaseCommand : IBaseCommand
     {
         #region IBaseCommand Members
-        public virtual void Connect() { }
+        public bool Connect(out string errorMessage)
+        {
+            errorMessage = string.Empty;
+            return true;
+        }
 
-        public virtual void Release() { }
+        public bool Release(out string errorMessage)
+        {
+            errorMessage = string.Empty;
+            return true;
+        }
         #endregion
     }
 }

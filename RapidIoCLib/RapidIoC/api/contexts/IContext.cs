@@ -23,7 +23,7 @@
         /// If there are no bindings or views left in the context,
         /// it will be automatically deleted and this signal will be dispatched.
         /// </summary>
-        Signal DestroyedSignal { get; }
+        ISignal DestroyedSignal { get; }
 
         /// <summary>
         /// Check if local binding exists.

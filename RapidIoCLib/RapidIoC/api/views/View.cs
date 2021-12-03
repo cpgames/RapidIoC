@@ -9,14 +9,14 @@
         #region IView Members
         public virtual string ContextName => null;
 
-        public void RegisterWithContext()
+        public bool RegisterWithContext(out string errorMessage)
         {
-            Rapid.RegisterView(this);
+            return Rapid.RegisterView(this, out errorMessage);
         }
 
-        public void UnregisterFromContext()
+        public bool UnregisterFromContext(out string errorMessage)
         {
-            Rapid.UnregisterView(this);
+            return Rapid.UnregisterView(this, out errorMessage);
         }
         #endregion
     }
@@ -27,7 +27,7 @@
         protected TModel _model;
         #endregion
 
-        #region Properties
+        #region IView<TModel> Members
         public virtual TModel Model
         {
             get => _model;
@@ -37,11 +37,8 @@
                 UpdateModelInternal();
             }
         }
-        #endregion
-
-        #region IView Members
         public bool HasModel => _model != null;
-        public Signal ModelSetSignal { get; } = new Signal();
+        public ISignal ModelSetSignal { get; } = new LazySignal();
         #endregion
 
         #region Methods

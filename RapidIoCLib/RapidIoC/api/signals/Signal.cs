@@ -8,11 +8,13 @@ namespace cpGames.core.RapidIoC
     /// <summary>
     /// Signal with no parameters
     /// </summary>
-    public class Signal : SignalBase
+    public class Signal : SignalBase, ISignal
     {
-        private int _dispatchQueue = 0;
+        #region Fields
+        private int _dispatchQueue  ;
+        #endregion
 
-        #region Methods
+        #region ISignal Members
         /// <summary>
         /// Add command with an action callback
         /// </summary>
@@ -90,10 +92,13 @@ namespace cpGames.core.RapidIoC
     /// <summary>
     /// Signal with one parameter
     /// </summary>
-    public class Signal<T_In> : SignalBase
+    public class Signal<T_In> : SignalBase, ISignal<T_In>
     {
+        #region Fields
         private readonly Queue<T_In> _dispatchQueue = new Queue<T_In>();
-        #region Methods
+        #endregion
+
+        #region ISignal<T_In> Members
         /// <summary>
         /// Add command with an action callback
         /// </summary>
@@ -172,11 +177,13 @@ namespace cpGames.core.RapidIoC
     /// Signal with two parameters.
     /// If you want to have more, I recommend creating a model and using that as a single-parameter signal.
     /// </summary>
-    public class Signal<T_In1, T_In2> : SignalBase
+    public class Signal<T_In1, T_In2> : SignalBase, ISignal<T_In1, T_In2>
     {
+        #region Fields
         private readonly Queue<KeyValuePair<T_In1, T_In2>> _dispatchQueue = new Queue<KeyValuePair<T_In1, T_In2>>();
+        #endregion
 
-        #region Methods
+        #region ISignal<T_In1,T_In2> Members
         /// <summary>
         /// Add command with an action callback
         /// </summary>
@@ -240,7 +247,7 @@ namespace cpGames.core.RapidIoC
                             command.Execute(in1, in2);
                         }
                     }
-                    DispatchEnd(); 
+                    DispatchEnd();
                     if (_dispatchQueue.Count > 0)
                     {
                         var kvp = _dispatchQueue.Dequeue();

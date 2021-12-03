@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace cpGames.core.RapidIoC
 {
@@ -20,6 +21,11 @@ namespace cpGames.core.RapidIoC
         object Value { get; set; }
 
         /// <summary>
+        /// Map of subscribing views and their property injecting the binding.
+        /// </summary>
+        IEnumerable<KeyValuePair<IView, PropertyInfo>> Subscribers { get; }
+
+        /// <summary>
         /// If there are no subscribers, this is true.
         /// </summary>
         bool Empty { get; }
@@ -27,12 +33,12 @@ namespace cpGames.core.RapidIoC
         /// <summary>
         /// When binding is removed it notifies owning collection via this signal.
         /// </summary>
-        Signal RemovedSignal { get; }
+        ISignal RemovedSignal { get; }
 
         /// <summary>
         /// When value is updated, this signal is emitted.
         /// </summary>
-        Signal ValueUpdatedSignal { get; }
+        ISignal ValueUpdatedSignal { get; }
 
         /// <summary>
         /// If unbinded, but still has some subscribers left, it is moved to discarded list and no new subscribers can be added.
@@ -46,9 +52,24 @@ namespace cpGames.core.RapidIoC
         /// </summary>
         /// <param name="view">View instance owning the property</param>
         /// <param name="property">PropertyInfo of the the property.</param>
+        /// <returns>False if view instance was already binded, otherwise true.</returns>
+        bool Subscribe(IView view, PropertyInfo property);
+
+        /// <summary>
+        /// Register a property belonging to a view with this binding.
+        /// </summary>
+        /// <param name="view">View instance owning the property</param>
+        /// <param name="property">PropertyInfo of the the property.</param>
         /// <param name="errorMessage">If fails, this explains why.</param>
         /// <returns>False if view instance was already binded, otherwise true.</returns>
         bool Subscribe(IView view, PropertyInfo property, out string errorMessage);
+
+        /// <summary>
+        /// Unregister view.
+        /// </summary>
+        /// <param name="view">View instance to unregister.</param>
+        /// <returns>False if view instance was not registered, otherwise true.</returns>
+        bool Unsubscribe(IView view);
 
         /// <summary>
         /// Unregister view.
@@ -58,7 +79,9 @@ namespace cpGames.core.RapidIoC
         /// <returns>False if view instance was not registered, otherwise true.</returns>
         bool Unsubscribe(IView view, out string errorMessage);
 
-        bool Join(IBinding binding, out string errorMessage);
+        bool Consume(IBinding binding);
+
+        bool Consume(IBinding binding, out string errorMessage);
         #endregion
     }
 }

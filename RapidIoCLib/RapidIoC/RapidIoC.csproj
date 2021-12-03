@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="api\bindings\IBinding.cs" />
     <Compile Include="api\bindings\IBindingCollection.cs" />
+    <Compile Include="api\commands\ActionResultCommand.cs" />
     <Compile Include="api\commands\BaseCommand.cs" />
     <Compile Include="api\commands\BaseCommandView.cs" />
     <Compile Include="api\commands\CommandResult.cs" />
@@ -68,10 +69,25 @@
     <Compile Include="api\contexts\IContextCollection.cs" />
     <Compile Include="api\instantiators\IInstantiator.cs" />
     <Compile Include="api\commands\Command.cs" />
-    <Compile Include="api\signals\SignalBase.cs" />
-    <Compile Include="api\signals\signalsWithResult\SignalBoolOutString.cs" />
-    <Compile Include="api\signals\signalsWithResult\SignalBoolOut.cs" />
-    <Compile Include="api\signals\signalsWithResult\SignalBool.cs" />
+    <Compile Include="api\signals\ISignal.cs" />
+    <Compile Include="api\signals\ISignalBase.cs" />
+    <Compile Include="api\signals\ISignalBoolOutString.cs" />
+    <Compile Include="api\signals\ISignalBoolOut.cs" />
+    <Compile Include="api\signals\ISignalResultOut.cs" />
+    <Compile Include="api\signals\ISignalResult.cs" />
+    <Compile Include="api\signals\ISignalBool.cs" />
+    <Compile Include="api\signals\SignalCommandModel.cs" />
+    <Compile Include="api\signals\LazySignal.cs" />
+    <Compile Include="impl\signals\LazySignalBase.cs" />
+    <Compile Include="api\signals\LazySignalBool.cs" />
+    <Compile Include="api\signals\LazySignalResult.cs" />
+    <Compile Include="impl\signals\SignalBase.cs" />
+    <Compile Include="api\signals\LazySignalBoolOut.cs" />
+    <Compile Include="api\signals\LazySignalBoolOutString.cs" />
+    <Compile Include="api\signals\SignalBoolOutString.cs" />
+    <Compile Include="api\signals\SignalBoolOut.cs" />
+    <Compile Include="api\signals\SignalBool.cs" />
+    <Compile Include="api\signals\LazySignalResultOut.cs" />
     <Compile Include="api\signals\SignalResultOut.cs" />
     <Compile Include="api\signals\SignalResult.cs" />
     <Compile Include="api\states\IContext.cs" />

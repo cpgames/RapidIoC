@@ -1,9 +1,9 @@
 ﻿namespace cpGames.core.RapidIoC
 {
-    public interface IInstantiator
+    public interface IInstantiator<T>
     {
         #region Methods
-        object Create();
+        bool Create(out T value, out string errorMessage);
         #endregion
     }
 }

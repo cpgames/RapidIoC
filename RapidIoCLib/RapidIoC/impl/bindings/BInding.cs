@@ -8,6 +8,7 @@ namespace cpGames.core.RapidIoC.impl
         #region Fields
         private object _value;
         private readonly Dictionary<IView, PropertyInfo> _subscribers = new Dictionary<IView, PropertyInfo>();
+        public IEnumerable<KeyValuePair<IView, PropertyInfo>> Subscribers => _subscribers;
         #endregion
 
         #region Constructors
@@ -30,24 +31,59 @@ namespace cpGames.core.RapidIoC.impl
         }
 
         public bool Empty => _subscribers.Count == 0;
-        public Signal RemovedSignal { get; } = new Signal();
-        public Signal ValueUpdatedSignal { get; } = new Signal();
+        public ISignal RemovedSignal { get; } = new Signal();
+        public ISignal ValueUpdatedSignal { get; } = new Signal();
         public bool Discarded { get; set; } = true;
 
-        public bool Subscribe(IView view, PropertyInfo property, out string errorMessage)
+        private void SubscribeInternal(IView view, PropertyInfo property)
         {
-            if (_subscribers.ContainsKey(view))
-            {
-                errorMessage = string.Format("View <{0}> already binded property <{1}>.", view, property.Name);
-                return false;
-            }
             _subscribers.Add(view, property);
             if (!Empty)
             {
                 property.SetValue(view, Value, null);
                 RegisterPotentialSignalMap(view, property);
             }
+        }
+
+        public bool Subscribe(IView view, PropertyInfo property)
+        {
+            if (_subscribers.ContainsKey(view))
+            {
+                return false;
+            }
+            SubscribeInternal(view, property);
+            return true;
+        }
+
+        public bool Subscribe(IView view, PropertyInfo property, out string errorMessage)
+        {
+            if (_subscribers.ContainsKey(view))
+            {
+                errorMessage = $"View <{view}> already binded property <{property.Name}>.";
+                return false;
+            }
+            SubscribeInternal(view, property);
             errorMessage = string.Empty;
+            return true;
+        }
+
+        private void UnsubscribeInternal(IView view, PropertyInfo property)
+        {
+            UnregisterPotentialSignalMap(view, property);
+            _subscribers.Remove(view);
+            if (Discarded && Empty)
+            {
+                RemovedSignal.Dispatch();
+            }
+        }
+
+        public bool Unsubscribe(IView view)
+        {
+            if (!_subscribers.TryGetValue(view, out var property))
+            {
+                return false;
+            }
+            UnsubscribeInternal(view, property);
             return true;
         }
 
@@ -55,28 +91,37 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (!_subscribers.TryGetValue(view, out var property))
             {
-                errorMessage = string.Format("View <{0}> is not binded to binding with key <{1}>.", view, Key);
+                errorMessage = $"View <{view}> is not binded to binding with key <{Key}>.";
                 return false;
             }
-            UnregisterPotentialSignalMap(view, property);
-            _subscribers.Remove(view);
-            if (Discarded && Empty)
-            {
-                RemovedSignal.Dispatch();
-            }
+            UnsubscribeInternal(view, property);
             errorMessage = string.Empty;
             return true;
         }
 
-        public bool Join(IBinding binding, out string errorMessage)
+        public bool Consume(IBinding binding)
         {
-            var bindingImpl = (Binding)binding;
-            foreach (var subscriber in bindingImpl._subscribers)
+            foreach (var subscriber in binding.Subscribers)
             {
                 if (_subscribers.ContainsKey(subscriber.Key))
                 {
-                    errorMessage = string.Format("Can not join binding <{0}> with <{1}>, encountered duplicate subscriber <{2}>.",
-                        binding.Key, Key, subscriber.Key);
+                    return false;
+                }
+                if (!Subscribe(subscriber.Key, subscriber.Value))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public bool Consume(IBinding binding, out string errorMessage)
+        {
+            foreach (var subscriber in binding.Subscribers)
+            {
+                if (_subscribers.ContainsKey(subscriber.Key))
+                {
+                    errorMessage = $"Can't join binding <{binding.Key}> with <{Key}>, encountered duplicate subscriber <{subscriber.Key}>.";
                     return false;
                 }
                 if (!Subscribe(subscriber.Key, subscriber.Value, out errorMessage))

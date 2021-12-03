@@ -3,10 +3,9 @@
     internal class UidKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public bool Create(object keyData, out IKey key, out string errorMessage)
+        public bool Create(object keyData, out IKey key)
         {
             key = null;
-            errorMessage = string.Empty;
             switch (keyData)
             {
                 case long longKeyData:
@@ -16,8 +15,18 @@
                     key = new UidKey(uidGenerator.GenerateUid());
                     return true;
             }
-            errorMessage = "keyData type is not supported.";
             return false;
+        }
+
+        public bool Create(object keyData, out IKey key, out string errorMessage)
+        {
+            if (!Create(keyData, out key))
+            {
+                errorMessage = "keyData type is not supported.";
+                return false;
+            }
+            errorMessage = string.Empty;
+            return true;
         }
         #endregion
     }
@@ -75,7 +84,7 @@
 
         public override string ToString()
         {
-            return string.Format("UidKey:{0}", Uid);
+            return $"UidKey:{Uid}";
         }
         #endregion
     }

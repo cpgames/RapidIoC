@@ -1,49 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using cpGames.core.RapidIoC.impl;
 
-namespace cpGames.core.RapidIoC
+namespace cpGames.core.RapidIoC.impl
 {
     /// <summary>
     /// Signals are a way to execute commands.
     /// To use, connect your commands to a signal and the call signal.Dispatch(parameters) to execute connected commands.
     /// </summary>
-    public abstract class SignalBase
+    public abstract class SignalBase : ISignalBase
     {
-        #region Nested type: CommandData
-        public class CommandData
-        {
-            #region Properties
-            public IBaseCommand Command { get; }
-            public bool Once { get; }
-            #endregion
-
-            #region Constructors
-            public CommandData(IBaseCommand command, bool once)
-            {
-                Command = command;
-                Once = once;
-            }
-            #endregion
-        }
-        #endregion
-
         #region Fields
-        private readonly Dictionary<IKey, CommandData> _commands = new Dictionary<IKey, CommandData>();
-        private readonly Dictionary<IKey, CommandData> _commandsToAdd = new Dictionary<IKey, CommandData>();
+        private readonly Dictionary<IKey, SignalCommandModel> _commands = new Dictionary<IKey, SignalCommandModel>();
+        private readonly Dictionary<IKey, SignalCommandModel> _commandsToAdd = new Dictionary<IKey, SignalCommandModel>();
         private readonly HashSet<IKey> _commandsToRemove = new HashSet<IKey>();
-        private readonly UidGenerator _uidGenerator = new UidGenerator();
+        private UidGenerator _uidGenerator;
         private bool _dispatching;
         protected internal readonly object _syncRoot = new object();
         #endregion
 
         #region Properties
-        public IEnumerable<KeyValuePair<IKey, CommandData>> Commands => _commands;
-        public int CommandCount => _commands.Count;
+        private UidGenerator UidGenerator => _uidGenerator ?? (_uidGenerator = new UidGenerator());
         #endregion
 
-        #region Methods
+        #region ISignalBase Members
+        public IEnumerable<KeyValuePair<IKey, SignalCommandModel>> Commands => _commands;
+        public int CommandCount => _commands.Count;
+
         public bool IsScheduledForRemoval(IKey key)
         {
             return _commandsToRemove.Contains(key);
@@ -66,11 +49,13 @@ namespace cpGames.core.RapidIoC
             }
         }
 
-        public void RemoveCommand<TCommand>() where TCommand : IBaseCommand
+        public void RemoveCommand<TCommand>(bool silent = false) where TCommand : IBaseCommand
         {
-            RemoveCommand(typeof(TCommand));
+            RemoveCommand(typeof(TCommand), silent);
         }
+        #endregion
 
+        #region Methods
         protected bool RemoveCommandInternal(IKey key, bool silent, out string errorMessage)
         {
             lock (_syncRoot)
@@ -82,7 +67,7 @@ namespace cpGames.core.RapidIoC
                         errorMessage = string.Empty;
                         return true;
                     }
-                    errorMessage = string.Format("Command with key <{0}> not found.", key);
+                    errorMessage = $"Command with key <{key}> not found.";
                     return false;
                 }
                 if (_dispatching)
@@ -94,16 +79,19 @@ namespace cpGames.core.RapidIoC
                             errorMessage = string.Empty;
                             return true;
                         }
-                        errorMessage = string.Format("Command with key <{0}> is already scheduled for removal.", key);
+                        errorMessage = $"Command with key <{key}> is already scheduled for removal.";
                         return false;
                     }
                     errorMessage = string.Empty;
                     return true;
                 }
-                commandData.Command.Release();
+                if (!commandData.Command.Release(out errorMessage))
+                {
+                    return false;
+                }
                 if (key is UidKey uidKey)
                 {
-                    _uidGenerator.RemoveUid(uidKey.Uid);
+                    UidGenerator.RemoveUid(uidKey.Uid);
                 }
                 _commands.Remove(key);
             }
@@ -131,17 +119,17 @@ namespace cpGames.core.RapidIoC
             {
                 if (_commands.ContainsKey(key))
                 {
-                    errorMessage = string.Format("Command with key <{0}> already added.", key);
+                    errorMessage = $"Command with key <{key}> already added.";
                     return false;
                 }
                 if (_commandsToRemove.Contains(key))
                 {
-                    errorMessage = string.Format("Command with key <{0}> is already scheduled for removal.", key);
+                    errorMessage = $"Command with key <{key}> is already scheduled for removal.";
                     return false;
                 }
                 if (_commandsToAdd.ContainsKey(key))
                 {
-                    errorMessage = string.Format("Command with key <{0}> is already scheduled to add.", key);
+                    errorMessage = $"Command with key <{key}> is already scheduled to add.";
                     return false;
                 }
             }
@@ -161,7 +149,7 @@ namespace cpGames.core.RapidIoC
 
         protected IKey AddCommandInternal(IBaseCommand command, object keyData, bool once)
         {
-            keyData = keyData ?? _uidGenerator;
+            keyData = keyData ?? UidGenerator;
             if (!Rapid.KeyFactoryCollection.Create(keyData, out var key, out var errorMessage) ||
                 !AddCommandInternal(command, key, once, out errorMessage))
             {
@@ -178,13 +166,11 @@ namespace cpGames.core.RapidIoC
                 {
                     return false;
                 }
-                var commandData = new CommandData(command, once);
+                var commandData = new SignalCommandModel(command, once);
                 var commands = _dispatching ? _commandsToAdd : _commands;
                 commands.Add(key, commandData);
-                command.Connect();
+                return command.Connect(out errorMessage);
             }
-            errorMessage = string.Empty;
-            return true;
         }
 
         protected bool DispatchBegin()
@@ -211,7 +197,10 @@ namespace cpGames.core.RapidIoC
                 foreach (var key in _commandsToRemove)
                 {
                     var command = _commands[key];
-                    command.Command.Release();
+                    if (!command.Command.Release(out var errorMessage))
+                    {
+
+                    }
                     _commands.Remove(key);
                 }
                 _commandsToRemove.Clear();
@@ -247,6 +236,13 @@ namespace cpGames.core.RapidIoC
                 throw new Exception($"{GetType().Name} is already dispatching, recursive execution for this Signal type is not supported.");
             }
         }
+        #endregion
+    }
+
+    public abstract class SignalBaseResultOut<T_Result, T_Out> : SignalBaseResult<T_Result>
+    {
+        #region Properties
+        public virtual T_Out DefaultOut => default;
         #endregion
     }
 }

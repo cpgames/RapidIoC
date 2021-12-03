@@ -13,12 +13,18 @@ namespace cpGames.core.RapidIoC.impl
         #region IBindingCollection Members
         public int BindingCount => _bindings.Count;
 
+        public bool FindBinding(IKey key, bool includeDiscarded, out IBinding binding)
+        {
+            return
+                _bindings.TryGetValue(key, out binding) ||
+                includeDiscarded && _discardedBindings.TryGetValue(key, out binding);
+        }
+
         public bool FindBinding(IKey key, bool includeDiscarded, out IBinding binding, out string errorMessage)
         {
-            if (!_bindings.TryGetValue(key, out binding) &&
-                (!includeDiscarded || !_discardedBindings.TryGetValue(key, out binding)))
+            if (!FindBinding(key, includeDiscarded, out binding))
             {
-                errorMessage = string.Format("Binding with key <{0}> not found.", key);
+                errorMessage = $"Binding with key <{key}> not found.";
                 return false;
             }
             errorMessage = string.Empty;
@@ -28,6 +34,27 @@ namespace cpGames.core.RapidIoC.impl
         public bool BindingExists(IKey key)
         {
             return _bindings.ContainsKey(key);
+        }
+
+        public bool Bind(IKey key, out IBinding binding)
+        {
+            if (!FindBinding(key, false, out binding))
+            {
+                binding = new Binding(key);
+                binding.RemovedSignal.AddCommand(() =>
+                {
+                    if (_discardedBindings.ContainsKey(key))
+                    {
+                        _discardedBindings.Remove(key);
+                    }
+                    if (_bindings.ContainsKey(key))
+                    {
+                        _bindings.Remove(key);
+                    }
+                }, key, true);
+                _bindings.Add(key, binding);
+            }
+            return true;
         }
 
         public bool Bind(IKey key, out IBinding binding, out string errorMessage)
@@ -52,24 +79,30 @@ namespace cpGames.core.RapidIoC.impl
             return true;
         }
 
-        public bool Unbind(IKey key, out string errorMessage)
+        public bool Unbind(IKey key)
         {
-            if (!FindBinding(key, true, out var binding, out errorMessage))
+            if (!FindBinding(key, true, out var binding))
             {
                 return false;
             }
-            if (!binding.Empty)
-            {
-                if (binding.Value is SignalBase signal)
-                {
-                    signal.ClearCommands();
-                }
-                binding.Discarded = true;
-                _discardedBindings.Add(key, binding);
-            }
-            _bindings.Remove(key);
-            errorMessage = string.Empty;
+            UnbindInternal(key, binding);
             return true;
+        }
+
+        public bool Unbind(IKey key, out string errorMessage)
+        {
+            if (FindBinding(key, true, out var binding, out errorMessage))
+            {
+                UnbindInternal(key, binding);
+                return true;
+            }
+            return true;
+        }
+
+        public bool ClearBindings()
+        {
+            var bindingKeys = _bindings.Keys.ToList();
+            return bindingKeys.All(Unbind);
         }
 
         public bool ClearBindings(out string errorMessage)
@@ -86,15 +119,40 @@ namespace cpGames.core.RapidIoC.impl
             return true;
         }
 
-        public bool BindValue(IKey key, object value, out string errorMessage)
+        public bool BindValue(IKey key, object value)
         {
-            if (!Bind(key, out var binding, out errorMessage))
+            if (!Bind(key, out var binding))
             {
                 return false;
             }
             binding.Discarded = false;
             binding.Value = value;
-            errorMessage = string.Empty;
+            return true;
+        }
+
+        public bool BindValue(IKey key, object value, out string errorMessage)
+        {
+            if (Bind(key, out var binding, out errorMessage))
+            {
+                binding.Discarded = false;
+                binding.Value = value;
+                return true;
+            }
+            return false;
+        }
+
+        public bool MoveBindingFrom(IKey key, IBindingCollection collection)
+        {
+            if (!FindBinding(key, false, out var binding))
+            {
+                return false;
+            }
+            if (!collection.MoveBindingTo(binding))
+            {
+                return false;
+            }
+            (binding.RemovedSignal as Signal).ClearCommands();
+            _bindings.Remove(key);
             return true;
         }
 
@@ -108,16 +166,39 @@ namespace cpGames.core.RapidIoC.impl
             {
                 return false;
             }
-            binding.RemovedSignal.ClearCommands();
+            (binding.RemovedSignal as Signal).ClearCommands();
             _bindings.Remove(key);
             return true;
+        }
+
+        public bool MoveBindingTo(IBinding binding)
+        {
+            return
+                Bind(binding.Key, out var localBinding) &&
+                localBinding.Consume(binding);
         }
 
         public bool MoveBindingTo(IBinding binding, out string errorMessage)
         {
             return
                 Bind(binding.Key, out var localBinding, out errorMessage) &&
-                localBinding.Join(binding, out errorMessage);
+                localBinding.Consume(binding, out errorMessage);
+        }
+        #endregion
+
+        #region Methods
+        private void UnbindInternal(IKey key, IBinding binding)
+        {
+            if (!binding.Empty)
+            {
+                if (binding.Value is SignalBase signal)
+                {
+                    signal.ClearCommands();
+                }
+                binding.Discarded = true;
+                _discardedBindings.Add(key, binding);
+            }
+            _bindings.Remove(key);
         }
         #endregion
     }

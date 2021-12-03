@@ -7,6 +7,26 @@ namespace cpGames.core.RapidIoC.impl
     internal class CompositeKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
+        public bool Create(object keyData, out IKey key)
+        {
+            key = null;
+            if (keyData is List<object> childKeyDatas)
+            {
+                var keyList = new List<IKey>();
+                foreach (var childKeyData in childKeyDatas)
+                {
+                    if (!Rapid.KeyFactoryCollection.Create(childKeyData, out var childKey))
+                    {
+                        return false;
+                    }
+                    keyList.Add(childKey);
+                }
+                key = new CompositeKey(keyList);
+                return true;
+            }
+            return false;
+        }
+
         public bool Create(object keyData, out IKey key, out string errorMessage)
         {
             key = null;
@@ -87,7 +107,7 @@ namespace cpGames.core.RapidIoC.impl
 
         public override string ToString()
         {
-            return string.Format("CompositeKey:{0}", Keys.ToString(","));
+            return $"CompositeKey:{Keys.ToString(",")}";
         }
         #endregion
     }

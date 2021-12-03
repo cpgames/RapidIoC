@@ -4,12 +4,8 @@
         View<T_MODEL>,
         IContext<T_STATE> where T_STATE : IStateBase
     {
-        #region Fields
-        private readonly Signal _stateChangedSignal = new Signal();
-        #endregion
-
         #region Properties
-        public Signal StateChangedSignal => _stateChangedSignal;
+        public ISignal StateChangedSignal { get; } = new Signal();
         #endregion
 
         #region IContext<T_STATE> Members

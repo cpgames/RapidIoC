@@ -19,7 +19,7 @@ namespace cpGames.core.RapidIoC.impl
         #region IContext Members
         public bool IsRoot => Name == ContextCollection.ROOT_CONTEXT_NAME;
         public string Name { get; }
-        public Signal DestroyedSignal { get; } = new Signal();
+        public ISignal DestroyedSignal { get; } = new Signal();
         public int ViewCount => _views.ViewCount;
         public int BindingCount => _bindings.BindingCount;
 
@@ -73,6 +73,13 @@ namespace cpGames.core.RapidIoC.impl
             return true;
         }
 
+        public bool FindBinding(IKey key, bool includeDiscarded, out IBinding binding)
+        {
+            return
+                !IsRoot && Rapid.Contexts.Root.FindBinding(key, includeDiscarded, out binding) ||
+                _bindings.FindBinding(key, includeDiscarded, out binding);
+        }
+
         public bool FindBinding(IKey key, bool includeDiscarded, out IBinding binding, out string errorMessage)
         {
             return
@@ -85,6 +92,23 @@ namespace cpGames.core.RapidIoC.impl
             return
                 !IsRoot && Rapid.Contexts.Root.BindingExists(key) ||
                 _bindings.BindingExists(key);
+        }
+
+        public bool Bind(IKey key, out IBinding binding)
+        {
+            if (IsRoot)
+            {
+                if (Rapid.Contexts.Contexts
+                    .Where(x => x.LocalBindingExists(key))
+                    .Any(context => !context.MoveBindingFrom(key, this)))
+                {
+                    binding = null;
+                    return false;
+                }
+            }
+            return
+                !IsRoot && Rapid.Contexts.Root.FindBinding(key, false, out binding) ||
+                _bindings.Bind(key, out binding);
         }
 
         public bool Bind(IKey key, out IBinding binding, out string errorMessage)
@@ -106,6 +130,20 @@ namespace cpGames.core.RapidIoC.impl
                 _bindings.Bind(key, out binding, out errorMessage);
         }
 
+        public bool BindValue(IKey key, object value)
+        {
+            if (IsRoot)
+            {
+                if (Rapid.Contexts.Contexts
+                    .Where(x => x.LocalBindingExists(key))
+                    .Any(context => !context.MoveBindingFrom(key, this)))
+                {
+                    return false;
+                }
+            }
+            return _bindings.BindValue(key, value);
+        }
+
         public bool BindValue(IKey key, object value, out string errorMessage)
         {
             if (IsRoot)
@@ -122,14 +160,35 @@ namespace cpGames.core.RapidIoC.impl
             return _bindings.BindValue(key, value, out errorMessage);
         }
 
+        public bool MoveBindingFrom(IKey key, IBindingCollection collection)
+        {
+            return _bindings.MoveBindingFrom(key, collection);
+        }
+
         public bool MoveBindingFrom(IKey key, IBindingCollection collection, out string errorMessage)
         {
             return _bindings.MoveBindingFrom(key, collection, out errorMessage);
         }
 
+        public bool MoveBindingTo(IBinding binding)
+        {
+            return _bindings.MoveBindingTo(binding);
+        }
+
         public bool MoveBindingTo(IBinding binding, out string errorMessage)
         {
             return _bindings.MoveBindingTo(binding, out errorMessage);
+        }
+
+        public bool Unbind(IKey key)
+        {
+            if (!IsRoot && Rapid.Contexts.Root.Unbind(key) ||
+                _bindings.Unbind(key))
+            {
+                DestroyIfEmpty();
+                return true;
+            }
+            return false;
         }
 
         public bool Unbind(IKey key, out string errorMessage)
@@ -141,6 +200,16 @@ namespace cpGames.core.RapidIoC.impl
                 return true;
             }
             return false;
+        }
+
+        public bool ClearBindings()
+        {
+            if (!_bindings.ClearBindings())
+            {
+                return false;
+            }
+            DestroyIfEmpty();
+            return true;
         }
 
         public bool ClearBindings(out string errorMessage)

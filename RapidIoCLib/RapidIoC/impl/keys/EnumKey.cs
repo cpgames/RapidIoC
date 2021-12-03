@@ -5,17 +5,26 @@ namespace cpGames.core.RapidIoC.impl
     internal class EnumKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public bool Create(object keyData, out IKey key, out string errorMessage)
+        public bool Create(object keyData, out IKey key)
         {
             key = null;
-            errorMessage = string.Empty;
             if (keyData.GetType().IsEnum)
             {
                 key = new EnumKey((Enum)keyData);
                 return true;
             }
-            errorMessage = "keyData type is not supported.";
             return false;
+        }
+
+        public bool Create(object keyData, out IKey key, out string errorMessage)
+        {
+            if (!Create(keyData, out key))
+            {
+                errorMessage = "keyData type is not supported.";
+                return false;
+            }
+            errorMessage = string.Empty;
+            return true;
         }
         #endregion
     }
@@ -73,7 +82,7 @@ namespace cpGames.core.RapidIoC.impl
 
         public override string ToString()
         {
-            return string.Format("EnumKey:{0}", EnumType);
+            return $"EnumKey:{EnumType}";
         }
         #endregion
     }

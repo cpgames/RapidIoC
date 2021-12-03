@@ -2,16 +2,12 @@
 {
     public class ActionResultCommand<T_Result> : CommandResult<T_Result>, IActionCommand
     {
-        #region Nested type: ActionResultDelegate
-        public delegate T_Result ActionResultDelegate();
-        #endregion
-
         #region Fields
-        private readonly ActionResultDelegate _action;
+        private readonly ActionResultDelegate<T_Result> _action;
         #endregion
 
         #region Constructors
-        public ActionResultCommand(ActionResultDelegate action)
+        public ActionResultCommand(ActionResultDelegate<T_Result> action)
         {
             _action = action;
         }
@@ -27,16 +23,12 @@
 
     public class ActionResultCommand<T_Result, T_In> : CommandResult<T_Result, T_In>, IActionCommand
     {
-        #region Nested type: ActionResultDelegate
-        public delegate T_Result ActionResultDelegate(T_In @in);
-        #endregion
-
         #region Fields
-        private readonly ActionResultDelegate _action;
+        private readonly ActionResultDelegate<T_Result, T_In> _action;
         #endregion
 
         #region Constructors
-        public ActionResultCommand(ActionResultDelegate action)
+        public ActionResultCommand(ActionResultDelegate<T_Result, T_In> action)
         {
             _action = action;
         }
@@ -52,16 +44,12 @@
 
     public class ActionResultCommand<T_Result, T_In_1, T_In_2> : CommandResult<T_Result, T_In_1, T_In_2>, IActionCommand
     {
-        #region Nested type: ActionResultDelegate
-        public delegate T_Result ActionResultDelegate(T_In_1 in1, T_In_2 in2);
-        #endregion
-
         #region Fields
-        private readonly ActionResultDelegate _action;
+        private readonly ActionResultDelegate<T_Result, T_In_1, T_In_2> _action;
         #endregion
 
         #region Constructors
-        public ActionResultCommand(ActionResultDelegate action)
+        public ActionResultCommand(ActionResultDelegate<T_Result, T_In_1, T_In_2> action)
         {
             _action = action;
         }

@@ -11,14 +11,21 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region IBaseCommand Members
-        public virtual void Connect() { }
+        public virtual bool Connect(out string errorMessage)
+        {
+            errorMessage = string.Empty;
+            return true;
+        }
 
-        public virtual void Release()
+        public virtual bool Release(out string errorMessage)
         {
             if (_executing)
             {
-                throw new Exception($"Command <{this}> is still executing. Call EndExecute first.");
+                errorMessage = $"Command <{this}> is still executing. Call EndExecute first.";
+                return false;
             }
+            errorMessage = string.Empty;
+            return true;
         }
         #endregion
 
@@ -30,7 +37,10 @@ namespace cpGames.core.RapidIoC
                 throw new Exception($"Command <{this}> is already executing.");
             }
             _executing = true;
-            RegisterWithContext();
+            if (!RegisterWithContext(out var errorMessage))
+            {
+                throw new Exception(errorMessage);
+            }
         }
 
         protected void EndExecute()
@@ -40,7 +50,10 @@ namespace cpGames.core.RapidIoC
                 throw new Exception($"Command <{this}> is not executing.");
             }
             _executing = false;
-            UnregisterFromContext();
+            if (!UnregisterFromContext(out var errorMessage))
+            {
+                throw new Exception(errorMessage);
+            }
         }
 
         protected abstract void ExecuteInternal();

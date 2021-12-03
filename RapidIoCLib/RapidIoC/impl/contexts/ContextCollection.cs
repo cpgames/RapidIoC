@@ -14,26 +14,30 @@ namespace cpGames.core.RapidIoC.impl
         public int Count => _contexts.Count;
         public IEnumerable<IContext> Contexts => _contexts.Values;
 
-        public bool FindContext(string name, out IContext context, out string errorMessage)
+        public bool FindContext(string name, out IContext context)
         {
             if (string.IsNullOrEmpty(name) || name.Equals(ROOT_CONTEXT_NAME))
             {
-                errorMessage = string.Empty;
                 context = Root;
                 return true;
             }
-            if (_contexts.TryGetValue(name, out context))
-            {
-                errorMessage = string.Empty;
-                return true;
-            }
-            errorMessage = string.Format("Failed to find context <{0}>.", name);
-            return false;
+            return _contexts.TryGetValue(name, out context);
         }
 
-        public bool FindOrCreateContext(string name, out IContext context, out string errorMessage)
+        public bool FindContext(string name, out IContext context, out string errorMessage)
         {
-            if (FindContext(name, out context, out errorMessage))
+            if (!FindContext(name, out context))
+            {
+                errorMessage = $"Failed to find context <{name}>.";
+                return false;
+            }
+            errorMessage = string.Empty;
+            return true;
+        }
+
+        public bool FindOrCreateContext(string name, out IContext context)
+        {
+            if (FindContext(name, out context))
             {
                 return true;
             }
@@ -44,6 +48,16 @@ namespace cpGames.core.RapidIoC.impl
             }, name, true);
             _contexts.Add(name, newContext);
             context = newContext;
+            return true;
+        }
+
+        public bool FindOrCreateContext(string name, out IContext context, out string errorMessage)
+        {
+            if (!FindOrCreateContext(name, out context))
+            {
+                errorMessage = $"Failed to find or create context <{name}>.";
+                return false;
+            }
             errorMessage = string.Empty;
             return true;
         }

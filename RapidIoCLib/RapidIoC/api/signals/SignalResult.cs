@@ -2,10 +2,10 @@
 
 namespace cpGames.core.RapidIoC
 {
-    public abstract class SignalResult<T_Result> : SignalBaseResult<T_Result>
+    public abstract class SignalResult<T_Result> : SignalBaseResult<T_Result>, ISignalResult<T_Result>
     {
-        #region Methods
-        public IKey AddCommand(ActionResultCommand<T_Result>.ActionResultDelegate callback, object keyData = null, bool once = false)
+        #region ISignalResult<T_Result> Members
+        public IKey AddCommand(ActionResultDelegate<T_Result> callback, object keyData = null, bool once = false)
         {
             return AddCommandInternal(new ActionResultCommand<T_Result>(callback), keyData, once);
         }
@@ -50,10 +50,10 @@ namespace cpGames.core.RapidIoC
         #endregion
     }
 
-    public abstract class SignalResult<T_Result, T_In> : SignalBaseResult<T_Result>
+    public abstract class SignalResult<T_Result, T_In> : SignalBaseResult<T_Result>, ISignalResult<T_Result, T_In>
     {
-        #region Methods
-        public IKey AddCommand(ActionResultCommand<T_Result, T_In>.ActionResultDelegate callback, object keyData = null, bool once = false)
+        #region ISignalResult<T_Result,T_In> Members
+        public IKey AddCommand(ActionResultDelegate<T_Result, T_In> callback, object keyData = null, bool once = false)
         {
             return AddCommandInternal(new ActionResultCommand<T_Result, T_In>(callback), keyData, once);
         }
@@ -98,10 +98,10 @@ namespace cpGames.core.RapidIoC
         #endregion
     }
 
-    public abstract class SignalResult<T_Result, T_In_1, T_In_2> : SignalBaseResult<T_Result>
+    public abstract class SignalResult<T_Result, T_In_1, T_In_2> : SignalBaseResult<T_Result>, ISignalResult<T_Result, T_In_1, T_In_2>
     {
-        #region Methods
-        public IKey AddCommand(ActionResultCommand<T_Result, T_In_1, T_In_2>.ActionResultDelegate callback, object keyData = null, bool once = false)
+        #region ISignalResult<T_Result,T_In_1,T_In_2> Members
+        public IKey AddCommand(ActionResultDelegate<T_Result, T_In_1, T_In_2> callback, object keyData = null, bool once = false)
         {
             return AddCommandInternal(new ActionResultCommand<T_Result, T_In_1, T_In_2>(callback), keyData, once);
         }

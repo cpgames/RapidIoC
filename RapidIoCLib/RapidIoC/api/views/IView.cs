@@ -15,12 +15,12 @@
         /// <summary>
         /// Register view with context, call this whenever view is created or initialized.
         /// </summary>
-        void RegisterWithContext();
+        bool RegisterWithContext(out string errorMessage);
 
         /// <summary>
         /// Unregister view from context, call this whenever view is destroyed.
         /// </summary>
-        void UnregisterFromContext();
+        bool UnregisterFromContext(out string errorMessage);
         #endregion
     }
 
@@ -29,7 +29,7 @@
         #region Properties
         TModel Model { get; set; }
         bool HasModel { get; }
-        Signal ModelSetSignal { get; }
+        ISignal ModelSetSignal { get; }
         #endregion
     }
 }

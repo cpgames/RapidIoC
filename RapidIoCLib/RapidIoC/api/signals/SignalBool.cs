@@ -1,6 +1,6 @@
 ﻿namespace cpGames.core.RapidIoC
 {
-    public class SignalBoolOut<T_Out> : SignalResultOut<bool, T_Out>
+    public class SignalBool : SignalResult<bool>, ISignalBool
     {
         #region Properties
         public override bool DefaultResult => true;
@@ -21,10 +21,12 @@
         #endregion
     }
 
-    public class SignalBoolOut<T_In, T_Out> : SignalResultOut<bool, T_In, T_Out>
+    public class SignalBool<T_In> : SignalResult<bool, T_In>, ISignalBool<T_In>
     {
         #region Properties
         public override bool DefaultResult => true;
+        public override bool StopOnResult => true;
+        public override bool TargetResult => false;
         #endregion
 
         #region Methods
@@ -40,10 +42,12 @@
         #endregion
     }
 
-    public class SignalBoolOut<T_In_1, T_In_2, T_Out> : SignalResultOut<bool, T_In_1, T_In_2, T_Out>
+    public class SignalBool<T_In_1, T_In_2> : SignalResult<bool, T_In_1, T_In_2>, ISignalBool<T_In_1, T_In_2>
     {
         #region Properties
         public override bool DefaultResult => true;
+        public override bool StopOnResult => true;
+        public override bool TargetResult => false;
         #endregion
 
         #region Methods
