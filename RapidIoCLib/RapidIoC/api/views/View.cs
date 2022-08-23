@@ -7,7 +7,7 @@
     public abstract class View : IView
     {
         #region IView Members
-        public abstract string ContextName { get; }
+        public virtual string ContextName => null;
 
         public void RegisterWithContext()
         {

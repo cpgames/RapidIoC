@@ -25,6 +25,11 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region Methods
+        public bool HasKey(object keyData)
+        {
+            return Rapid.KeyFactoryCollection.Create(keyData, out var key, out _) && (_commands.ContainsKey(key) || _commandsToAdd.ContainsKey(key));
+        }
+
         public void RemoveCommand(object keyData)
         {
             if (!Rapid.KeyFactoryCollection.Create(keyData, out var key, out var errorMessage) ||

@@ -29,10 +29,35 @@ namespace cpGames.core.RapidIoC.Tests
             view.RegisterWithContext();
             var signal = new TestSignalB();
             Rapid.Bind(Globals.INJECT_KEY1, signal);
+            Assert.AreEqual(signal.CommandCount, 1);
             signal.Dispatch(5);
             Assert.AreEqual(view.n, 5);
             Rapid.Unbind(Globals.INJECT_KEY1);
             view.UnregisterFromContext();
+            Assert.AreEqual(Rapid.Contexts.Count, 0);
+        }
+
+        [TestMethod]
+        public void Dynamic_Binding2_Test()
+        {
+            var view = new TestViewWithSignal();
+            view.RegisterWithContext();
+            
+            var signal1 = new TestSignalB();
+            Rapid.Bind(Globals.INJECT_KEY1, signal1);
+            Assert.AreEqual(signal1.CommandCount, 1);
+
+            var signal2 = new TestSignalB();
+            Rapid.Bind(Globals.INJECT_KEY2, signal2);
+            Assert.AreEqual(signal2.CommandCount, 0);
+
+            view.UnregisterFromContext();
+            Assert.AreEqual(signal1.CommandCount, 0);
+            Assert.AreEqual(signal2.CommandCount, 0);
+
+            Rapid.Unbind(Globals.INJECT_KEY1);
+            Rapid.Unbind(Globals.INJECT_KEY2);
+
             Assert.AreEqual(Rapid.Contexts.Count, 0);
         }
         #endregion

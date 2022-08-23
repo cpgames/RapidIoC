@@ -7,6 +7,7 @@
         public const string TEST_STR_VAL_1 = "I am a test";
         public const string TEST_STR_VAL_2 = "I am updated test";
         public const string INJECT_KEY1 = "InjectKey1";
+        public const string INJECT_KEY2 = "InjectKey2";
         #endregion
     }
 }
