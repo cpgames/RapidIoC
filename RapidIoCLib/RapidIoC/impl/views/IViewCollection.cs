@@ -17,24 +17,21 @@
         /// Register a unique view.
         /// </summary>
         /// <param name="view">View instance to register.</param>
-        /// <param name="errorMessage">If fails, this explains why</param>
         /// <returns>True if successful, otherwise false.</returns>
-        bool RegisterView(IView view, out string errorMessage);
+        Outcome RegisterView(IView view);
 
         /// <summary>
         /// Unregister view.
         /// </summary>
         /// <param name="view">View instance to unregister.</param>
-        /// <param name="errorMessage">If fails, this explains why.</param>
         /// <returns>True if successful, otherwise false.</returns>
-        bool UnregisterView(IView view, out string errorMessage);
+        Outcome UnregisterView(IView view);
 
         /// <summary>
         /// Unregister all views.
         /// </summary>
-        /// <param name="errorMessage">If fails, this explains why.</param>
         /// <returns>True if successful, otherwise false</returns>
-        bool ClearViews(out string errorMessage);
+        Outcome ClearViews();
         #endregion
     }
 }

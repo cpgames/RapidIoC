@@ -13,27 +13,29 @@ namespace cpGames.core.RapidIoC.impl
         #region Constructors
         public KeyFactoryCollection()
         {
-            if (!AddFactory(new NameKeyFactory(), out var errorMessage) ||
-                !AddFactory(new TypeKeyFactory(), out errorMessage) ||
-                !AddFactory(new UidKeyFactory(), out errorMessage) ||
-                !AddFactory(new ByteKeyFactory(), out errorMessage) ||
-                !AddFactory(new EnumKeyFactory(), out errorMessage) ||
-                !AddFactory(new CompositeKeyFactory(), out errorMessage) ||
-                !AddFactory(new InstanceKeyFactory(), out errorMessage))
+            var addFactoryOutcome =
+                AddFactory(new NameKeyFactory()) &&
+                AddFactory(new TypeKeyFactory()) &&
+                AddFactory(new UidKeyFactory()) &&
+                AddFactory(new ByteKeyFactory()) &&
+                AddFactory(new EnumKeyFactory()) &&
+                AddFactory(new CompositeKeyFactory()) &&
+                AddFactory(new InstanceKeyFactory());
+
+            if (!addFactoryOutcome)
             {
-                throw new Exception(errorMessage);
+                throw new Exception(addFactoryOutcome.ErrorMessage);
             }
         }
         #endregion
 
         #region IKeyFactoryCollection Members
-        public bool Create(object keyData, out IKey key, out string errorMessage)
+        public Outcome Create(object keyData, out IKey key)
         {
             if (keyData is IKey)
             {
                 key = (IKey)keyData;
-                errorMessage = string.Empty;
-                return true;
+                return Outcome.Success();
             }
 
             lock (_factories)
@@ -42,31 +44,28 @@ namespace cpGames.core.RapidIoC.impl
                 {
                     lock (factory)
                     {
-                        if (factory.Create(keyData, out key, out errorMessage))
+                        if (factory.Create(keyData, out key))
                         {
-                            return true;
+                            return Outcome.Success();
                         }
                     }
                 }
             }
             key = null;
-            errorMessage = "Failed to create binding key, no matching key factory found.";
-            return false;
+            return Outcome.Fail("Failed to create binding key, no matching key factory found.");
         }
 
-        public bool AddFactory(IKeyFactory factory, out string errorMessage)
+        public Outcome AddFactory(IKeyFactory factory)
         {
             lock (_factories)
             {
                 if (_factories.Any(x => x.GetType() == factory.GetType()))
                 {
-                    errorMessage = string.Format("Factory of type <{0}> already exists.", factory.GetType().Name);
-                    return false;
+                    return Outcome.Fail($"Factory of type <{factory.GetType().Name}> already exists.");
                 }
                 _factories.Add(factory);
             }
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Success();
         }
         #endregion
     }

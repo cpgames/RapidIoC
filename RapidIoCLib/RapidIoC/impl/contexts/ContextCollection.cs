@@ -5,52 +5,53 @@ namespace cpGames.core.RapidIoC.impl
     public class ContextCollection : IContextCollection
     {
         #region Fields
-        public static readonly string ROOT_CONTEXT_NAME = "Root";
-        private readonly Dictionary<string, IContext> _contexts = new Dictionary<string, IContext>();
+        private readonly Dictionary<IKey, IContext> _contexts = new Dictionary<IKey, IContext>();
         #endregion
 
         #region IContextCollection Members
-        public IContext Root { get; } = new Context(ROOT_CONTEXT_NAME);
+        public IContext Root { get; } = new Context(RootKey.Instance);
         public int Count => _contexts.Count;
         public IEnumerable<IContext> Contexts => _contexts.Values;
 
-        public bool FindContext(string name, out IContext context, out string errorMessage)
+        public Outcome FindContext(IKey key, out IContext context)
         {
-            if (string.IsNullOrEmpty(name) || name.Equals(ROOT_CONTEXT_NAME))
+            if (RootKey.Instance == key)
             {
-                errorMessage = string.Empty;
                 context = Root;
-                return true;
+                return Outcome.Success();
             }
-            if (_contexts.TryGetValue(name, out context))
-            {
-                errorMessage = string.Empty;
-                return true;
-            }
-            errorMessage = string.Format("Failed to find context <{0}>.", name);
-            return false;
+            return
+                _contexts.TryGetValue(key, out context) ?
+                    Outcome.Fail($"Failed to find context <{key}>.") :
+                    Outcome.Success();
         }
 
-        public bool FindOrCreateContext(string name, out IContext context, out string errorMessage)
+        public Outcome FindOrCreateContext(IKey key, out IContext context)
         {
-            if (FindContext(name, out context, out errorMessage))
+            var findContextOutcome = FindContext(key, out context);
+            if (!findContextOutcome)
             {
-                return true;
+                return findContextOutcome;
             }
-            var newContext = new Context(name);
-            newContext.DestroyedSignal.AddCommand(() =>
+            var newContext = new Context(key);
+            var addCommandResult = newContext.DestroyedSignal.AddCommand(() =>
             {
-                _contexts.Remove(newContext.Name);
-            }, name, true);
-            _contexts.Add(name, newContext);
+                _contexts.Remove(newContext.Key);
+            }, key, true);
+            if (!addCommandResult)
+            {
+                return addCommandResult;
+            }
+            _contexts.Add(key, newContext);
             context = newContext;
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Success();
         }
 
-        public bool ContextExists(string name)
+        public Outcome ContextExists(IKey key)
         {
-            return FindContext(name, out _, out _);
+            return !_contexts.ContainsKey(key) ?
+                Outcome.Fail($"Context <{key}> does not exist.") :
+                Outcome.Success();
         }
         #endregion
     }

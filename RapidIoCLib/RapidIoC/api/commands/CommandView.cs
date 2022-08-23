@@ -1,60 +1,5 @@
-﻿using System;
-
-namespace cpGames.core.RapidIoC
+﻿namespace cpGames.core.RapidIoC
 {
-    public abstract class BaseCommandView : View, IBaseCommand
-    {
-        #region Fields
-        private bool _executing;
-        internal bool _retain;
-        protected internal readonly object _syncRoot = new object();
-        #endregion
-
-        #region IBaseCommand Members
-        public virtual void Connect() { }
-
-        public virtual void Release()
-        {
-            if (_executing)
-            {
-                throw new Exception(string.Format("Command <{0}> is still executing. Call EndExecute first.", this));
-            }
-        }
-        #endregion
-
-        #region Methods
-        protected void BeginExecute()
-        {
-            if (_executing)
-            {
-                throw new Exception(string.Format("Command <{0}> is already executing.", this));
-            }
-            _executing = true;
-            RegisterWithContext();
-        }
-
-        protected void EndExecute()
-        {
-            if (!_executing)
-            {
-                throw new Exception(string.Format("Command <{0}> is not executing.", this));
-            }
-            _executing = false;
-            UnregisterFromContext();
-        }
-
-        protected abstract void ExecuteInternal();
-
-        protected void Retain()
-        {
-            lock (_syncRoot)
-            {
-                _retain = true;
-            }
-        }
-        #endregion
-    }
-
     public abstract class CommandView : BaseCommandView, ICommand
     {
         #region ICommand Members
@@ -73,19 +18,19 @@ namespace cpGames.core.RapidIoC
         #endregion
     }
 
-    public abstract class CommandView<TModel> : BaseCommandView, ICommand<TModel>
+    public abstract class CommandView<T_In> : BaseCommandView, ICommand<T_In>
     {
         #region Properties
-        public TModel Model { get; private set; }
+        public T_In In { get; private set; }
         #endregion
 
-        #region ICommand<TModel> Members
-        public void Execute(TModel model)
+        #region ICommand<T_In> Members
+        public void Execute(T_In @in)
         {
             lock (_syncRoot)
             {
                 BeginExecute();
-                Model = model;
+                In = @in;
                 ExecuteInternal();
                 if (!_retain)
                 {
@@ -96,21 +41,21 @@ namespace cpGames.core.RapidIoC
         #endregion
     }
 
-    public abstract class CommandView<TModel1, TModel2> : BaseCommandView, ICommand<TModel1, TModel2>
+    public abstract class CommandView<T_In_1, T_In_2> : BaseCommandView, ICommand<T_In_1, T_In_2>
     {
         #region Properties
-        public TModel1 Model1 { get; private set; }
-        public TModel2 Model2 { get; private set; }
+        public T_In_1 In1 { get; private set; }
+        public T_In_2 In2 { get; private set; }
         #endregion
 
         #region ICommand<TModel1,TModel2> Members
-        public void Execute(TModel1 model1, TModel2 model2)
+        public void Execute(T_In_1 in1, T_In_2 in2)
         {
             lock (_syncRoot)
             {
                 BeginExecute();
-                Model1 = model1;
-                Model2 = model2;
+                In1 = in1;
+                In2 = in2;
                 ExecuteInternal();
                 if (!_retain)
                 {

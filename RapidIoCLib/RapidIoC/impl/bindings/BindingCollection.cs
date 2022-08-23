@@ -13,29 +13,29 @@ namespace cpGames.core.RapidIoC.impl
         #region IBindingCollection Members
         public int BindingCount => _bindings.Count;
 
-        public bool FindBinding(IKey key, bool includeDiscarded, out IBinding binding, out string errorMessage)
+        public Outcome FindBinding(IKey key, bool includeDiscarded, out IBinding binding)
         {
-            if (!_bindings.TryGetValue(key, out binding) &&
-                (!includeDiscarded || !_discardedBindings.TryGetValue(key, out binding)))
+            if (_bindings.TryGetValue(key, out binding) ||
+                (includeDiscarded && _discardedBindings.TryGetValue(key, out binding)))
             {
-                errorMessage = string.Format("Binding with key <{0}> not found.", key);
-                return false;
+                return Outcome.Success();
             }
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Fail($"Binding with key <{key}> not found.");
         }
 
-        public bool BindingExists(IKey key)
+        public Outcome BindingExists(IKey key)
         {
-            return _bindings.ContainsKey(key);
+            return !_bindings.ContainsKey(key) ?
+                Outcome.Fail($"Binding with key <{key}> not found.") :
+                Outcome.Success();
         }
 
-        public bool Bind(IKey key, out IBinding binding, out string errorMessage)
+        public Outcome Bind(IKey key, out IBinding binding)
         {
-            if (!FindBinding(key, false, out binding, out errorMessage))
+            if (!FindBinding(key, false, out binding))
             {
                 binding = new Binding(key);
-                binding.RemovedSignal.AddCommand(() =>
+                var addCommandResult = binding.RemovedSignal.AddCommand(() =>
                 {
                     if (_discardedBindings.ContainsKey(key))
                     {
@@ -46,78 +46,88 @@ namespace cpGames.core.RapidIoC.impl
                         _bindings.Remove(key);
                     }
                 }, key, true);
+                if (!addCommandResult)
+                {
+                    return addCommandResult;
+                }
                 _bindings.Add(key, binding);
             }
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Success();
         }
 
-        public bool Unbind(IKey key, out string errorMessage)
+        public Outcome Unbind(IKey key)
         {
-            if (!FindBinding(key, true, out var binding, out errorMessage))
+            return
+                FindBinding(key, true, out var binding) &&
+                UnbindInternal(key, binding);
+        }
+
+        public Outcome ClearBindings()
+        {
+            var bindingKeys = _bindings.Keys.ToList();
+            foreach (var key in bindingKeys)
             {
-                return false;
+                var unbindOutcome = Unbind(key);
+                if (!unbindOutcome)
+                {
+                    return unbindOutcome;
+                }
             }
+            return Outcome.Success();
+        }
+
+        public Outcome BindValue(IKey key, object value)
+        {
+            var bindOutcome = Bind(key, out var binding);
+            if (!bindOutcome)
+            {
+                return bindOutcome;
+            }
+            binding.Discarded = false;
+            return binding.SetValue(value);
+        }
+
+        public Outcome MoveBindingFrom(IKey key, IBindingCollection collection)
+        {
+            var clearCommandsOutcome =
+                FindBinding(key, false, out var binding) &&
+                collection.MoveBindingTo(binding) &&
+                (binding.RemovedSignal as Signal).ClearCommands();
+            if (!clearCommandsOutcome)
+            {
+                return clearCommandsOutcome;
+            }
+            _bindings.Remove(key);
+            return Outcome.Success();
+        }
+
+        public Outcome MoveBindingTo(IBinding binding)
+        {
+            return
+                Bind(binding.Key, out var localBinding) &&
+                localBinding.Consume(binding);
+        }
+        #endregion
+
+        #region Methods
+        private Outcome UnbindInternal(IKey key, IBinding binding)
+        {
             if (!binding.Empty)
             {
-                if (binding.Value is BaseSignal signal)
+                var getBindingOutcome = binding.GetValue<SignalBase>(out var signal);
+                if (getBindingOutcome)
                 {
-                    signal.ClearCommands();
+                    var clearCommandsOutcome = signal.ClearCommands();
+                    if (!clearCommandsOutcome)
+                    {
+                        return clearCommandsOutcome;
+                    }
                 }
                 binding.Discarded = true;
                 _discardedBindings.Add(key, binding);
             }
             _bindings.Remove(key);
-            errorMessage = string.Empty;
-            return true;
-        }
-
-        public bool ClearBindings(out string errorMessage)
-        {
-            var bindingKeys = _bindings.Keys.ToList();
-            foreach (var key in bindingKeys)
-            {
-                if (!Unbind(key, out errorMessage))
-                {
-                    return false;
-                }
-            }
-            errorMessage = string.Empty;
-            return true;
-        }
-
-        public bool BindValue(IKey key, object value, out string errorMessage)
-        {
-            if (!Bind(key, out var binding, out errorMessage))
-            {
-                return false;
-            }
-            binding.Discarded = false;
-            binding.Value = value;
-            errorMessage = string.Empty;
-            return true;
-        }
-
-        public bool MoveBindingFrom(IKey key, IBindingCollection collection, out string errorMessage)
-        {
-            if (!FindBinding(key, false, out var binding, out errorMessage))
-            {
-                return false;
-            }
-            if (!collection.MoveBindingTo(binding, out errorMessage))
-            {
-                return false;
-            }
-            binding.RemovedSignal.ClearCommands();
-            _bindings.Remove(key);
-            return true;
-        }
-
-        public bool MoveBindingTo(IBinding binding, out string errorMessage)
-        {
-            return
-                Bind(binding.Key, out var localBinding, out errorMessage) &&
-                localBinding.Join(binding, out errorMessage);
+            return Outcome.Success();
         }
         #endregion
     }

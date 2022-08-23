@@ -3,17 +3,15 @@
     internal class ByteKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public bool Create(object keyData, out IKey key, out string errorMessage)
+        public Outcome Create(object keyData, out IKey key)
         {
             key = null;
-            errorMessage = string.Empty;
             if (keyData is byte byteKeyData)
             {
                 key = new ByteKey(byteKeyData);
-                return true;
+                return Outcome.Success();
             }
-            errorMessage = "keyData type is not supported.";
-            return false;
+            return Outcome.Fail("keyData type is not supported.");
         }
         #endregion
     }
@@ -71,7 +69,7 @@
 
         public override string ToString()
         {
-            return string.Format("ByteKey:{0}", Data);
+            return $"ByteKey:{Data}";
         }
         #endregion
     }

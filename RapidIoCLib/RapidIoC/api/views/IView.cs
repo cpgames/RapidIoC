@@ -8,28 +8,33 @@
     public interface IView
     {
         #region Properties
-        string ContextName { get; }
+        IKey ContextKey { get; }
         #endregion
 
         #region Methods
         /// <summary>
         /// Register view with context, call this whenever view is created or initialized.
         /// </summary>
-        void RegisterWithContext();
+        Outcome RegisterWithContext();
 
         /// <summary>
         /// Unregister view from context, call this whenever view is destroyed.
         /// </summary>
-        void UnregisterFromContext();
+        Outcome UnregisterFromContext();
         #endregion
     }
 
     public interface IView<TModel> : IView
     {
         #region Properties
-        TModel Model { get; set; }
+        TModel Model { get; }
         bool HasModel { get; }
-        Signal ModelSetSignal { get; }
+        ISignalOutcome<TModel> ModelBeginSetSignal { get; }
+        ISignalOutcome ModelEndSetSignal { get; }
+        #endregion
+
+        #region Methods
+        Outcome SetModel(TModel model);
         #endregion
     }
 }

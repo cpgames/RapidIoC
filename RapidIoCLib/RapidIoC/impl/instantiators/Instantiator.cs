@@ -3,10 +3,10 @@ using System.Reflection;
 
 namespace cpGames.core.RapidIoC.impl
 {
-    public class DefaultInstantiator<T> : IInstantiator
+    public class DefaultInstantiator<T> : IInstantiator<T>
     {
         #region IInstantiator Members
-        public object Create()
+        public Outcome Create(out T value)
         {
             var ctor =
                 typeof(T).GetConstructor(
@@ -14,9 +14,11 @@ namespace cpGames.core.RapidIoC.impl
                     null, Type.EmptyTypes, null);
             if (ctor == null)
             {
-                throw new Exception(string.Format("Type <{0}> missing empty ctor.", typeof(T).Name));
+                value = default;
+                return Outcome.Fail($"Type <{typeof(T).Name}> missing empty ctor.");
             }
-            return (T)ctor.Invoke(null);
+            value = (T)ctor.Invoke(null);
+            return Outcome.Success();
         }
         #endregion
     }

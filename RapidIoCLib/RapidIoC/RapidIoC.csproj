@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityExamplesDebug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -40,6 +43,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -52,19 +56,55 @@
   <ItemGroup>
     <Compile Include="api\bindings\IBinding.cs" />
     <Compile Include="api\bindings\IBindingCollection.cs" />
+    <Compile Include="api\commands\ActionResultOutCommand.cs" />
+    <Compile Include="api\commands\ActionResultCommand.cs" />
+    <Compile Include="api\commands\BaseCommand.cs" />
+    <Compile Include="api\commands\BaseCommandView.cs" />
+    <Compile Include="api\commands\CommandResult.cs" />
+    <Compile Include="api\commands\CommandResultOut.cs" />
+    <Compile Include="api\commands\CommandResultOutView.cs" />
+    <Compile Include="api\commands\CommandResultView.cs" />
     <Compile Include="api\commands\CommandView.cs" />
+    <Compile Include="api\commands\IBaseCommand.cs" />
+    <Compile Include="api\commands\ICommandResult.cs" />
+    <Compile Include="api\commands\ICommandResultOut.cs" />
     <Compile Include="api\keys\IKeyFactoryCollection.cs" />
     <Compile Include="api\commands\ICommand.cs" />
     <Compile Include="api\contexts\IContext.cs" />
     <Compile Include="api\contexts\IContextCollection.cs" />
     <Compile Include="api\instantiators\IInstantiator.cs" />
     <Compile Include="api\commands\Command.cs" />
-    <Compile Include="api\signals\BaseSignal.cs" />
+    <Compile Include="api\Outcome.cs" />
+    <Compile Include="api\signals\addCommandModels\AddActionResultOutCommandModel.cs" />
+    <Compile Include="api\signals\addCommandModels\AddActionResultCommandModel.cs" />
+    <Compile Include="api\signals\addCommandModels\AddActionCommandModel.cs" />
+    <Compile Include="api\signals\addCommandModels\AddCommandBaseModel.cs" />
+    <Compile Include="api\signals\ISignal.cs" />
+    <Compile Include="api\signals\ISignalBase.cs" />
+    <Compile Include="api\signals\ISignalOutcomeOut.cs" />
+    <Compile Include="api\signals\ISignalResultOut.cs" />
+    <Compile Include="api\signals\ISignalResult.cs" />
+    <Compile Include="api\signals\ISignalOutcome.cs" />
+    <Compile Include="api\signals\SignalCommandModel.cs" />
+    <Compile Include="api\signals\LazySignal.cs" />
+    <Compile Include="impl\keys\RootKey.cs" />
+    <Compile Include="impl\signals\LazySignalBase.cs" />
+    <Compile Include="api\signals\LazySignalOutcome.cs" />
+    <Compile Include="api\signals\LazySignalResult.cs" />
+    <Compile Include="impl\signals\SignalBase.cs" />
+    <Compile Include="api\signals\LazySignalOutcomeOut.cs" />
+    <Compile Include="api\signals\SignalOutcomeOut.cs" />
+    <Compile Include="api\signals\SignalOutcome.cs" />
+    <Compile Include="api\signals\LazySignalResultOut.cs" />
+    <Compile Include="api\signals\SignalResultOut.cs" />
+    <Compile Include="api\signals\SignalResult.cs" />
     <Compile Include="api\states\IContext.cs" />
     <Compile Include="api\states\IState.cs" />
     <Compile Include="api\states\StateContextMethods.cs" />
     <Compile Include="api\states\StateContextModelView.cs" />
     <Compile Include="api\views\IView.cs" />
+    <Compile Include="impl\commands\ActionResultCommand.cs" />
+    <Compile Include="impl\commands\ActionResultOutCommand.cs" />
     <Compile Include="impl\keys\InstanceKey.cs" />
     <Compile Include="impl\keys\EnumKey.cs" />
     <Compile Include="impl\keys\ByteKey.cs" />
@@ -99,11 +139,10 @@
       <Name>zLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy RapidIoC.dll %25PA_ROOT%25\ClientA\Assets\_ProjectA\_lib\ /Y
-copy RapidIoC.pdb %25PA_ROOT%25\ClientA\Assets\_ProjectA\_lib\ /Y
-copy RapidIoC.dll %25PA_ROOT%25\AIClient\Assets\_aiClient\_lib\ /Y
-copy RapidIoC.pdb %25PA_ROOT%25\AIClient\Assets\_aiClient\_lib\ /Y</PostBuildEvent>
+    <PostBuildEvent>copy RapidIoC.dll %25PA_ROOT%25\Shared\CpCore\Assets\CpCore\Runtime\lib\  /Y
+copy RapidIoC.pdb %25PA_ROOT%25\Shared\CpCore\Assets\CpCore\Runtime\lib\ /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -19,16 +19,15 @@
         /// <param name="key">Unique key.</param>
         /// <param name="includeDiscarded">Search discarded bucket as well.</param>
         /// <param name="binding">Binding instance if found, otherwise null.</param>
-        /// <param name="errorMessage">If fails or binding not found, this explains why.</param>
         /// <returns>True if binding found, otherwise false.</returns>
-        bool FindBinding(IKey key, bool includeDiscarded, out IBinding binding, out string errorMessage);
+        Outcome FindBinding(IKey key, bool includeDiscarded, out IBinding binding);
 
         /// <summary>
         /// Check if binding exists.
         /// </summary>
         /// <param name="key">Unique key.</param>
         /// <returns>True if binding exists, otherwise false.</returns>
-        bool BindingExists(IKey key);
+        Outcome BindingExists(IKey key);
 
         /// <summary>
         /// If binding does not exist, register new binding. Otherwise return existing one.
@@ -37,37 +36,33 @@
         /// </summary>
         /// <param name="key">Unique key.</param>
         /// <param name="binding">Binding instance if found or created, otherwise null.</param>
-        /// <param name="errorMessage">If fails, this explains why.</param>
         /// <returns>True if success, otherwise false.</returns>
-        bool Bind(IKey key, out IBinding binding, out string errorMessage);
+        Outcome Bind(IKey key, out IBinding binding);
 
         /// <summary>
         /// Remove binding by key.
         /// </summary>
         /// <param name="key">Unique key.</param>
-        /// <param name="errorMessage">If fails or binding does not exist, this explains why.</param>
         /// <returns>True if success, otherwise false.</returns>
-        bool Unbind(IKey key, out string errorMessage);
+        Outcome Unbind(IKey key);
 
         /// <summary>
         /// Remove all local bindings.
         /// </summary>
-        /// <param name="errorMessage">If fails, this explains why.</param>
         /// <returns>True if success, otherwise false.</returns>
-        bool ClearBindings(out string errorMessage);
+        Outcome ClearBindings();
 
         /// <summary>
         /// Update binding value, update all injected properties of that binding, and notify all owning views.
         /// </summary>
         /// <param name="key">Unique key.</param>
         /// <param name="value">New value to assign to binding.</param>
-        /// <param name="errorMessage">True if success, otherwise false.</param>
         /// <returns>True if success, otherwise false.</returns>
-        bool BindValue(IKey key, object value, out string errorMessage);
+        Outcome BindValue(IKey key, object value);
 
-        bool MoveBindingFrom(IKey key, IBindingCollection collection, out string errorMessage);
+        Outcome MoveBindingFrom(IKey key, IBindingCollection collection);
 
-        bool MoveBindingTo(IBinding binding, out string errorMessage);
+        Outcome MoveBindingTo(IBinding binding);
         #endregion
     }
 }

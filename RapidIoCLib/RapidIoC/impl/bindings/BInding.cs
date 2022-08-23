@@ -18,110 +18,142 @@ namespace cpGames.core.RapidIoC.impl
         #endregion
 
         #region IBinding Members
+        public IEnumerable<KeyValuePair<IView, PropertyInfo>> Subscribers => _subscribers;
         public IKey Key { get; }
-        public object Value
-        {
-            get => _value;
-            set
-            {
-                _value = value;
-                UpdateBindings();
-            }
-        }
 
         public bool Empty => _subscribers.Count == 0;
-        public Signal RemovedSignal { get; } = new Signal();
-        public Signal ValueUpdatedSignal { get; } = new Signal();
+        public ISignal RemovedSignal { get; } = new Signal();
+        public ISignal ValueUpdatedSignal { get; } = new Signal();
         public bool Discarded { get; set; } = true;
 
-        public bool Subscribe(IView view, PropertyInfo property, out string errorMessage)
+        public Outcome GetValue<TValue>(out TValue value)
+        {
+            if (_value == null)
+            {
+                value = default;
+                return Outcome.Fail("Value is null");
+            }
+            if (!(_value is TValue))
+            {
+                value = default;
+                return Outcome.Fail($"Incorrect value type <{_value.GetType()}>, <{typeof(TValue)}> expected.");
+            }
+            value = (TValue)_value;
+            return Outcome.Success();
+        }
+
+        public Outcome SetValue(object value)
+        {
+            _value = value;
+            return UpdateBindings();
+        }
+
+        public Outcome Subscribe(IView view, PropertyInfo property)
         {
             if (_subscribers.ContainsKey(view))
             {
-                errorMessage = string.Format("View <{0}> already binded property <{1}>.", view, property.Name);
-                return false;
+                return Outcome.Fail($"View <{view}> already binded property <{property.Name}>.");
             }
-            _subscribers.Add(view, property);
-            if (!Empty)
-            {
-                property.SetValue(view, Value, null);
-                RegisterPotentialSignalMap(view, property);
-            }
-            errorMessage = string.Empty;
-            return true;
+            SubscribeInternal(view, property);
+            return Outcome.Success();
         }
 
-        public bool Unsubscribe(IView view, out string errorMessage)
+        public Outcome Unsubscribe(IView view)
         {
             if (!_subscribers.TryGetValue(view, out var property))
             {
-                errorMessage = string.Format("View <{0}> is not binded to binding with key <{1}>.", view, Key);
-                return false;
+                return Outcome.Fail($"View <{view}> is not binded to binding with key <{Key}>.");
             }
+            UnsubscribeInternal(view, property);
+            return Outcome.Success();
+        }
+
+        public Outcome Consume(IBinding binding)
+        {
+            foreach (var subscriber in binding.Subscribers)
+            {
+                if (_subscribers.ContainsKey(subscriber.Key))
+                {
+                    return Outcome.Fail($"Can't join binding <{binding.Key}> with <{Key}>, encountered duplicate subscriber <{subscriber.Key}>.");
+                }
+                var subscribeResult = Subscribe(subscriber.Key, subscriber.Value);
+                if (!subscribeResult)
+                {
+                    return subscribeResult;
+                }
+            }
+            return Outcome.Success();
+        }
+        #endregion
+
+        #region Methods
+        private void SubscribeInternal(IView view, PropertyInfo property)
+        {
+            _subscribers.Add(view, property);
+            if (!Empty)
+            {
+                property.SetValue(view, _value, null);
+                RegisterPotentialSignalMap(view, property);
+            }
+        }
+
+        private void UnsubscribeInternal(IView view, PropertyInfo property)
+        {
             UnregisterPotentialSignalMap(view, property);
             _subscribers.Remove(view);
             if (Discarded && Empty)
             {
                 RemovedSignal.Dispatch();
             }
-            errorMessage = string.Empty;
-            return true;
         }
 
-        public bool Join(IBinding binding, out string errorMessage)
-        {
-            var bindingImpl = (Binding)binding;
-            foreach (var subscriber in bindingImpl._subscribers)
-            {
-                if (_subscribers.ContainsKey(subscriber.Key))
-                {
-                    errorMessage = string.Format("Can not join binding <{0}> with <{1}>, encountered duplicate subscriber <{2}>.",
-                        binding.Key, Key, subscriber.Key);
-                    return false;
-                }
-                if (!Subscribe(subscriber.Key, subscriber.Value, out errorMessage))
-                {
-                    return false;
-                }
-            }
-            errorMessage = string.Empty;
-            return true;
-        }
-        #endregion
-
-        #region Methods
-        private void UpdateBindings()
+        private Outcome UpdateBindings()
         {
             foreach (var propertyMap in _subscribers)
             {
                 var view = propertyMap.Key;
                 var property = propertyMap.Value;
 
-                UnregisterPotentialSignalMap(view, property);
-                propertyMap.Value.SetValue(propertyMap.Key, Value, null);
-                RegisterPotentialSignalMap(view, property);
+                var unregisterPotentialSignalMapOutcome = UnregisterPotentialSignalMap(view, property);
+                if (!unregisterPotentialSignalMapOutcome)
+                {
+                    return unregisterPotentialSignalMapOutcome;
+                }
+                propertyMap.Value.SetValue(propertyMap.Key, _value, null);
+                var registerPotentialSignalMapOutcome = RegisterPotentialSignalMap(view, property);
+                if (!registerPotentialSignalMapOutcome)
+                {
+                    return registerPotentialSignalMapOutcome;
+                }
                 ValueUpdatedSignal.Dispatch();
             }
+            return Outcome.Success();
         }
 
-        private void UnregisterPotentialSignalMap(IView view, PropertyInfo property)
+        private Outcome UnregisterPotentialSignalMap(IView view, PropertyInfo property)
         {
-            if (property.PropertyType.IsSubclassOf(typeof(BaseSignal)))
+            if (property.PropertyType.IsSubclassOf(typeof(SignalBase)))
             {
-                var signal = (BaseSignal)property.GetValue(view, null);
+                var signal = (SignalBase)property.GetValue(view, null);
                 if (signal != null && signal.HasKey(view))
                 {
-                    signal.RemoveCommand(view);
+                    var removeCommandResult = signal.RemoveCommand(view);
+                    if (!removeCommandResult)
+                    {
+                        return removeCommandResult;
+                    }
                 }
             }
+            return Outcome.Success();
         }
 
-        private void RegisterPotentialSignalMap(IView view, PropertyInfo property)
+        private Outcome RegisterPotentialSignalMap(IView view, PropertyInfo property)
         {
-            if (property.PropertyType.IsSubclassOf(typeof(BaseSignal)) && Value != null)
+            if (property.PropertyType.IsSubclassOf(typeof(SignalBase)) && _value != null)
             {
-                view.ConnectSignalProperty(property);
+                return view.ConnectSignalProperty(property);
             }
+            return Outcome.Success();
         }
         #endregion
     }

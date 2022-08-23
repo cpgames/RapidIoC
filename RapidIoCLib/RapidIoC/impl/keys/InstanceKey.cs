@@ -3,19 +3,17 @@
     internal class InstanceKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public bool Create(object keyData, out IKey key, out string errorMessage)
+        public Outcome Create(object keyData, out IKey key)
         {
             key = null;
-            errorMessage = string.Empty;
             var keyDataType = keyData.GetType();
-            if (!keyDataType.IsValueType 
+            if (!keyDataType.IsValueType
                 && keyDataType != typeof(string))
             {
                 key = new InstanceKey(keyData);
-                return true;
+                return Outcome.Success();
             }
-            errorMessage = "keyData type is not supported.";
-            return false;
+            return Outcome.Fail("keyData type is not supported.");
         }
         #endregion
     }
@@ -73,7 +71,7 @@
 
         public override string ToString()
         {
-            return string.Format("InstanceKey:{0}", Instance);
+            return $"InstanceKey:{Instance}";
         }
         #endregion
     }

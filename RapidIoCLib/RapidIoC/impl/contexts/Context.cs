@@ -10,159 +10,174 @@ namespace cpGames.core.RapidIoC.impl
         #endregion
 
         #region Constructors
-        public Context(string name)
+        public Context(IKey key)
         {
-            Name = name;
+            Key = key;
         }
         #endregion
 
         #region IContext Members
-        public bool IsRoot => Name == ContextCollection.ROOT_CONTEXT_NAME;
-        public string Name { get; }
-        public Signal DestroyedSignal { get; } = new Signal();
+        public bool IsRoot => RootKey.Instance == Key;
+        public IKey Key { get; }
+        public ISignal DestroyedSignal { get; } = new Signal();
         public int ViewCount => _views.ViewCount;
         public int BindingCount => _bindings.BindingCount;
 
-        public bool RegisterView(IView view, out string errorMessage)
+        public Outcome RegisterView(IView view)
         {
-            if (!_views.RegisterView(view, out errorMessage))
+            var registerViewOutcome = _views.RegisterView(view);
+            if (!registerViewOutcome)
             {
-                return false;
+                return registerViewOutcome;
             }
 
             foreach (var property in view.GetInjectedProperties())
             {
-                if (!property.GetInjectionKey(out var key, out errorMessage) ||
-                    !Bind(key, out var binding, out errorMessage) ||
-                    !binding.Subscribe(view, property, out errorMessage))
+                IBinding binding = null;
+                var subscribeOutcome =
+                    property.GetInjectionKey(out var key) &&
+                    Bind(key, out binding) &&
+                    binding.Subscribe(view, property);
+
+                if (!subscribeOutcome)
                 {
-                    return false;
+                    return subscribeOutcome;
                 }
             }
 
-            return true;
+            return Outcome.Success();
         }
 
-        public bool UnregisterView(IView view, out string errorMessage)
+        public Outcome FindBinding(IKey key, bool includeDiscarded, out IBinding binding)
         {
-            if (!_views.UnregisterView(view, out errorMessage))
-            {
-                return false;
-            }
-
-            foreach (var property in view.GetInjectedProperties())
-            {
-                if (!property.GetInjectionKey(out var key, out errorMessage) ||
-                    !FindBinding(key, true, out var binding, out errorMessage) ||
-                    !binding.Unsubscribe(view, out errorMessage))
-                {
-                    return false;
-                }
-            }
-            DestroyIfEmpty();
-            return true;
+            return IsRoot ?
+                _bindings.FindBinding(key, includeDiscarded, out binding) :
+                Rapid.Contexts.Root.FindBinding(key, includeDiscarded, out binding);
         }
 
-        public bool ClearViews(out string errorMessage)
+        public Outcome BindingExists(IKey key)
         {
-            if (!_views.ClearViews(out errorMessage))
-            {
-                return false;
-            }
-            DestroyIfEmpty();
-            return true;
+            return IsRoot ?
+                _bindings.BindingExists(key) :
+                Rapid.Contexts.Root.BindingExists(key);
         }
 
-        public bool FindBinding(IKey key, bool includeDiscarded, out IBinding binding, out string errorMessage)
-        {
-            return
-                !IsRoot && Rapid.Contexts.Root.FindBinding(key, includeDiscarded, out binding, out errorMessage) ||
-                _bindings.FindBinding(key, includeDiscarded, out binding, out errorMessage);
-        }
-
-        public bool BindingExists(IKey key)
-        {
-            return
-                !IsRoot && Rapid.Contexts.Root.BindingExists(key) ||
-                _bindings.BindingExists(key);
-        }
-
-        public bool Bind(IKey key, out IBinding binding, out string errorMessage)
+        public Outcome Bind(IKey key, out IBinding binding)
         {
             if (IsRoot)
             {
                 foreach (var context in Rapid.Contexts.Contexts
-                    .Where(x => x.LocalBindingExists(key)))
+                             .Where(x => x.LocalBindingExists(key)))
                 {
-                    if (!context.MoveBindingFrom(key, this, out errorMessage))
+                    var moveBindingOutcome = context.MoveBindingFrom(key, this);
+                    if (!moveBindingOutcome)
                     {
                         binding = null;
-                        return false;
+                        return moveBindingOutcome;
                     }
                 }
             }
-            return
-                !IsRoot && Rapid.Contexts.Root.FindBinding(key, false, out binding, out errorMessage) ||
-                _bindings.Bind(key, out binding, out errorMessage);
+            return FindBinding(key, false, out binding);
         }
 
-        public bool BindValue(IKey key, object value, out string errorMessage)
+        public Outcome BindValue(IKey key, object value)
         {
             if (IsRoot)
             {
                 foreach (var context in Rapid.Contexts.Contexts
-                    .Where(x => x.LocalBindingExists(key)))
+                             .Where(x => x.LocalBindingExists(key)))
                 {
-                    if (!context.MoveBindingFrom(key, this, out errorMessage))
+                    var moveBindingOutcome = context.MoveBindingFrom(key, this);
+                    if (!moveBindingOutcome)
                     {
-                        return false;
+                        return moveBindingOutcome;
                     }
                 }
             }
-            return _bindings.BindValue(key, value, out errorMessage);
+            return _bindings.BindValue(key, value);
         }
 
-        public bool MoveBindingFrom(IKey key, IBindingCollection collection, out string errorMessage)
+        public Outcome MoveBindingFrom(IKey key, IBindingCollection collection)
         {
-            return _bindings.MoveBindingFrom(key, collection, out errorMessage);
+            return _bindings.MoveBindingFrom(key, collection);
         }
 
-        public bool MoveBindingTo(IBinding binding, out string errorMessage)
+        public Outcome MoveBindingTo(IBinding binding)
         {
-            return _bindings.MoveBindingTo(binding, out errorMessage);
+            return _bindings.MoveBindingTo(binding);
         }
 
-        public bool Unbind(IKey key, out string errorMessage)
+        public Outcome Unbind(IKey key)
         {
-            if (!IsRoot && Rapid.Contexts.Root.Unbind(key, out errorMessage) ||
-                _bindings.Unbind(key, out errorMessage))
+            var unbindResult = IsRoot ?
+                _bindings.Unbind(key) :
+                Rapid.Contexts.Root.Unbind(key);
+
+            if (!unbindResult)
             {
-                DestroyIfEmpty();
-                return true;
+                return unbindResult;
             }
-            return false;
-        }
 
-        public bool ClearBindings(out string errorMessage)
-        {
-            if (!_bindings.ClearBindings(out errorMessage))
-            {
-                return false;
-            }
             DestroyIfEmpty();
-            return true;
+            return Outcome.Success();
         }
 
-        public bool LocalBindingExists(IKey key)
+        public Outcome LocalBindingExists(IKey key)
         {
             return _bindings.BindingExists(key);
         }
 
-        public bool DestroyContext(out string errorMessage)
+        public Outcome UnregisterView(IView view)
+        {
+            var unregisterViewOutcome = _views.UnregisterView(view);
+            if (!unregisterViewOutcome)
+            {
+                return unregisterViewOutcome;
+            }
+
+            foreach (var property in view.GetInjectedProperties())
+            {
+                IBinding binding = null;
+                var unsubscribeOutcome =
+                    property.GetInjectionKey(out var key) &&
+                    FindBinding(key, true, out binding) &&
+                    binding.Unsubscribe(view);
+                if (unsubscribeOutcome)
+                {
+                    return unsubscribeOutcome;
+                }
+            }
+            DestroyIfEmpty();
+            return Outcome.Success();
+        }
+
+        public Outcome ClearViews()
+        {
+            var clearViewsOutcome = _views.ClearViews();
+            if (!clearViewsOutcome)
+            {
+                return clearViewsOutcome;
+            }
+            DestroyIfEmpty();
+            return Outcome.Success();
+        }
+
+        public Outcome ClearBindings()
+        {
+            var clearBindingsOutcome = _bindings.ClearBindings();
+            if (!clearBindingsOutcome)
+            {
+                return clearBindingsOutcome;
+            }
+            DestroyIfEmpty();
+            return Outcome.Success();
+        }
+
+        public Outcome DestroyContext()
         {
             return
-                ClearBindings(out errorMessage) &&
-                ClearViews(out errorMessage);
+                ClearBindings() &&
+                ClearViews();
         }
         #endregion
 
@@ -177,7 +192,7 @@ namespace cpGames.core.RapidIoC.impl
 
         public override string ToString()
         {
-            return string.Format("Context <{0}>", Name);
+            return $"Context <{Key}>";
         }
         #endregion
     }

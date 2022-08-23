@@ -28,27 +28,25 @@ namespace cpGames.core.RapidIoC
         /// <summary>
         /// Check if context exists.
         /// </summary>
-        /// <param name="name">>Unique name for context.</param>
+        /// <param name="key">>Unique key for context.</param>
         /// <returns>rue if exists, otherwise false.</returns>
-        bool ContextExists(string name);
+        Outcome ContextExists(IKey key);
 
         /// <summary>
         /// Find context by name, returns false if context does not exist.
         /// </summary>
-        /// <param name="name">Unique name for context.</param>
+        /// <param name="key">Unique name for context.</param>
         /// <param name="context">Context instance if found, otherwise null.</param>
-        /// <param name="errorMessage">If fails or context not found, this explains why.</param>
         /// <returns>True if successful, otherwise false.</returns>
-        bool FindContext(string name, out IContext context, out string errorMessage);
+        Outcome FindContext(IKey key, out IContext context);
 
         /// <summary>
         /// Find context by name, try to create one if none exists.
         /// </summary>
-        /// <param name="name">Unique name for context.</param>
+        /// <param name="key">Unique key for context.</param>
         /// <param name="context">Context instance if found, otherwise null.</param>
-        /// <param name="errorMessage">If fails, this explains why.</param>
         /// <returns>True if successful, otherwise false.</returns>
-        bool FindOrCreateContext(string name, out IContext context, out string errorMessage);
+        Outcome FindOrCreateContext(IKey key, out IContext context);
         #endregion
     }
 }
