@@ -1,5 +1,4 @@
-﻿using System;
-using cpGames.core.RapidIoC.impl;
+﻿using cpGames.core.RapidIoC.impl;
 
 namespace cpGames.core.RapidIoC
 {
@@ -15,24 +14,34 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region ISignalResultOut<T_Result,T_Out> Members
-        public IKey AddCommand(ActionResultOutCommand<T_Result, T_Out>.ActionResultDelegate callback, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_Out> command, IKey key, bool once = false)
         {
-            return Signal.AddCommand(callback, keyData, once);
+            return Signal.AddCommand(command, key, once);
         }
 
-        public IKey AddCommand(ICommandResultOut<T_Result, T_Out> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_Out> command, object keyData = null, bool once = false)
         {
             return Signal.AddCommand(command, keyData, once);
         }
 
-        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommandResultOut<T_Result, T_Out>
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_Out> command, out IKey key, object keyData = null, bool once = false)
         {
-            return Signal.AddCommand<TCommand>(once);
+            return Signal.AddCommand(command, out key, keyData, once);
         }
 
-        public IKey AddCommand(Action callback, object keyData = null, bool once = false)
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_Out> action, IKey key, bool once = false)
         {
-            return Signal.AddCommand(callback, keyData, once);
+            return Signal.AddCommand(action, key, once);
+        }
+
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_Out> action, object keyData = null, bool once = false)
+        {
+            return Signal.AddCommand(action, keyData, once);
+        }
+
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_Out> action, out IKey key, object keyData = null, bool once = false)
+        {
+            return Signal.AddCommand(action, out key, keyData, once);
         }
 
         public T_Result DispatchResult(T_Result startingResult, out T_Out @out)
@@ -73,24 +82,34 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region ISignalResultOut<T_Result,T_In,T_Out> Members
-        public IKey AddCommand(ActionResultOutCommand<T_Result, T_In, T_Out>.ActionResultDelegate callback, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_In, T_Out> command, IKey key, bool once = false)
         {
-            return Signal.AddCommand(callback, keyData, once);
+            return Signal.AddCommand(command, key, once);
         }
 
-        public IKey AddCommand(ICommandResultOut<T_Result, T_In, T_Out> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_In, T_Out> command, object keyData = null, bool once = false)
         {
             return Signal.AddCommand(command, keyData, once);
         }
 
-        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommandResultOut<T_Result, T_In, T_Out>
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_In, T_Out> command, out IKey key, object keyData = null, bool once = false)
         {
-            return Signal.AddCommand<TCommand>(once);
+            return Signal.AddCommand(command, out key, keyData, once);
         }
 
-        public IKey AddCommand(Action<T_In> callback, object keyData = null, bool once = false)
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In, T_Out> action, IKey key, bool once = false)
         {
-            return Signal.AddCommand(callback, keyData, once);
+            return Signal.AddCommand(action, key, once);
+        }
+
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In, T_Out> action, object keyData = null, bool once = false)
+        {
+            return Signal.AddCommand(action, keyData, once);
+        }
+
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In, T_Out> action, out IKey key, object keyData = null, bool once = false)
+        {
+            return Signal.AddCommand(action, out key, keyData, once);
         }
 
         public T_Result DispatchResult(T_In @in, T_Result startingResult, out T_Out @out)
@@ -131,24 +150,34 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region ISignalResultOut<T_Result,T_In_1,T_In_2,T_Out> Members
-        public IKey AddCommand(ActionResultOutCommand<T_Result, T_In_1, T_In_2, T_Out>.ActionResultDelegate callback, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_In_1, T_In_2, T_Out> command, IKey key, bool once = false)
         {
-            return Signal.AddCommand(callback, keyData, once);
+            return Signal.AddCommand(command, key, once);
         }
 
-        public IKey AddCommand(ICommandResultOut<T_Result, T_In_1, T_In_2, T_Out> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_In_1, T_In_2, T_Out> command, object keyData = null, bool once = false)
         {
             return Signal.AddCommand(command, keyData, once);
         }
 
-        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommandResultOut<T_Result, T_In_1, T_In_2, T_Out>
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_In_1, T_In_2, T_Out> command, out IKey key, object keyData = null, bool once = false)
         {
-            return Signal.AddCommand<TCommand>(once);
+            return Signal.AddCommand(command, out key, keyData, once);
         }
 
-        public IKey AddCommand(Action<T_In_1, T_In_2> callback, object keyData = null, bool once = false)
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In_1, T_In_2, T_Out> action, IKey key, bool once = false)
         {
-            return Signal.AddCommand(callback, keyData, once);
+            return Signal.AddCommand(action, key, once);
+        }
+
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In_1, T_In_2, T_Out> action, object keyData = null, bool once = false)
+        {
+            return Signal.AddCommand(action, keyData, once);
+        }
+
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In_1, T_In_2, T_Out> action, out IKey key, object keyData = null, bool once = false)
+        {
+            return Signal.AddCommand(action, out key, keyData, once);
         }
 
         public T_Result DispatchResult(T_In_1 in1, T_In_2 in2, T_Result startingResult, out T_Out @out)

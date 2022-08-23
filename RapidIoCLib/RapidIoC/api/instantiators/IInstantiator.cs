@@ -3,7 +3,7 @@
     public interface IInstantiator<T>
     {
         #region Methods
-        bool Create(out T value, out string errorMessage);
+        Outcome Create(out T value);
         #endregion
     }
 }

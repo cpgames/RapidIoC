@@ -1,4 +1,6 @@
-﻿namespace cpGames.core.RapidIoC
+﻿using cpGames.core.RapidIoC.impl;
+
+namespace cpGames.core.RapidIoC
 {
     /// <inheritdoc cref="IView" />
     /// <summary>
@@ -7,48 +9,77 @@
     public abstract class View : IView
     {
         #region IView Members
-        public virtual string ContextName => null;
+        public virtual IKey ContextKey => RootKey.Instance;
 
-        public bool RegisterWithContext(out string errorMessage)
+        public Outcome RegisterWithContext()
         {
-            return Rapid.RegisterView(this, out errorMessage);
+            return Rapid.RegisterView(this);
         }
 
-        public bool UnregisterFromContext(out string errorMessage)
+        public Outcome UnregisterFromContext()
         {
-            return Rapid.UnregisterView(this, out errorMessage);
+            return Rapid.UnregisterView(this);
         }
         #endregion
     }
 
     public abstract class View<TModel> : View, IView<TModel>
     {
-        #region Fields
-        protected TModel _model;
+        #region Properties
+        public virtual bool OneTimeSet => !AllowNull;
+        public virtual bool AllowNull => false;
         #endregion
 
         #region IView<TModel> Members
-        public virtual TModel Model
+        public ISignalOutcome<TModel> ModelBeginSetSignal { get; } = new LazySignalOutcome<TModel>();
+        public ISignalOutcome ModelEndSetSignal { get; } = new LazySignalOutcome();
+        public virtual TModel Model { get; private set; }
+        public bool HasModel => Model != null;
+
+        public Outcome SetModel(TModel model)
         {
-            get => _model;
-            set
+            if (OneTimeSet && HasModel)
             {
-                _model = value;
-                UpdateModelInternal();
+                return Outcome.Fail($"View {GetType().Name} is a one-time set, can not update model again.");
             }
+            if (ReferenceEquals(Model, model))
+            {
+                return Outcome.Fail("Model is already set.");
+            }
+            var beginUpdateModelInternalResult = BeginUpdateModelInternal(model);
+            if (!beginUpdateModelInternalResult)
+            {
+                return beginUpdateModelInternalResult;
+            }
+            Model = model;
+            return EndUpdateModelInternal();
         }
-        public bool HasModel => _model != null;
-        public ISignal ModelSetSignal { get; } = new LazySignal();
         #endregion
 
         #region Methods
-        private void UpdateModelInternal()
+        private Outcome BeginUpdateModelInternal(TModel newModel)
         {
-            UpdateModel();
-            ModelSetSignal.Dispatch();
+            return
+                ModelBeginSetSignal.DispatchResult(newModel) &&
+                BeginUpdateModel(newModel);
         }
 
-        protected virtual void UpdateModel() { }
+        private Outcome EndUpdateModelInternal()
+        {
+            return
+                EndUpdateModel() &&
+                ModelEndSetSignal.DispatchResult();
+        }
+
+        protected virtual Outcome BeginUpdateModel(TModel newModel)
+        {
+            return Outcome.Success();
+        }
+
+        protected virtual Outcome EndUpdateModel()
+        {
+            return Outcome.Success();
+        }
         #endregion
     }
 }

@@ -3,16 +3,14 @@
     public abstract class BaseCommand : IBaseCommand
     {
         #region IBaseCommand Members
-        public bool Connect(out string errorMessage)
+        public virtual Outcome Connect()
         {
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Success();
         }
 
-        public bool Release(out string errorMessage)
+        public virtual Outcome Release()
         {
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Success();
         }
         #endregion
     }

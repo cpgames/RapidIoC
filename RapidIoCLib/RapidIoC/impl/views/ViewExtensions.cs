@@ -22,10 +22,10 @@ namespace cpGames.core.RapidIoC.impl
             return view.GetType().GetProperties().Where(x => x.HasAttribute<InjectAttribute>());
         }
 
-        public static bool GetInjectionKey(this PropertyInfo property, out IKey key, out string errorMessage)
+        public static Outcome GetInjectionKey(this PropertyInfo property, out IKey key)
         {
-            var keyData = property.GetAttribute<InjectAttribute>().Key ?? property.PropertyType;
-            return Rapid.KeyFactoryCollection.Create(keyData, out key, out errorMessage);
+            var keyData = property.GetAttribute<InjectAttribute>().KeyData ?? property.PropertyType;
+            return Rapid.KeyFactoryCollection.Create(keyData, out key);
         }
 
         private static string SignalToBaseName(string signalName)
@@ -48,30 +48,29 @@ namespace cpGames.core.RapidIoC.impl
             return signalType;
         }
 
-        public static void ConnectSignalProperty(this IView view, PropertyInfo signalProperty)
+        public static Outcome ConnectSignalProperty(this IView view, PropertyInfo signalProperty)
         {
             var signal = (SignalBase)signalProperty.GetValue(view, null);
             if (signal == null)
             {
-                return;
+                return Outcome.Success();
             }
             var baseName = SignalToBaseName(signalProperty.Name);
             var signalType = GetSignalType(signal);
-            switch (signalType.GetGenericArguments().Length)
+            var argLength = signalType.GetGenericArguments().Length;
+            switch (argLength)
             {
                 case 0:
-                    ConnectSignalWithNoParameters(view, signal, baseName);
-                    break;
+                    return ConnectSignalWithNoParameters(view, signal, baseName);
                 case 1:
-                    ConnectSignalWithOneParameter(view, signal, baseName);
-                    break;
+                    return ConnectSignalWithOneParameter(view, signal, baseName);
                 case 2:
-                    ConnectSignalWithTwoParameters(view, signal, baseName);
-                    break;
+                    return ConnectSignalWithTwoParameters(view, signal, baseName);
             }
+            return Outcome.Fail("Only up to 2 parameters are supported.");
         }
 
-        private static void ConnectSignalWithNoParameters(
+        private static Outcome ConnectSignalWithNoParameters(
             IView view,
             SignalBase signal,
             string baseName)
@@ -87,12 +86,12 @@ namespace cpGames.core.RapidIoC.impl
             {
                 var actionType = typeof(Action);
                 var action = (Action)Delegate.CreateDelegate(actionType, view, method);
-                var command = new ActionCommand(action);
-                (signal as Signal).AddCommand(command, view);
+                return (signal as ISignal).AddCommand(action, view);
             }
+            return Outcome.Success();
         }
 
-        private static void ConnectSignalWithOneParameter(
+        private static Outcome ConnectSignalWithOneParameter(
             IView view,
             SignalBase signal,
             string baseName)
@@ -112,12 +111,14 @@ namespace cpGames.core.RapidIoC.impl
                 var action = Delegate.CreateDelegate(actionType, view, method);
                 var commandType = typeof(ActionCommand<>).MakeGenericType(signalType.GetGenericArguments()[0]);
                 var command = Activator.CreateInstance(commandType, action);
-                var addCommandMethod = signalType.GetMethod("AddCommand", new[] { commandType, typeof(object), typeof(bool) });
-                addCommandMethod.Invoke(signal, new[] { command, view, false });
+                var addCommandMethod = signalType.GetMethod("AddCommand");
+                var outcome = (Outcome)addCommandMethod.Invoke(signal, new[] { command, view });
+                return outcome;
             }
+            return Outcome.Success();
         }
 
-        private static void ConnectSignalWithTwoParameters(
+        private static Outcome ConnectSignalWithTwoParameters(
             IView view,
             SignalBase signal,
             string baseName)
@@ -139,9 +140,11 @@ namespace cpGames.core.RapidIoC.impl
                 var action = Delegate.CreateDelegate(actionType, view, method);
                 var commandType = typeof(ActionCommand<,>).MakeGenericType(signalType.GetGenericArguments());
                 var command = Activator.CreateInstance(commandType, action);
-                var addCommandMethod = signalType.GetMethod("AddCommand", new[] { commandType, typeof(object), typeof(bool) });
-                addCommandMethod.Invoke(signal, new[] { command, view, false });
+                var addCommandMethod = signalType.GetMethod("AddCommand");
+                var outcome = (Outcome)addCommandMethod.Invoke(signal, new[] { command, view });
+                return outcome;
             }
+            return Outcome.Success();
         }
         #endregion
     }

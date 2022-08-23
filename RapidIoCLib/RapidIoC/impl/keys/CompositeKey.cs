@@ -7,7 +7,7 @@ namespace cpGames.core.RapidIoC.impl
     internal class CompositeKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public bool Create(object keyData, out IKey key)
+        public Outcome Create(object keyData, out IKey key)
         {
             key = null;
             if (keyData is List<object> childKeyDatas)
@@ -15,38 +15,17 @@ namespace cpGames.core.RapidIoC.impl
                 var keyList = new List<IKey>();
                 foreach (var childKeyData in childKeyDatas)
                 {
-                    if (!Rapid.KeyFactoryCollection.Create(childKeyData, out var childKey))
+                    var createKeyOutcome = Rapid.KeyFactoryCollection.Create(childKeyData, out var childKey);
+                    if (!createKeyOutcome)
                     {
-                        return false;
+                        return createKeyOutcome;
                     }
                     keyList.Add(childKey);
                 }
                 key = new CompositeKey(keyList);
-                return true;
+                return Outcome.Success();
             }
-            return false;
-        }
-
-        public bool Create(object keyData, out IKey key, out string errorMessage)
-        {
-            key = null;
-            errorMessage = string.Empty;
-            if (keyData is List<object> childKeyDatas)
-            {
-                var keyList = new List<IKey>();
-                foreach (var childKeyData in childKeyDatas)
-                {
-                    if (!Rapid.KeyFactoryCollection.Create(childKeyData, out var childKey, out errorMessage))
-                    {
-                        return false;
-                    }
-                    keyList.Add(childKey);
-                }
-                key = new CompositeKey(keyList);
-                return true;
-            }
-            errorMessage = "keyData type is not supported.";
-            return false;
+            return Outcome.Fail("keyData type is not supported.");
         }
         #endregion
     }

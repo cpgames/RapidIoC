@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace cpGames.core.RapidIoC.impl
 {
@@ -23,30 +22,14 @@ namespace cpGames.core.RapidIoC.impl
             return SignalBase != null && SignalBase.HasKey(keyData);
         }
 
-        public void RemoveCommand(object keyData, bool silent = false)
+        public Outcome RemoveCommand(object keyData)
         {
-            if (SignalBase == null)
-            {
-                if (!silent)
-                {
-                    throw new Exception("Lazy signal not active.");
-                }
-                return;
-            }
-            SignalBase.RemoveCommand(keyData, silent);
+            return SignalBase.RemoveCommand(keyData);
         }
 
-        public void RemoveCommand<TCommand>(bool silent = false) where TCommand : IBaseCommand
+        public Outcome RemoveCommand<TCommand>() where TCommand : IBaseCommand
         {
-            if (SignalBase == null)
-            {
-                if (!silent)
-                {
-                    throw new Exception("Lazy signal not active.");
-                }
-                return;
-            }
-            SignalBase.RemoveCommand<TCommand>(silent);
+            return SignalBase.RemoveCommand<TCommand>();
         }
         #endregion
     }

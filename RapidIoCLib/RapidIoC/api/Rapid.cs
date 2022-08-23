@@ -12,253 +12,138 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region Properties
+        public static IKey RootKey => impl.RootKey.Instance;
         public static IKeyFactoryCollection KeyFactoryCollection { get; } = new KeyFactoryCollection();
         public static IContextCollection Contexts { get; } = new ContextCollection();
         #endregion
 
         #region Methods
-        public static bool Bind(object keyData, object value, string contextName, out string errorMessage)
+        public static Outcome Bind(IKey key, IKey contextKey, object value)
         {
             lock (_syncRoot)
             {
-                if (!Contexts.FindOrCreateContext(contextName, out var context, out errorMessage) ||
-                    !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
-                    !context.BindValue(key, value, out errorMessage))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public static bool Bind(object keyData, object value, out string errorMessage)
-        {
-            return Bind(keyData, value, null, out errorMessage);
-        }
-
-        public static bool Bind<TKeyData>(object value, string contextName, out string errorMessage)
-        {
-            return Bind(typeof(TKeyData), value, contextName, out errorMessage);
-        }
-
-        public static bool Bind<TKeyData>(object value, out string errorMessage)
-        {
-            return Bind(typeof(TKeyData), value, out errorMessage);
-        }
-
-        public static bool Bind<TKeyDataValue>(out TKeyDataValue value, string contextName, out string errorMessage)
-        {
-            var instantiator = new DefaultInstantiator<TKeyDataValue>(); // ToDo: Inject this
-            return
-                instantiator.Create(out value, out errorMessage) &&
-                Bind<TKeyDataValue>(value, contextName, out errorMessage);
-        }
-
-        public static bool Bind<TKeyDataValue>(out TKeyDataValue value, out string errorMessage)
-        {
-            var instantiator = new DefaultInstantiator<TKeyDataValue>(); // ToDo: Inject this
-            return
-                instantiator.Create(out value, out errorMessage) &&
-                Bind<TKeyDataValue>(value, out errorMessage);
-        }
-
-        public static bool Bind<TKeyDataValue>(out string errorMessage)
-        {
-            var instantiator = new DefaultInstantiator<TKeyDataValue>(); // ToDo: Inject this
-            return
-                instantiator.Create(out var value, out errorMessage) &&
-                Bind<TKeyDataValue>(value, out errorMessage);
-        }
-
-        public static bool Bind<TKeyDataInterface, TValue>(out TValue value, string contextName, out string errorMessage) where TValue : TKeyDataInterface
-        {
-            var instantiator = new DefaultInstantiator<TValue>(); // ToDo: Inject this
-            return
-                instantiator.Create(out value, out errorMessage) &&
-                Bind<TKeyDataInterface>(value, contextName, out errorMessage);
-        }
-
-        public static bool Bind<TKeyDataInterface, TValue>(out TValue value, out string errorMessage) where TValue : TKeyDataInterface
-        {
-            var instantiator = new DefaultInstantiator<TValue>(); // ToDo: Inject this
-            return
-                instantiator.Create(out value, out errorMessage) &&
-                Bind<TKeyDataInterface>(value, out errorMessage);
-        }
-
-        public static bool Unbind(object keyData, string contextName, out string errorMessage)
-        {
-            lock (_syncRoot)
-            {
-                if (!Contexts.FindContext(contextName, out var context, out errorMessage) ||
-                    !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
-                    !context.Unbind(key, out errorMessage))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public static bool Unbind(object keyData, out string errorMessage)
-        {
-            return Unbind(keyData, null, out errorMessage);
-        }
-
-        public static bool Unbind<T>(string contextName, out string errorMessage)
-        {
-            return Unbind(typeof(T), contextName, out errorMessage);
-        }
-
-        public static bool Unbind<T>(out string errorMessage)
-        {
-            return Unbind(typeof(T), out errorMessage);
-        }
-
-        public static IBinding GetBinding(object keyData, string contextName = null)
-        {
-            lock (_syncRoot)
-            {
-                if (!Contexts.FindContext(contextName, out var context) ||
-                    !KeyFactoryCollection.Create(keyData, out var key) ||
-                    !context.Bind(key, out var binding))
-                {
-                    return null;
-                }
-                return binding;
+                return
+                    Contexts.FindOrCreateContext(contextKey, out var context) &&
+                    context.BindValue(key, value);
             }
         }
 
-        public static IBinding GetBinding<T>(string contextName = null)
-        {
-            return GetBinding(typeof(T), contextName);
-        }
-
-        public static object GetBindingValue(object keyData, string contextName = null)
-        {
-            return GetBinding(keyData, contextName)?.Value;
-        }
-
-        public static bool GetBindingValue<TValue>(object keyData, out TValue value, string contextName = null)
+        public static Outcome Bind(object keyData, IKey contextKey, object value)
         {
             lock (_syncRoot)
             {
-                if (!Contexts.FindContext(contextName, out var context) ||
-                    !KeyFactoryCollection.Create(keyData, out var key) ||
-                    !context.FindBinding(key, false, out var binding))
-                {
-                    value = default;
-                    return false;
-                }
-                if (binding.Value is TValue)
-                {
-                    value = (TValue)binding.Value;
-                    return true;
-                }
+                return
+                    KeyFactoryCollection.Create(keyData, out var key) &&
+                    Bind(key, contextKey, value);
+            }
+        }
+
+        public static Outcome Bind<TKeyData>(IKey contextKey, object value)
+        {
+            return
+                KeyFactoryCollection.Create(typeof(TKeyData), out var key) &&
+                Bind(key, contextKey, value);
+        }
+
+        public static Outcome Bind<TDataValue>(IKey contextKey)
+        {
+            var instantiator = new DefaultInstantiator<TDataValue>(); // ToDo: Inject this
+            return
+                instantiator.Create(out var value) &&
+                Bind<TDataValue>(contextKey, value);
+        }
+
+        public static Outcome Bind<TDataValue>(IKey contextKey, out TDataValue value)
+        {
+            var instantiator = new DefaultInstantiator<TDataValue>(); // ToDo: Inject this
+            return
+                instantiator.Create(out value) &&
+                Bind<TDataValue>(contextKey, value);
+        }
+
+        public static Outcome Bind<TKeyDataInterface, TDataValue>(IKey contextKey, out TDataValue value) where TDataValue : TKeyDataInterface
+        {
+            var instantiator = new DefaultInstantiator<TDataValue>(); // ToDo: Inject this
+            return
+                instantiator.Create(out value) &&
+                Bind<TKeyDataInterface>(contextKey, value);
+        }
+
+        public static Outcome Unbind(IKey key, IKey contextKey)
+        {
+            lock (_syncRoot)
+            {
+                return
+                    Contexts.FindContext(contextKey, out var context) &&
+                    context.Unbind(key);
+            }
+        }
+
+        public static Outcome Unbind<TDataValue>(IKey contextKey)
+        {
+            return
+                KeyFactoryCollection.Create(typeof(TDataValue), out var key) &&
+                Unbind(key, contextKey);
+        }
+
+        public static Outcome GetBinding(IKey key, IKey contextKey, out IBinding binding)
+        {
+            lock (_syncRoot)
+            {
+                binding = default;
+                return
+                    Contexts.FindContext(contextKey, out var context) &&
+                    context.Bind(key, out binding);
+            }
+        }
+
+        public static Outcome GetBinding<TDataValue>(IKey contextKey, out IBinding binding)
+        {
+            binding = default;
+            return
+                KeyFactoryCollection.Create(typeof(TDataValue), out var key) &&
+                GetBinding(key, contextKey, out binding);
+        }
+
+        public static Outcome GetBindingValue<TDataValue>(IKey key, IKey contextKey, out TDataValue value)
+        {
+            lock (_syncRoot)
+            {
                 value = default;
-                return false;
+                IBinding binding = null;
+                return
+                    Contexts.FindContext(contextKey, out var context) &&
+                    context.FindBinding(key, false, out binding) &&
+                    binding.GetValue(out value);
             }
         }
 
-        public static bool GetBindingValue<TValue>(object keyData, out TValue value, out string errorMessage, string contextName = null)
+        public static Outcome GetBindingValue<TDataValue>(IKey contextKey, out TDataValue value)
+        {
+            value = default;
+            return
+                KeyFactoryCollection.Create(typeof(TDataValue), out var key) &&
+                GetBindingValue(key, contextKey, out value);
+        }
+
+        public static Outcome RegisterView(IView view)
         {
             lock (_syncRoot)
             {
-                if (!Contexts.FindContext(contextName, out var context, out errorMessage) ||
-                    !KeyFactoryCollection.Create(keyData, out var key, out errorMessage) ||
-                    !context.FindBinding(key, false, out var binding, out errorMessage))
-                {
-                    value = default;
-                    return false;
-                }
-                if (binding.Value is TValue)
-                {
-                    value = (TValue)binding.Value;
-                    return true;
-                }
-                value = default;
-                errorMessage = $"Binding with key <{key}> exists, but of wrong type: <{binding.Value.GetType().Name}>. <{typeof(TValue).Name} expected.";
-                return false;
+                return
+                    Contexts.FindOrCreateContext(view.ContextKey, out var context) &&
+                    context.RegisterView(view);
             }
         }
 
-        public static bool GetBindingValue<TValue>(out TValue value, string contextName = null)
+        public static Outcome UnregisterView(IView view)
         {
             lock (_syncRoot)
             {
-                if (!Contexts.FindContext(contextName, out var context) ||
-                    !KeyFactoryCollection.Create(typeof(TValue), out var key) ||
-                    !context.FindBinding(key, false, out var binding))
-                {
-                    value = default;
-                    return false;
-                }
-                if (binding.Value is TValue)
-                {
-                    value = (TValue)binding.Value;
-                    return true;
-                }
-                value = default;
-                return false;
+                return
+                    Contexts.FindContext(view.ContextKey, out var context) &&
+                    context.UnregisterView(view);
             }
-        }
-
-        public static bool GetBindingValue<TValue>(out TValue value, out string errorMessage, string contextName = null)
-        {
-            lock (_syncRoot)
-            {
-                if (!Contexts.FindContext(contextName, out var context, out errorMessage) ||
-                    !KeyFactoryCollection.Create(typeof(TValue), out var key, out errorMessage) ||
-                    !context.FindBinding(key, false, out var binding, out errorMessage))
-                {
-                    value = default;
-                    return false;
-                }
-                if (binding.Value is TValue)
-                {
-                    value = (TValue)binding.Value;
-                    return true;
-                }
-                value = default;
-                errorMessage = $"Binding with key <{key}> exists, but of wrong type: <{binding.Value.GetType().Name}>. <{typeof(TValue).Name} expected.";
-                return false;
-            }
-        }
-
-        public static T GetBindingValue<T>(object keyData, string contextName = null)
-        {
-            return (T)GetBindingValue(keyData, contextName);
-        }
-
-        public static T GetBindingValue<T>(string contextName = null)
-        {
-            return (T)GetBindingValue(typeof(T), contextName);
-        }
-
-        public static bool RegisterView(IView view, out string errorMessage)
-        {
-            lock (_syncRoot)
-            {
-                if (!Contexts.FindOrCreateContext(view.ContextName, out var context, out errorMessage) ||
-                    !context.RegisterView(view, out errorMessage))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public static bool UnregisterView(IView view, out string errorMessage)
-        {
-            lock (_syncRoot)
-            {
-                if (!Contexts.FindContext(view.ContextName, out var context, out errorMessage) ||
-                    !context.UnregisterView(view, out errorMessage))
-                {
-                    return false;
-                }
-            }
-            return true;
         }
         #endregion
     }

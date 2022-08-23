@@ -3,30 +3,19 @@
     internal class UidKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public bool Create(object keyData, out IKey key)
+        public Outcome Create(object keyData, out IKey key)
         {
             key = null;
             switch (keyData)
             {
                 case long longKeyData:
                     key = new UidKey(longKeyData);
-                    return true;
+                    return Outcome.Success();
                 case UidGenerator uidGenerator:
                     key = new UidKey(uidGenerator.GenerateUid());
-                    return true;
+                    return Outcome.Success();
             }
-            return false;
-        }
-
-        public bool Create(object keyData, out IKey key, out string errorMessage)
-        {
-            if (!Create(keyData, out key))
-            {
-                errorMessage = "keyData type is not supported.";
-                return false;
-            }
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Fail("keyData type is not supported.");
         }
         #endregion
     }

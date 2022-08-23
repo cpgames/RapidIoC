@@ -5,26 +5,15 @@ namespace cpGames.core.RapidIoC
     public class TypeKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public bool Create(object keyData, out IKey key)
+        public Outcome Create(object keyData, out IKey key)
         {
             key = null;
             if (keyData is Type typeKeyData)
             {
                 key = new TypeKey(typeKeyData);
-                return true;
+                return Outcome.Success();
             }
-            return false;
-        }
-
-        public bool Create(object keyData, out IKey key, out string errorMessage)
-        {
-            if (!Create(keyData, out key))
-            {
-                errorMessage = "keyData type is not supported.";
-                return false;
-            }
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Fail("keyData type is not supported.");
         }
         #endregion
     }

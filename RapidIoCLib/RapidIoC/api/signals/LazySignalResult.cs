@@ -15,19 +15,34 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region ISignalResult<T_Result> Members
-        public IKey AddCommand(ActionResultDelegate<T_Result> callback, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResult<T_Result> command, IKey key, bool once = false)
         {
-            return Signal.AddCommand(callback, keyData, once);
+            return Signal.AddCommand(command, key, once);
         }
 
-        public IKey AddCommand(ICommandResult<T_Result> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResult<T_Result> command, object keyData = null, bool once = false)
         {
             return Signal.AddCommand(command, keyData, once);
         }
 
-        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommandResult<T_Result>
+        public Outcome AddCommand(ICommandResult<T_Result> command, out IKey key, object keyData = null, bool once = false)
         {
-            return Signal.AddCommand<TCommand>(once);
+            return Signal.AddCommand(command, out key, keyData, once);
+        }
+
+        public Outcome AddCommand(ActionResultDelegate<T_Result> action, IKey key, bool once = false)
+        {
+            return Signal.AddCommand(new ActionResultCommand<T_Result>(action), key, once);
+        }
+
+        public Outcome AddCommand(ActionResultDelegate<T_Result> action, object keyData = null, bool once = false)
+        {
+            return Signal.AddCommand(new ActionResultCommand<T_Result>(action), keyData, once);
+        }
+
+        public Outcome AddCommand(ActionResultDelegate<T_Result> action, out IKey key, object keyData = null, bool once = false)
+        {
+            return Signal.AddCommand(new ActionResultCommand<T_Result>(action), out key, keyData, once);
         }
 
         public T_Result DispatchResult(T_Result startingResult)
@@ -59,19 +74,34 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region ISignalResult<T_Result,T_In> Members
-        public IKey AddCommand(ActionResultDelegate<T_Result, T_In> callback, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResult<T_Result, T_In> command, IKey key, bool once = false)
         {
-            return Signal.AddCommand(callback, keyData, once);
+            return Signal.AddCommand(command, key, once);
         }
 
-        public IKey AddCommand(ICommandResult<T_Result, T_In> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResult<T_Result, T_In> command, object keyData = null, bool once = false)
         {
             return Signal.AddCommand(command, keyData, once);
         }
 
-        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommandResult<T_Result, T_In>
+        public Outcome AddCommand(ICommandResult<T_Result, T_In> command, out IKey key, object keyData = null, bool once = false)
         {
-            return Signal.AddCommand<TCommand>(once);
+            return Signal.AddCommand(command, out key, keyData, once);
+        }
+
+        public Outcome AddCommand(ActionResultDelegate<T_Result, T_In> action, IKey key, bool once = false)
+        {
+            return Signal.AddCommand(new ActionResultCommand<T_Result, T_In>(action), key, once);
+        }
+
+        public Outcome AddCommand(ActionResultDelegate<T_Result, T_In> action, object keyData = null, bool once = false)
+        {
+            return Signal.AddCommand(new ActionResultCommand<T_Result, T_In>(action), keyData, once);
+        }
+
+        public Outcome AddCommand(ActionResultDelegate<T_Result, T_In> action, out IKey key, object keyData = null, bool once = false)
+        {
+            return Signal.AddCommand(new ActionResultCommand<T_Result, T_In>(action), out key, keyData, once);
         }
 
         public T_Result DispatchResult(T_In @in, T_Result startingResult)
@@ -103,19 +133,34 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region ISignalResult<T_Result,T_In_1,T_In_2> Members
-        public IKey AddCommand(ActionResultDelegate<T_Result, T_In_1, T_In_2> callback, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResult<T_Result, T_In_1, T_In_2> command, IKey key, bool once = false)
         {
-            return Signal.AddCommand(callback, keyData, once);
+            return Signal.AddCommand(command, key, once);
         }
 
-        public IKey AddCommand(ICommandResult<T_Result, T_In_1, T_In_2> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResult<T_Result, T_In_1, T_In_2> command, object keyData = null, bool once = false)
         {
             return Signal.AddCommand(command, keyData, once);
         }
 
-        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommandResult<T_Result, T_In_1, T_In_2>
+        public Outcome AddCommand(ICommandResult<T_Result, T_In_1, T_In_2> command, out IKey key, object keyData = null, bool once = false)
         {
-            return Signal.AddCommand<TCommand>(once);
+            return Signal.AddCommand(command, out key, keyData, once);
+        }
+
+        public Outcome AddCommand(ActionResultDelegate<T_Result, T_In_1, T_In_2> action, IKey key, bool once = false)
+        {
+            return Signal.AddCommand(new ActionResultCommand<T_Result, T_In_1, T_In_2>(action), key, once);
+        }
+
+        public Outcome AddCommand(ActionResultDelegate<T_Result, T_In_1, T_In_2> action, object keyData = null, bool once = false)
+        {
+            return Signal.AddCommand(new ActionResultCommand<T_Result, T_In_1, T_In_2>(action), keyData, once);
+        }
+
+        public Outcome AddCommand(ActionResultDelegate<T_Result, T_In_1, T_In_2> action, out IKey key, object keyData = null, bool once = false)
+        {
+            return Signal.AddCommand(new ActionResultCommand<T_Result, T_In_1, T_In_2>(action), out key, keyData, once);
         }
 
         public T_Result DispatchResult(T_In_1 in1, T_In_2 in2, T_Result startingResult)

@@ -14,12 +14,7 @@ namespace cpGames.core.RapidIoC
         /// Unique key.
         /// </summary>
         IKey Key { get; }
-
-        /// <summary>
-        /// Value dynamically set to all registered properties.
-        /// </summary>
-        object Value { get; set; }
-
+        
         /// <summary>
         /// Map of subscribing views and their property injecting the binding.
         /// </summary>
@@ -47,41 +42,24 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Register a property belonging to a view with this binding.
-        /// </summary>
-        /// <param name="view">View instance owning the property</param>
-        /// <param name="property">PropertyInfo of the the property.</param>
-        /// <returns>False if view instance was already binded, otherwise true.</returns>
-        bool Subscribe(IView view, PropertyInfo property);
+        Outcome GetValue<TValue>(out TValue value);
+        Outcome SetValue(object value);
 
         /// <summary>
         /// Register a property belonging to a view with this binding.
         /// </summary>
         /// <param name="view">View instance owning the property</param>
         /// <param name="property">PropertyInfo of the the property.</param>
-        /// <param name="errorMessage">If fails, this explains why.</param>
         /// <returns>False if view instance was already binded, otherwise true.</returns>
-        bool Subscribe(IView view, PropertyInfo property, out string errorMessage);
+        Outcome Subscribe(IView view, PropertyInfo property);
 
         /// <summary>
         /// Unregister view.
         /// </summary>
         /// <param name="view">View instance to unregister.</param>
         /// <returns>False if view instance was not registered, otherwise true.</returns>
-        bool Unsubscribe(IView view);
-
-        /// <summary>
-        /// Unregister view.
-        /// </summary>
-        /// <param name="view">View instance to unregister.</param>
-        /// <param name="errorMessage">If fails, this explains why.</param>
-        /// <returns>False if view instance was not registered, otherwise true.</returns>
-        bool Unsubscribe(IView view, out string errorMessage);
-
-        bool Consume(IBinding binding);
-
-        bool Consume(IBinding binding, out string errorMessage);
+        Outcome Unsubscribe(IView view);
+        Outcome Consume(IBinding binding);
         #endregion
     }
 }

@@ -11,16 +11,17 @@ namespace cpGames.core.RapidIoC.impl
     public abstract class SignalBase : ISignalBase
     {
         #region Fields
+        private static UidGenerator _uidGenerator;
+
         private readonly Dictionary<IKey, SignalCommandModel> _commands = new Dictionary<IKey, SignalCommandModel>();
         private readonly Dictionary<IKey, SignalCommandModel> _commandsToAdd = new Dictionary<IKey, SignalCommandModel>();
         private readonly HashSet<IKey> _commandsToRemove = new HashSet<IKey>();
-        private UidGenerator _uidGenerator;
         private bool _dispatching;
         protected internal readonly object _syncRoot = new object();
         #endregion
 
         #region Properties
-        private UidGenerator UidGenerator => _uidGenerator ?? (_uidGenerator = new UidGenerator());
+        internal static UidGenerator UidGenerator => _uidGenerator ?? (_uidGenerator = new UidGenerator());
         #endregion
 
         #region ISignalBase Members
@@ -36,58 +37,46 @@ namespace cpGames.core.RapidIoC.impl
         {
             lock (_syncRoot)
             {
-                return Rapid.KeyFactoryCollection.Create(keyData, out var key, out _) && (_commands.ContainsKey(key) || _commandsToAdd.ContainsKey(key));
+                return
+                    Rapid.KeyFactoryCollection.Create(keyData, out var key) &&
+                    (_commands.ContainsKey(key) || _commandsToAdd.ContainsKey(key));
             }
         }
 
-        public void RemoveCommand(object keyData, bool silent = false)
+        public Outcome RemoveCommand(object keyData)
         {
-            if (!Rapid.KeyFactoryCollection.Create(keyData, out var key, out var errorMessage) ||
-                !RemoveCommandInternal(key, silent, out errorMessage))
-            {
-                throw new Exception(errorMessage);
-            }
+            return
+                Rapid.KeyFactoryCollection.Create(keyData, out var key) &&
+                RemoveCommandInternal(key);
         }
 
-        public void RemoveCommand<TCommand>(bool silent = false) where TCommand : IBaseCommand
+        public Outcome RemoveCommand<TCommand>() where TCommand : IBaseCommand
         {
-            RemoveCommand(typeof(TCommand), silent);
+            return RemoveCommand(typeof(TCommand));
         }
         #endregion
 
         #region Methods
-        protected bool RemoveCommandInternal(IKey key, bool silent, out string errorMessage)
+        protected Outcome RemoveCommandInternal(IKey key)
         {
             lock (_syncRoot)
             {
                 if (!_commands.TryGetValue(key, out var commandData))
                 {
-                    if (silent)
-                    {
-                        errorMessage = string.Empty;
-                        return true;
-                    }
-                    errorMessage = $"Command with key <{key}> not found.";
-                    return false;
+                    return Outcome.Fail($"Command with key <{key}> not found.");
                 }
                 if (_dispatching)
                 {
                     if (!_commandsToRemove.Add(key))
                     {
-                        if (silent)
-                        {
-                            errorMessage = string.Empty;
-                            return true;
-                        }
-                        errorMessage = $"Command with key <{key}> is already scheduled for removal.";
-                        return false;
+                        return Outcome.Fail($"Command with key <{key}> is already scheduled for removal.");
                     }
-                    errorMessage = string.Empty;
-                    return true;
+                    return Outcome.Success();
                 }
-                if (!commandData.Command.Release(out errorMessage))
+                var releaseCommandResult = commandData.Command.Release();
+                if (!releaseCommandResult)
                 {
-                    return false;
+                    return releaseCommandResult;
                 }
                 if (key is UidKey uidKey)
                 {
@@ -95,82 +84,85 @@ namespace cpGames.core.RapidIoC.impl
                 }
                 _commands.Remove(key);
             }
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Success();
         }
 
-        public void ClearCommands()
+        public Outcome ClearCommands()
         {
             lock (_syncRoot)
             {
                 while (_commands.Count > 0)
                 {
-                    if (!RemoveCommandInternal(_commands.Keys.First(), false, out var errorMessage))
+                    var removeCommandResult = RemoveCommandInternal(_commands.Keys.First());
+                    if (!removeCommandResult)
                     {
-                        throw new Exception(errorMessage);
+                        return removeCommandResult;
                     }
                 }
+                return Outcome.Success();
             }
         }
 
-        private bool ValidateKey(IKey key, out string errorMessage)
+        private Outcome ValidateKey(IKey key)
         {
             lock (_syncRoot)
             {
                 if (_commands.ContainsKey(key))
                 {
-                    errorMessage = $"Command with key <{key}> already added.";
-                    return false;
+                    return Outcome.Fail($"Command with key <{key}> already added.");
                 }
                 if (_commandsToRemove.Contains(key))
                 {
-                    errorMessage = $"Command with key <{key}> is already scheduled for removal.";
-                    return false;
+                    return Outcome.Fail($"Command with key <{key}> is already scheduled for removal.");
                 }
                 if (_commandsToAdd.ContainsKey(key))
                 {
-                    errorMessage = $"Command with key <{key}> is already scheduled to add.";
-                    return false;
+                    return Outcome.Fail($"Command with key <{key}> is already scheduled to add.");
                 }
             }
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Success();
         }
 
-        protected IKey AddCommandInternal<TCommand>(bool once) where TCommand : IBaseCommand
-        {
-            if (!Rapid.KeyFactoryCollection.Create(typeof(TCommand), out var key, out var errorMessage) ||
-                !AddCommandInternal((IBaseCommand)Activator.CreateInstance(((TypeKey)key).Type), key, once, out errorMessage))
-            {
-                throw new Exception(errorMessage);
-            }
-            return key;
-        }
-
-        protected IKey AddCommandInternal(IBaseCommand command, object keyData, bool once)
-        {
-            keyData = keyData ?? UidGenerator;
-            if (!Rapid.KeyFactoryCollection.Create(keyData, out var key, out var errorMessage) ||
-                !AddCommandInternal(command, key, once, out errorMessage))
-            {
-                throw new Exception(errorMessage);
-            }
-            return key;
-        }
-
-        private bool AddCommandInternal(IBaseCommand command, IKey key, bool once, out string errorMessage)
+        protected Outcome AddCommandInternal(IBaseCommand command, IKey key, bool once)
         {
             lock (_syncRoot)
             {
-                if (!ValidateKey(key, out errorMessage))
+                var result = ValidateKey(key);
+                if (!result)
                 {
-                    return false;
+                    return result;
                 }
                 var commandData = new SignalCommandModel(command, once);
                 var commands = _dispatching ? _commandsToAdd : _commands;
                 commands.Add(key, commandData);
-                return command.Connect(out errorMessage);
+                return command.Connect();
             }
+        }
+
+        protected Outcome AddCommandInternal(IBaseCommand command, object keyData, bool once)
+        {
+            return AddCommandInternal(command, out _, keyData, once);
+        }
+
+        protected Outcome AddCommandInternal(IBaseCommand command, out IKey key, object keyData, bool once)
+        {
+            if (keyData == null)
+            {
+                var createKeyOutcome = Rapid.KeyFactoryCollection.Create(UidGenerator, out key);
+                if (!createKeyOutcome)
+                {
+                    return createKeyOutcome;
+                }
+            }
+            else
+            {
+                var createKeyOutcome = Rapid.KeyFactoryCollection.Create(keyData, out key);
+                if (!createKeyOutcome)
+                {
+                    return createKeyOutcome;
+                }
+            }
+            return AddCommandInternal(command, key, once);
         }
 
         protected bool DispatchBegin()
@@ -197,9 +189,10 @@ namespace cpGames.core.RapidIoC.impl
                 foreach (var key in _commandsToRemove)
                 {
                     var command = _commands[key];
-                    if (!command.Command.Release(out var errorMessage))
+                    var releaseCommandResult = command.Command.Release();
+                    if (!releaseCommandResult)
                     {
-
+                        throw new Exception(releaseCommandResult.ErrorMessage);
                     }
                     _commands.Remove(key);
                 }

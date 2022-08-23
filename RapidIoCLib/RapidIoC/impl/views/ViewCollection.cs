@@ -11,41 +11,37 @@ namespace cpGames.core.RapidIoC.impl
         #region IViewCollection Members
         public int ViewCount => _views.Count;
 
-        public bool RegisterView(IView view, out string errorMessage)
+        public Outcome RegisterView(IView view)
         {
             if (_views.Contains(view))
             {
-                errorMessage = string.Format("View <{0}> is already registered.", view);
-                return false;
+                return Outcome.Fail($"View <{view}> is already registered.");
             }
             _views.Add(view);
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Success();
         }
 
-        public bool UnregisterView(IView view, out string errorMessage)
+        public Outcome UnregisterView(IView view)
         {
             if (!_views.Contains(view))
             {
-                errorMessage = string.Format("View <{0}> is not registered.", view);
-                return false;
+                return Outcome.Fail($"View <{view}> is not registered.");
             }
             _views.Remove(view);
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Success();
         }
 
-        public bool ClearViews(out string errorMessage)
+        public Outcome ClearViews()
         {
             while (_views.Count > 0)
             {
-                if (!UnregisterView(_views[0], out errorMessage))
+                var unregisterViewOutcome = UnregisterView(_views[0]);
+                if (!unregisterViewOutcome)
                 {
-                    return false;
+                    return unregisterViewOutcome;
                 }
             }
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Success();
         }
         #endregion
     }

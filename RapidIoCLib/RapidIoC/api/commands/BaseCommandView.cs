@@ -11,21 +11,16 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region IBaseCommand Members
-        public virtual bool Connect(out string errorMessage)
+        public virtual Outcome Connect()
         {
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Success();
         }
 
-        public virtual bool Release(out string errorMessage)
+        public virtual Outcome Release()
         {
-            if (_executing)
-            {
-                errorMessage = $"Command <{this}> is still executing. Call EndExecute first.";
-                return false;
-            }
-            errorMessage = string.Empty;
-            return true;
+            return _executing ?
+                Outcome.Fail($"Command <{this}> is still executing. Call EndExecute first.") :
+                Outcome.Success();
         }
         #endregion
 
@@ -37,9 +32,10 @@ namespace cpGames.core.RapidIoC
                 throw new Exception($"Command <{this}> is already executing.");
             }
             _executing = true;
-            if (!RegisterWithContext(out var errorMessage))
+            var registerWithContextOutcome = RegisterWithContext();
+            if (!registerWithContextOutcome)
             {
-                throw new Exception(errorMessage);
+                throw new Exception(registerWithContextOutcome.ErrorMessage);
             }
         }
 
@@ -50,9 +46,10 @@ namespace cpGames.core.RapidIoC
                 throw new Exception($"Command <{this}> is not executing.");
             }
             _executing = false;
-            if (!UnregisterFromContext(out var errorMessage))
+            var unregisterWithContextOutcome = UnregisterFromContext();
+            if (!unregisterWithContextOutcome)
             {
-                throw new Exception(errorMessage);
+                throw new Exception(unregisterWithContextOutcome.ErrorMessage);
             }
         }
 

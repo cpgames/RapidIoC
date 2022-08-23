@@ -9,9 +9,11 @@ namespace cpGames.core.RapidIoC
         int CommandCount { get; }
         #endregion
 
+        #region Methods
         bool IsScheduledForRemoval(IKey key);
         bool HasKey(object keyData);
-        void RemoveCommand(object keyData, bool silent = false);
-        void RemoveCommand<TCommand>(bool silent = false) where TCommand : IBaseCommand;
+        Outcome RemoveCommand(object keyData);
+        Outcome RemoveCommand<TCommand>() where TCommand : IBaseCommand;
+        #endregion
     }
 }

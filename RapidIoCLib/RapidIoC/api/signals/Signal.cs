@@ -11,44 +11,38 @@ namespace cpGames.core.RapidIoC
     public class Signal : SignalBase, ISignal
     {
         #region Fields
-        private int _dispatchQueue  ;
+        private int _dispatchQueue;
         #endregion
 
         #region ISignal Members
-        /// <summary>
-        /// Add command with an action callback
-        /// </summary>
-        /// <param name="callback">Action to execute</param>
-        /// <param name="keyData">Unique key data to bind command to, passing null will generate random Uid key</param>
-        /// <param name="once">If true, command will be removed after first execution</param>
-        /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand(Action callback, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommand command, IKey key, bool once = false)
         {
-            return AddCommandInternal(new ActionCommand(callback), keyData, once);
+            return AddCommandInternal(command, key, once);
         }
 
-        /// <summary>
-        /// Add command with a command object
-        /// </summary>
-        /// <param name="command">Command object</param>
-        /// <param name="keyData">Unique key data to bind command to, passing null will generate random Uid key</param>
-        /// <param name="once">If true, command will be removed after first execution</param>
-        /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand(ICommand command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommand command, object keyData = null, bool once = false)
         {
             return AddCommandInternal(command, keyData, once);
         }
 
-        /// <summary>
-        /// Create new command object of type TCommand and add it, it's keydata will be its type
-        /// note: only one type of this command object can be added
-        /// </summary>
-        /// <typeparam name="TCommand">Type of command object to instantiate</typeparam>
-        /// <param name="once">If true, command will be removed after first execution</param>
-        /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommand
+        public Outcome AddCommand(ICommand command, out IKey key, object keyData = null, bool once = false)
         {
-            return AddCommandInternal<TCommand>(once);
+            return AddCommandInternal(command, out key, keyData, once);
+        }
+
+        public Outcome AddCommand(Action action, IKey key, bool once = false)
+        {
+            return AddCommandInternal(new ActionCommand(action), key, once);
+        }
+
+        public Outcome AddCommand(Action action, object keyData = null, bool once = false)
+        {
+            return AddCommandInternal(new ActionCommand(action), keyData, once);
+        }
+
+        public Outcome AddCommand(Action action, out IKey key, object keyData = null, bool once = false)
+        {
+            return AddCommandInternal(new ActionCommand(action), out key, keyData, once);
         }
 
         /// <summary>
@@ -99,40 +93,34 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region ISignal<T_In> Members
-        /// <summary>
-        /// Add command with an action callback
-        /// </summary>
-        /// <param name="callback">Action to execute</param>
-        /// <param name="keyData">Unique key data to bind command to, passing null will generate random Uid key</param>
-        /// <param name="once">If true, command will be removed after first execution</param>
-        /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand(Action<T_In> callback, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommand<T_In> command, IKey key, bool once = false)
         {
-            return AddCommandInternal(new ActionCommand<T_In>(callback), keyData, once);
+            return AddCommandInternal(command, key, once);
         }
 
-        /// <summary>
-        /// Add command with a command object
-        /// </summary>
-        /// <param name="command">Command object</param>
-        /// <param name="keyData">Unique key data to bind command to, passing null will generate random Uid key</param>
-        /// <param name="once">If true, command will be removed after first execution</param>
-        /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand(ICommand<T_In> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommand<T_In> command, object keyData = null, bool once = false)
         {
             return AddCommandInternal(command, keyData, once);
         }
 
-        /// <summary>
-        /// Create new command object of type TCommand and add it, it's keydata will be its type
-        /// note: only one type of this command object can be added
-        /// </summary>
-        /// <typeparam name="TCommand">Type of command object to instantiate</typeparam>
-        /// <param name="once">If true, command will be removed after first execution</param>
-        /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T_In>
+        public Outcome AddCommand(ICommand<T_In> command, out IKey key, object keyData = null, bool once = false)
         {
-            return AddCommandInternal<TCommand>(once);
+            return AddCommandInternal(command, out key, keyData, once);
+        }
+
+        public Outcome AddCommand(Action<T_In> action, IKey key, bool once = false)
+        {
+            return AddCommandInternal(new ActionCommand<T_In>(action), key, once);
+        }
+
+        public Outcome AddCommand(Action<T_In> action, object keyData = null, bool once = false)
+        {
+            return AddCommandInternal(new ActionCommand<T_In>(action), keyData, once);
+        }
+
+        public Outcome AddCommand(Action<T_In> action, out IKey key, object keyData = null, bool once = false)
+        {
+            return AddCommandInternal(new ActionCommand<T_In>(action), out key, keyData, once);
         }
 
         /// <summary>
@@ -184,40 +172,34 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region ISignal<T_In1,T_In2> Members
-        /// <summary>
-        /// Add command with an action callback
-        /// </summary>
-        /// <param name="callback">Action to execute</param>
-        /// <param name="keyData">Unique key data to bind command to, passing null will generate random Uid key</param>
-        /// <param name="once">If true, command will be removed after first execution</param>
-        /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand(Action<T_In1, T_In2> callback, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommand<T_In1, T_In2> command, IKey key, bool once = false)
         {
-            return AddCommandInternal(new ActionCommand<T_In1, T_In2>(callback), keyData, once);
+            return AddCommandInternal(command, key, once);
         }
 
-        /// <summary>
-        /// Add command with a command object
-        /// </summary>
-        /// <param name="command">Command object</param>
-        /// <param name="keyData">Unique key data to bind command to, passing null will generate random Uid key</param>
-        /// <param name="once">If true, command will be removed after first execution</param>
-        /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand(ICommand<T_In1, T_In2> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommand<T_In1, T_In2> command, object keyData = null, bool once = false)
         {
             return AddCommandInternal(command, keyData, once);
         }
 
-        /// <summary>
-        /// Create new command object of type TCommand and add it, it's keydata will be its type
-        /// note: only one type of this command object can be added
-        /// </summary>
-        /// <typeparam name="TCommand">Type of command object to instantiate</typeparam>
-        /// <param name="once">If true, command will be removed after first execution</param>
-        /// <returns>Key instance the command is binded to, which can then be used to explicitly remove it from the signal</returns>
-        public IKey AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T_In1, T_In2>
+        public Outcome AddCommand(ICommand<T_In1, T_In2> command, out IKey key, object keyData = null, bool once = false)
         {
-            return AddCommandInternal<TCommand>(once);
+            return AddCommandInternal(command, out key, keyData, once);
+        }
+
+        public Outcome AddCommand(Action<T_In1, T_In2> action, IKey key, bool once = false)
+        {
+            return AddCommandInternal(new ActionCommand<T_In1, T_In2>(action), key, once);
+        }
+
+        public Outcome AddCommand(Action<T_In1, T_In2> action, object keyData = null, bool once = false)
+        {
+            return AddCommandInternal(new ActionCommand<T_In1, T_In2>(action), keyData, once);
+        }
+
+        public Outcome AddCommand(Action<T_In1, T_In2> action, out IKey key, object keyData = null, bool once = false)
+        {
+            return AddCommandInternal(new ActionCommand<T_In1, T_In2>(action), out key, keyData, once);
         }
 
         /// <summary>

@@ -6,7 +6,7 @@ namespace cpGames.core.RapidIoC.impl
     public class DefaultInstantiator<T> : IInstantiator<T>
     {
         #region IInstantiator Members
-        public bool Create(out T value, out string errorMessage)
+        public Outcome Create(out T value)
         {
             var ctor =
                 typeof(T).GetConstructor(
@@ -15,12 +15,10 @@ namespace cpGames.core.RapidIoC.impl
             if (ctor == null)
             {
                 value = default;
-                errorMessage = $"Type <{typeof(T).Name}> missing empty ctor.";
-                return false;
+                return Outcome.Fail($"Type <{typeof(T).Name}> missing empty ctor.");
             }
             value = (T)ctor.Invoke(null);
-            errorMessage = string.Empty;
-            return true;
+            return Outcome.Success();
         }
         #endregion
     }

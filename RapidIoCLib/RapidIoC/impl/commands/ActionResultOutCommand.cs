@@ -1,17 +1,13 @@
 ﻿namespace cpGames.core.RapidIoC.impl
 {
-    public class ActionResultOutCommand<T_Result, T_Out> : CommandResultOut<T_Result, T_Out>, IActionCommand
+    public class ActionResultOutCommand<T_Result, T_Out> : CommandResultOut<T_Result, T_Out>
     {
-        #region Nested type: ActionResultDelegate
-        public delegate T_Result ActionResultDelegate(out T_Out @out);
-        #endregion
-
         #region Fields
-        private readonly ActionResultDelegate _action;
+        private readonly ActionResultOutDelegate<T_Result, T_Out> _action;
         #endregion
 
         #region Constructors
-        public ActionResultOutCommand(ActionResultDelegate action)
+        public ActionResultOutCommand(ActionResultOutDelegate<T_Result, T_Out> action)
         {
             _action = action;
         }
@@ -25,18 +21,14 @@
         #endregion
     }
 
-    public class ActionResultOutCommand<T_Result, T_In, T_Out> : CommandResultOut<T_Result, T_In, T_Out>, IActionCommand
+    public class ActionResultOutCommand<T_Result, T_In, T_Out> : CommandResultOut<T_Result, T_In, T_Out>
     {
-        #region Nested type: ActionResultDelegate
-        public delegate T_Result ActionResultDelegate(T_In @in, out T_Out @out);
-        #endregion
-
         #region Fields
-        private readonly ActionResultDelegate _action;
+        private readonly ActionResultOutDelegate<T_Result, T_In, T_Out> _action;
         #endregion
 
         #region Constructors
-        public ActionResultOutCommand(ActionResultDelegate action)
+        public ActionResultOutCommand(ActionResultOutDelegate<T_Result, T_In, T_Out> action)
         {
             _action = action;
         }
@@ -50,18 +42,14 @@
         #endregion
     }
 
-    public class ActionResultOutCommand<T_Result, T_In_1, T_In_2, T_Out> : CommandResultOut<T_Result, T_In_1, T_In_2, T_Out>, IActionCommand
+    public class ActionResultOutCommand<T_Result, T_In_1, T_In_2, T_Out> : CommandResultOut<T_Result, T_In_1, T_In_2, T_Out>
     {
-        #region Nested type: ActionResultDelegate
-        public delegate T_Result ActionResultDelegate(T_In_1 in1, T_In_2 in2, out T_Out @out);
-        #endregion
-
         #region Fields
-        private readonly ActionResultDelegate _action;
+        private readonly ActionResultOutDelegate<T_Result, T_In_1, T_In_2, T_Out> _action;
         #endregion
 
         #region Constructors
-        public ActionResultOutCommand(ActionResultDelegate action)
+        public ActionResultOutCommand(ActionResultOutDelegate<T_Result, T_In_1, T_In_2, T_Out> action)
         {
             _action = action;
         }
