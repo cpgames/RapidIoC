@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <Description>This package provides following extensions: List extensions, String extensions, Binary extensions, Singleton pattern, UidGenerator
+        </Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/cpgames/RapidIoC.git</RepositoryUrl>
+        <PackageTags>c#; code extensions; singleton; UidGenerator</PackageTags>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <Authors>ChillPillGames</Authors>
+        <Title>RapidIoC</Title>
+        <Summary>A variety of helper methods for C#</Summary>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageId>$(Authors).$(AssemblyName)</PackageId>
+        <Version>1.0.1</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\icon.png">
+          <Pack>True</Pack>
+          <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ChillPillGames.CpCodeExtensions" Version="1.0.0" />
+    </ItemGroup>
+
+</Project>
