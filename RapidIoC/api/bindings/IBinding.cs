@@ -13,7 +13,7 @@ namespace cpGames.core.RapidIoC
         /// <summary>
         /// Unique key.
         /// </summary>
-        IKey? Key { get; }
+        IKey Key { get; }
         
         /// <summary>
         /// Map of subscribing views and their property injecting the binding.
@@ -42,7 +42,19 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region Methods
-        Outcome GetValue<TValue>(out TValue value);
+        /// <summary>
+        /// Get binding value and cast it to TValue.
+        /// </summary>
+        /// <typeparam name="TValue">Value type.</typeparam>
+        /// <param name="value">Binding value of type TValue, if value is null or mismatched type, then default.</param>
+        /// <returns><see cref="Outcome.Success()"/> if value is not null and of type TValue, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
+        Outcome GetValue<TValue>(out TValue? value);
+
+        /// <summary>
+        /// Set binding value.
+        /// </summary>
+        /// <param name="value">Value to set.</param>
+        /// <returns><see cref="Outcome.Success()"/> if successful, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
         Outcome SetValue(object value);
 
         /// <summary>
@@ -50,15 +62,21 @@ namespace cpGames.core.RapidIoC
         /// </summary>
         /// <param name="view">View instance owning the property</param>
         /// <param name="property">PropertyInfo of the the property.</param>
-        /// <returns>False if view instance was already binded, otherwise true.</returns>
+        /// <returns><see cref="Outcome.Success()"/> if successful, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
         Outcome Subscribe(IView view, PropertyInfo property);
 
         /// <summary>
         /// Unregister view.
         /// </summary>
         /// <param name="view">View instance to unregister.</param>
-        /// <returns>False if view instance was not registered, otherwise true.</returns>
+        /// <returns><see cref="Outcome.Success()"/> if successful, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
         Outcome Unsubscribe(IView view);
+
+        /// <summary>
+        /// Moves all subscribers from another binding into current binding.
+        /// </summary>
+        /// <param name="binding">Binding to consume.</param>
+        /// <returns><see cref="Outcome.Success()"/> if successful, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
         Outcome Consume(IBinding binding);
         #endregion
     }

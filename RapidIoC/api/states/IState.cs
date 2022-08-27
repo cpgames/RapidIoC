@@ -10,10 +10,10 @@
         #endregion
     }
 
-    public interface IState<out T> : IStateBase where T : IContextBase
+    public interface IState<out TContext> : IStateBase where TContext : IContextBase
     {
         #region Properties
-        T Context { get; }
+        TContext? Context { get; }
         #endregion
     }
 }

@@ -54,28 +54,28 @@ namespace cpGames.core.RapidIoC.impl
         #endregion
     }
 
-    public class ActionCommand<T_In1, T_In2> : Command<T_In1, T_In2>
+    public class ActionCommand<T_In_1, T_In_2> : Command<T_In_1, T_In_2>
     {
         #region Fields
-        private readonly Action<T_In1, T_In2> _action;
+        private readonly Action<T_In_1, T_In_2> _action;
         #endregion
 
         #region Constructors
-        public ActionCommand(Action<T_In1, T_In2> action)
+        public ActionCommand(Action<T_In_1, T_In_2> action)
         {
             _action = action;
         }
         #endregion
 
         #region Methods
-        public override void Execute(T_In1 in1, T_In2 in2)
+        public override void Execute(T_In_1 in1, T_In_2 in2)
         {
             _action(in1, in2);
         }
 
-        public static implicit operator ActionCommand<T_In1, T_In2>(Action<T_In1, T_In2> action)
+        public static implicit operator ActionCommand<T_In_1, T_In_2>(Action<T_In_1, T_In_2> action)
         {
-            return new ActionCommand<T_In1, T_In2>(action);
+            return new ActionCommand<T_In_1, T_In_2>(action);
         }
         #endregion
     }

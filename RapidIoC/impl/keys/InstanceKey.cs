@@ -3,15 +3,18 @@
     internal class InstanceKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public Outcome Create(object keyData, out IKey? key)
+        public Outcome Create(object? keyData, out IKey key)
         {
-            key = null;
-            var keyDataType = keyData.GetType();
-            if (!keyDataType.IsValueType
-                && keyDataType != typeof(string))
+            key = Rapid.InvalidKey;
+            if (keyData != null)
             {
-                key = new InstanceKey(keyData);
-                return Outcome.Success();
+                var keyDataType = keyData.GetType();
+                if (!keyDataType.IsValueType
+                    && keyDataType != typeof(string))
+                {
+                    key = new InstanceKey(keyData);
+                    return Outcome.Success();
+                }
             }
             return Outcome.Fail("keyData type is not supported.");
         }
@@ -56,12 +59,12 @@
 
         public override int GetHashCode()
         {
-            return Instance != null ? Instance.GetHashCode() : 0;
+            return Instance.GetHashCode();
         }
 
         public static bool operator ==(InstanceKey lhs, IKey rhs)
         {
-            return lhs?.Equals(rhs) ?? ReferenceEquals(rhs, null);
+            return lhs.Equals(rhs);
         }
 
         public static bool operator !=(InstanceKey lhs, IKey rhs)

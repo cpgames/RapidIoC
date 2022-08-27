@@ -1,9 +1,9 @@
 ﻿namespace cpGames.core.RapidIoC.impl
 {
-    internal class RootKey : Singleton<RootKey>, IKey
+    internal class InvalidKey : Singleton<InvalidKey>, IKey
     {
         #region Constructors
-        private RootKey() { }
+        private InvalidKey() { }
         #endregion
 
         #region Methods
@@ -25,19 +25,19 @@
             return 0;
         }
 
-        public static bool operator ==(RootKey lhs, IKey rhs)
+        public static bool operator ==(InvalidKey lhs, IKey rhs)
         {
             return lhs.Equals(rhs);
         }
 
-        public static bool operator !=(RootKey lhs, IKey rhs)
+        public static bool operator !=(InvalidKey lhs, IKey rhs)
         {
             return !(lhs == rhs);
         }
 
         public override string ToString()
         {
-            return "RootKey";
+            return "InvalidKey";
         }
         #endregion
     }

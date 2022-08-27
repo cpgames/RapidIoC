@@ -1,7 +1,5 @@
 ﻿namespace cpGames.core.RapidIoC
 {
-    /// <inheritdoc cref="IViewCollection" />
-    /// <inheritdoc cref="IBindingCollection" />
     /// <summary>
     /// Context encapsulates data for a collection of views registered under it.
     /// Registering view with context automatically binds injected properties.
@@ -12,7 +10,7 @@
         /// <summary>
         /// Unique key for context.
         /// </summary>
-        IKey? Key { get; }
+        IKey Key { get; }
 
         /// <summary>
         /// Root context is a global (cross-context) entity. Typically you want one of these.
@@ -30,7 +28,7 @@
         /// </summary>
         /// <param name="key">Unique key.</param>
         /// <returns>True if binding exists, otherwise false.</returns>
-        Outcome LocalBindingExists(IKey? key);
+        Outcome LocalBindingExists(IKey key);
         #endregion
 
         #region Methods

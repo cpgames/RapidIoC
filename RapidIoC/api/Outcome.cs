@@ -3,8 +3,8 @@
     public class Outcome
     {
         #region Fields
-        private static readonly Outcome EMPTY_FAIL = new Outcome(false, string.Empty);
-        private static readonly Outcome EMPTY_SUCCESS = new Outcome(true, string.Empty);
+        private static readonly Outcome EMPTY_FAIL = new(false, string.Empty);
+        private static readonly Outcome EMPTY_SUCCESS = new(true, string.Empty);
         #endregion
 
         #region Properties
@@ -71,12 +71,20 @@
             return Fail($"{a.ErrorMessage}\n{b.ErrorMessage}");
         }
 
-        public static bool operator ==(Outcome a, Outcome b)
+        public static bool operator ==(Outcome? a, Outcome? b)
         {
+            if (ReferenceEquals(a, null))
+            {
+                return ReferenceEquals(b, null);
+            }
+            if (ReferenceEquals(b, null))
+            {
+                return false;
+            }
             return a.IsSuccess == b.IsSuccess;
         }
 
-        public static bool operator !=(Outcome a, Outcome b)
+        public static bool operator !=(Outcome? a, Outcome? b)
         {
             return !(a == b);
         }
@@ -105,6 +113,7 @@
         {
             return new Outcome(false, errorMessage);
         }
+
         public static Outcome Fail()
         {
             return EMPTY_FAIL;

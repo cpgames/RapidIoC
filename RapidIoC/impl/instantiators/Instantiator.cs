@@ -5,8 +5,8 @@ namespace cpGames.core.RapidIoC.impl
 {
     public class DefaultInstantiator<T> : IInstantiator<T>
     {
-        #region IInstantiator Members
-        public Outcome Create(out T value)
+        #region IInstantiator<T> Members
+        public Outcome Create(out T? value)
         {
             var ctor =
                 typeof(T).GetConstructor(

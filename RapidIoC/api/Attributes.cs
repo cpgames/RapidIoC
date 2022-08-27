@@ -13,7 +13,7 @@ namespace cpGames.core.RapidIoC
         /// Optional key to locate the binding injecting this property.
         /// If key is missing, binding will be located by property type
         /// </summary>
-        public object KeyData { get; }
+        public object? KeyData { get; }
         #endregion
 
         #region Constructors

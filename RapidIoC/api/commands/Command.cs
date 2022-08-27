@@ -7,17 +7,17 @@
         #endregion
     }
 
-    public abstract class Command<T> : BaseCommand, ICommand<T>
+    public abstract class Command<T_In> : BaseCommand, ICommand<T_In>
     {
         #region ICommand<T> Members
-        public abstract void Execute(T @in);
+        public abstract void Execute(T_In @in);
         #endregion
     }
 
-    public abstract class Command<T, U> : BaseCommand, ICommand<T, U>
+    public abstract class Command<T_In_1, T_In_2> : BaseCommand, ICommand<T_In_1, T_In_2>
     {
         #region ICommand<T,U> Members
-        public abstract void Execute(T in1, U in2);
+        public abstract void Execute(T_In_1 in1, T_In_2 in2);
         #endregion
     }
 }

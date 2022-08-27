@@ -30,7 +30,7 @@ namespace cpGames.core.RapidIoC.impl
         #endregion
 
         #region IKeyFactoryCollection Members
-        public Outcome Create(object keyData, out IKey? key)
+        public Outcome Create(object? keyData, out IKey key)
         {
             if (keyData is IKey)
             {
@@ -51,7 +51,7 @@ namespace cpGames.core.RapidIoC.impl
                     }
                 }
             }
-            key = null;
+            key = Rapid.InvalidKey;
             return Outcome.Fail("Failed to create binding key, no matching key factory found.");
         }
 

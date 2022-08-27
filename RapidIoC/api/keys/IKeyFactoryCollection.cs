@@ -16,7 +16,7 @@
         /// False if no factory found that supports provided dataType.
         /// False if a factory supports provided dataType, but fails to generate key for whatever reason.
         /// </returns>
-        Outcome Create(object keyData, out IKey? key);
+        Outcome Create(object? keyData, out IKey key);
 
         /// <summary>
         /// Add new key factory.

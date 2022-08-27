@@ -5,10 +5,10 @@ namespace cpGames.core.RapidIoC.impl
     internal class EnumKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public Outcome Create(object keyData, out IKey? key)
+        public Outcome Create(object? keyData, out IKey key)
         {
-            key = null;
-            if (keyData.GetType().IsEnum)
+            key = Rapid.InvalidKey;
+            if (keyData != null && keyData.GetType().IsEnum)
             {
                 key = new EnumKey((Enum)keyData);
                 return Outcome.Success();
@@ -56,12 +56,12 @@ namespace cpGames.core.RapidIoC.impl
 
         public override int GetHashCode()
         {
-            return EnumType != null ? EnumType.GetHashCode() : 0;
+            return EnumType.GetHashCode();
         }
 
         public static bool operator ==(EnumKey lhs, IKey rhs)
         {
-            return lhs?.Equals(rhs) ?? ReferenceEquals(rhs, null);
+            return lhs.Equals(rhs);
         }
 
         public static bool operator !=(EnumKey lhs, IKey rhs)

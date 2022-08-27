@@ -11,24 +11,24 @@ namespace cpGames.core.RapidIoC.impl
     public abstract class SignalBase : ISignalBase
     {
         #region Fields
-        private static UidGenerator _uidGenerator;
+        private static UidGenerator? _uidGenerator;
 
-        private readonly Dictionary<IKey?, SignalCommandModel> _commands = new Dictionary<IKey?, SignalCommandModel>();
-        private readonly Dictionary<IKey?, SignalCommandModel> _commandsToAdd = new Dictionary<IKey?, SignalCommandModel>();
-        private readonly HashSet<IKey?> _commandsToRemove = new HashSet<IKey?>();
+        private readonly Dictionary<IKey, SignalCommandModel> _commands = new();
+        private readonly Dictionary<IKey, SignalCommandModel> _commandsToAdd = new();
+        private readonly HashSet<IKey> _commandsToRemove = new();
         private bool _dispatching;
-        protected internal readonly object _syncRoot = new object();
+        protected internal readonly object _syncRoot = new();
         #endregion
 
         #region Properties
-        internal static UidGenerator UidGenerator => _uidGenerator ?? (_uidGenerator = new UidGenerator());
+        internal static UidGenerator UidGenerator => _uidGenerator ??= new UidGenerator();
         #endregion
 
         #region ISignalBase Members
-        public IEnumerable<KeyValuePair<IKey?, SignalCommandModel>> Commands => _commands;
+        public IEnumerable<KeyValuePair<IKey, SignalCommandModel>> Commands => _commands;
         public int CommandCount => _commands.Count;
 
-        public bool IsScheduledForRemoval(IKey? key)
+        public bool IsScheduledForRemoval(IKey key)
         {
             return _commandsToRemove.Contains(key);
         }
@@ -39,11 +39,19 @@ namespace cpGames.core.RapidIoC.impl
             {
                 return
                     Rapid.KeyFactoryCollection.Create(keyData, out var key) &&
-                    (_commands.ContainsKey(key) || _commandsToAdd.ContainsKey(key));
+                    HasKey(key);
             }
         }
 
-        public Outcome RemoveCommand(object keyData)
+        public bool HasKey(IKey key)
+        {
+            lock (_syncRoot)
+            {
+                return _commands.ContainsKey(key) || _commandsToAdd.ContainsKey(key);
+            }
+        }
+
+        public Outcome RemoveCommand(object? keyData)
         {
             return
                 Rapid.KeyFactoryCollection.Create(keyData, out var key) &&
@@ -54,10 +62,26 @@ namespace cpGames.core.RapidIoC.impl
         {
             return RemoveCommand(typeof(TCommand));
         }
+
+        public Outcome ClearCommands()
+        {
+            lock (_syncRoot)
+            {
+                while (_commands.Count > 0)
+                {
+                    var removeCommandResult = RemoveCommandInternal(_commands.Keys.First());
+                    if (!removeCommandResult)
+                    {
+                        return removeCommandResult;
+                    }
+                }
+                return Outcome.Success();
+            }
+        }
         #endregion
 
         #region Methods
-        protected Outcome RemoveCommandInternal(IKey? key)
+        protected Outcome RemoveCommandInternal(IKey key)
         {
             lock (_syncRoot)
             {
@@ -87,23 +111,7 @@ namespace cpGames.core.RapidIoC.impl
             return Outcome.Success();
         }
 
-        public Outcome ClearCommands()
-        {
-            lock (_syncRoot)
-            {
-                while (_commands.Count > 0)
-                {
-                    var removeCommandResult = RemoveCommandInternal(_commands.Keys.First());
-                    if (!removeCommandResult)
-                    {
-                        return removeCommandResult;
-                    }
-                }
-                return Outcome.Success();
-            }
-        }
-
-        private Outcome ValidateKey(IKey? key)
+        private Outcome ValidateKey(IKey key)
         {
             lock (_syncRoot)
             {
@@ -123,7 +131,7 @@ namespace cpGames.core.RapidIoC.impl
             return Outcome.Success();
         }
 
-        protected Outcome AddCommandInternal(IBaseCommand command, IKey? key, bool once)
+        protected Outcome AddCommandInternal(IBaseCommand command, IKey key, bool once)
         {
             lock (_syncRoot)
             {
@@ -139,12 +147,12 @@ namespace cpGames.core.RapidIoC.impl
             }
         }
 
-        protected Outcome AddCommandInternal(IBaseCommand command, object keyData, bool once)
+        protected Outcome AddCommandInternal(IBaseCommand command, object? keyData, bool once)
         {
             return AddCommandInternal(command, out _, keyData, once);
         }
 
-        protected Outcome AddCommandInternal(IBaseCommand command, out IKey? key, object keyData, bool once)
+        protected Outcome AddCommandInternal(IBaseCommand command, out IKey key, object? keyData, bool once)
         {
             if (keyData == null)
             {
@@ -212,8 +220,8 @@ namespace cpGames.core.RapidIoC.impl
     public abstract class SignalBaseResult<T_Result> : SignalBase
     {
         #region Properties
-        public virtual T_Result DefaultResult => default;
-        public virtual T_Result TargetResult => default;
+        public abstract T_Result DefaultResult { get; }
+        public abstract T_Result TargetResult { get; }
         public virtual bool StopOnResult => false;
         #endregion
 
@@ -235,7 +243,7 @@ namespace cpGames.core.RapidIoC.impl
     public abstract class SignalBaseResultOut<T_Result, T_Out> : SignalBaseResult<T_Result>
     {
         #region Properties
-        public virtual T_Out DefaultOut => default;
+        public abstract T_Out DefaultOut { get; }
         #endregion
     }
 }

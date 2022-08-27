@@ -3,8 +3,8 @@
     public interface IAddCommandModel
     {
         #region Properties
-        IKey? Key { get; }
-        IBaseCommand Command { get; }
+        IKey Key { get; }
+        IBaseCommand? Command { get; }
         bool Once { get; }
         #endregion
     }
@@ -13,14 +13,14 @@
         where T_Command : IBaseCommand
     {
         #region Fields
-        protected IKey? _key;
-        protected T_Command _command;
+        protected IKey _key = Rapid.InvalidKey;
+        protected T_Command? _command;
         protected bool _once;
         #endregion
 
         #region IAddCommandModel Members
-        public IKey? Key => _key;
-        public IBaseCommand Command => _command;
+        public IKey Key => _key;
+        public IBaseCommand? Command => _command;
         public bool Once => _once;
         #endregion
     }

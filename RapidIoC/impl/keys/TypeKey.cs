@@ -2,12 +2,12 @@
 
 namespace cpGames.core.RapidIoC
 {
-    public class TypeKeyFactory : IKeyFactory
+    internal class TypeKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public Outcome Create(object keyData, out IKey? key)
+        public Outcome Create(object? keyData, out IKey key)
         {
-            key = null;
+            key = Rapid.InvalidKey;
             if (keyData is Type typeKeyData)
             {
                 key = new TypeKey(typeKeyData);
@@ -18,7 +18,7 @@ namespace cpGames.core.RapidIoC
         #endregion
     }
 
-    public class TypeKey : IKey
+    internal class TypeKey : IKey
     {
         #region Properties
         public Type Type { get; }
@@ -56,12 +56,12 @@ namespace cpGames.core.RapidIoC
 
         public override int GetHashCode()
         {
-            return Type != null ? Type.GetHashCode() : 0;
+            return Type.GetHashCode();
         }
 
         public static bool operator ==(TypeKey lhs, IKey rhs)
         {
-            return lhs?.Equals(rhs) ?? ReferenceEquals(rhs, null);
+            return lhs.Equals(rhs);
         }
 
         public static bool operator !=(TypeKey lhs, IKey rhs)

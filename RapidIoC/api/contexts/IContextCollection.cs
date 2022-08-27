@@ -30,7 +30,7 @@ namespace cpGames.core.RapidIoC
         /// </summary>
         /// <param name="key">>Unique key for context.</param>
         /// <returns>rue if exists, otherwise false.</returns>
-        Outcome ContextExists(IKey? key);
+        Outcome ContextExists(IKey key);
 
         /// <summary>
         /// Find context by name, returns false if context does not exist.
@@ -38,7 +38,7 @@ namespace cpGames.core.RapidIoC
         /// <param name="key">Unique name for context.</param>
         /// <param name="context">Context instance if found, otherwise null.</param>
         /// <returns>True if successful, otherwise false.</returns>
-        Outcome FindContext(IKey? key, out IContext context);
+        Outcome FindContext(IKey key, out IContext? context);
 
         /// <summary>
         /// Find context by name, try to create one if none exists.
@@ -46,7 +46,7 @@ namespace cpGames.core.RapidIoC
         /// <param name="key">Unique key for context.</param>
         /// <param name="context">Context instance if found, otherwise null.</param>
         /// <returns>True if successful, otherwise false.</returns>
-        Outcome FindOrCreateContext(IKey? key, out IContext context);
+        Outcome FindOrCreateContext(IKey key, out IContext? context);
         #endregion
     }
 }

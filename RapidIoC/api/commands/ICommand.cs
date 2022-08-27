@@ -1,8 +1,7 @@
 ﻿namespace cpGames.core.RapidIoC
 {
-    /// <inheritdoc />
     /// <summary>
-    /// Parameterless command, can be mapped to paramaterless signal.
+    /// Parameterless command, can be mapped to <see cref="ISignal"/>.
     /// </summary>
     public interface ICommand : IBaseCommand
     {
@@ -11,11 +10,10 @@
         #endregion
     }
 
-    /// <inheritdoc />
     /// <summary>
-    /// Command with one parameter, can be mapped to signal with one parameter.
+    /// Command with one parameter, can be mapped to <see cref="ISignal{T_In}"/>.
     /// </summary>
-    /// <typeparam name="T_In"></typeparam>
+    /// <typeparam name="T_In">Input parameter</typeparam>
     public interface ICommand<in T_In> : IBaseCommand
     {
         #region Methods
@@ -23,12 +21,11 @@
         #endregion
     }
 
-    /// <inheritdoc />
     /// <summary>
-    /// Command with two parameters, can be mapped to signal with two parameters
+    /// Command with two parameters, can be mapped to <see cref="ISignal{T_In_1, T_In_2}"/>.
     /// </summary>
-    /// <typeparam name="T_In_1"></typeparam>
-    /// <typeparam name="T_In_2"></typeparam>
+    /// <typeparam name="T_In_1">First input parameter</typeparam>
+    /// <typeparam name="T_In_2">Second input parameter</typeparam>
     public interface ICommand<in T_In_1, in T_In_2> : IBaseCommand
     {
         #region Methods

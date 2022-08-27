@@ -3,9 +3,9 @@
     internal class NameKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public Outcome Create(object keyData, out IKey? key)
+        public Outcome Create(object? keyData, out IKey key)
         {
-            key = null;
+            key = Rapid.InvalidKey;
             if (keyData is string stringKeyData)
             {
                 key = new NameKey(stringKeyData);
@@ -54,12 +54,12 @@
 
         public override int GetHashCode()
         {
-            return Name != null ? Name.GetHashCode() : 0;
+            return Name.GetHashCode();
         }
 
         public static bool operator ==(NameKey lhs, IKey rhs)
         {
-            return lhs?.Equals(rhs) ?? ReferenceEquals(rhs, null);
+            return lhs.Equals(rhs);
         }
 
         public static bool operator !=(NameKey lhs, IKey rhs)

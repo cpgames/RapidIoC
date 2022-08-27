@@ -22,9 +22,9 @@ namespace cpGames.core.RapidIoC.impl
             return view.GetType().GetProperties().Where(x => x.HasAttribute<InjectAttribute>());
         }
 
-        public static Outcome GetInjectionKey(this PropertyInfo property, out IKey? key)
+        public static Outcome GetInjectionKey(this PropertyInfo property, out IKey key)
         {
-            var keyData = property.GetAttribute<InjectAttribute>().KeyData ?? property.PropertyType;
+            var keyData = property.GetAttribute<InjectAttribute>()?.KeyData ?? property.PropertyType;
             return Rapid.KeyFactoryCollection.Create(keyData, out key);
         }
 
@@ -50,7 +50,7 @@ namespace cpGames.core.RapidIoC.impl
 
         public static Outcome ConnectSignalProperty(this IView view, PropertyInfo signalProperty)
         {
-            var signal = (SignalBase)signalProperty.GetValue(view, null);
+            var signal = (SignalBase?)signalProperty.GetValue(view, null);
             if (signal == null)
             {
                 return Outcome.Success();
@@ -86,7 +86,7 @@ namespace cpGames.core.RapidIoC.impl
             {
                 var actionType = typeof(Action);
                 var action = (Action)Delegate.CreateDelegate(actionType, view, method);
-                return (signal as ISignal).AddCommand(action, view);
+                return (signal as ISignal)!.AddCommand(action, view);
             }
             return Outcome.Success();
         }
@@ -111,8 +111,8 @@ namespace cpGames.core.RapidIoC.impl
                 var action = Delegate.CreateDelegate(actionType, view, method);
                 var commandType = typeof(ActionCommand<>).MakeGenericType(signalType.GetGenericArguments()[0]);
                 var command = Activator.CreateInstance(commandType, action);
-                var addCommandMethod = signalType.GetMethod("AddCommand");
-                var outcome = (Outcome)addCommandMethod.Invoke(signal, new[] { command, view });
+                var addCommandMethod = signalType.GetMethod("AddCommand", new[] { commandType, typeof(object), typeof(bool) });
+                var outcome = (Outcome)addCommandMethod.Invoke(signal, new[] { command, view, false });
                 return outcome;
             }
             return Outcome.Success();
@@ -140,7 +140,7 @@ namespace cpGames.core.RapidIoC.impl
                 var action = Delegate.CreateDelegate(actionType, view, method);
                 var commandType = typeof(ActionCommand<,>).MakeGenericType(signalType.GetGenericArguments());
                 var command = Activator.CreateInstance(commandType, action);
-                var addCommandMethod = signalType.GetMethod("AddCommand");
+                var addCommandMethod = signalType.GetMethod("AddCommand", new[] { commandType, typeof(object), typeof(bool) });
                 var outcome = (Outcome)addCommandMethod.Invoke(signal, new[] { command, view });
                 return outcome;
             }

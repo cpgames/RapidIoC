@@ -6,12 +6,12 @@ namespace cpGames.core.RapidIoC.impl
     internal class Binding : IBinding
     {
         #region Fields
-        private object _value;
-        private readonly Dictionary<IView, PropertyInfo> _subscribers = new Dictionary<IView, PropertyInfo>();
+        private object? _value;
+        private readonly Dictionary<IView, PropertyInfo> _subscribers = new();
         #endregion
 
         #region Constructors
-        public Binding(IKey? key)
+        public Binding(IKey key)
         {
             Key = key;
         }
@@ -19,14 +19,14 @@ namespace cpGames.core.RapidIoC.impl
 
         #region IBinding Members
         public IEnumerable<KeyValuePair<IView, PropertyInfo>> Subscribers => _subscribers;
-        public IKey? Key { get; }
+        public IKey Key { get; }
 
         public bool Empty => _subscribers.Count == 0;
         public ISignal RemovedSignal { get; } = new Signal();
         public ISignal ValueUpdatedSignal { get; } = new Signal();
         public bool Discarded { get; set; } = true;
 
-        public Outcome GetValue<TValue>(out TValue value)
+        public Outcome GetValue<TValue>(out TValue? value)
         {
             if (_value == null)
             {
@@ -44,6 +44,7 @@ namespace cpGames.core.RapidIoC.impl
 
         public Outcome SetValue(object value)
         {
+            Discarded = false;
             _value = value;
             return UpdateBindings();
         }
@@ -74,7 +75,7 @@ namespace cpGames.core.RapidIoC.impl
             {
                 if (_subscribers.ContainsKey(subscriber.Key))
                 {
-                    return Outcome.Fail($"Can't join binding <{binding.Key}> with <{Key}>, encountered duplicate subscriber <{subscriber.Key}>.");
+                    return Outcome.Fail($"Can't consume binding <{binding.Key}> with <{Key}>, encountered duplicate subscriber <{subscriber.Key}>.");
                 }
                 var subscribeResult = Subscribe(subscriber.Key, subscriber.Value);
                 if (!subscribeResult)
@@ -134,7 +135,7 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (property.PropertyType.IsSubclassOf(typeof(SignalBase)))
             {
-                var signal = (SignalBase)property.GetValue(view, null);
+                var signal = (SignalBase?)property.GetValue(view, null);
                 if (signal != null && signal.HasKey(view))
                 {
                     var removeCommandResult = signal.RemoveCommand(view);

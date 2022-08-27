@@ -5,41 +5,41 @@ namespace cpGames.core.RapidIoC
     public abstract class LazySignalResultOut<T_Result, T_Out> : LazySignalBaseResultOut<T_Result, T_Out>, ISignalResultOut<T_Result, T_Out>
     {
         #region Fields
-        private ISignalResultOut<T_Result, T_Out> _signal;
+        private ISignalResultOut<T_Result, T_Out>? _signal;
         #endregion
 
         #region Properties
-        protected ISignalResultOut<T_Result, T_Out> Signal => _signal ?? (_signal = Factory());
-        protected override ISignalBase SignalBase => _signal;
+        protected ISignalResultOut<T_Result, T_Out> Signal => _signal ??= Factory();
+        protected override ISignalBase SignalBase => Signal;
         #endregion
 
         #region ISignalResultOut<T_Result,T_Out> Members
-        public Outcome AddCommand(ICommandResultOut<T_Result, T_Out> command, IKey? key, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_Out> command, IKey key, bool once = false)
         {
             return Signal.AddCommand(command, key, once);
         }
 
-        public Outcome AddCommand(ICommandResultOut<T_Result, T_Out> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_Out> command, object? keyData = null, bool once = false)
         {
             return Signal.AddCommand(command, keyData, once);
         }
 
-        public Outcome AddCommand(ICommandResultOut<T_Result, T_Out> command, out IKey? key, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_Out> command, out IKey key, object? keyData = null, bool once = false)
         {
             return Signal.AddCommand(command, out key, keyData, once);
         }
 
-        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_Out> action, IKey? key, bool once = false)
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_Out> action, IKey key, bool once = false)
         {
             return Signal.AddCommand(action, key, once);
         }
 
-        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_Out> action, object keyData = null, bool once = false)
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_Out> action, object? keyData = null, bool once = false)
         {
             return Signal.AddCommand(action, keyData, once);
         }
 
-        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_Out> action, out IKey? key, object keyData = null, bool once = false)
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_Out> action, out IKey key, object? keyData = null, bool once = false)
         {
             return Signal.AddCommand(action, out key, keyData, once);
         }
@@ -73,41 +73,41 @@ namespace cpGames.core.RapidIoC
     public abstract class LazySignalResultOut<T_Result, T_In, T_Out> : LazySignalBaseResultOut<T_Result, T_Out>, ISignalResultOut<T_Result, T_In, T_Out>
     {
         #region Fields
-        private ISignalResultOut<T_Result, T_In, T_Out> _signal;
+        private ISignalResultOut<T_Result, T_In, T_Out>? _signal;
         #endregion
 
         #region Properties
-        protected ISignalResultOut<T_Result, T_In, T_Out> Signal => _signal ?? (_signal = Factory());
-        protected override ISignalBase SignalBase => _signal;
+        protected ISignalResultOut<T_Result, T_In, T_Out> Signal => _signal ??= Factory();
+        protected override ISignalBase SignalBase => Signal;
         #endregion
 
         #region ISignalResultOut<T_Result,T_In,T_Out> Members
-        public Outcome AddCommand(ICommandResultOut<T_Result, T_In, T_Out> command, IKey? key, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_In, T_Out> command, IKey key, bool once = false)
         {
             return Signal.AddCommand(command, key, once);
         }
 
-        public Outcome AddCommand(ICommandResultOut<T_Result, T_In, T_Out> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_In, T_Out> command, object? keyData = null, bool once = false)
         {
             return Signal.AddCommand(command, keyData, once);
         }
 
-        public Outcome AddCommand(ICommandResultOut<T_Result, T_In, T_Out> command, out IKey? key, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_In, T_Out> command, out IKey key, object? keyData = null, bool once = false)
         {
             return Signal.AddCommand(command, out key, keyData, once);
         }
 
-        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In, T_Out> action, IKey? key, bool once = false)
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In, T_Out> action, IKey key, bool once = false)
         {
             return Signal.AddCommand(action, key, once);
         }
 
-        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In, T_Out> action, object keyData = null, bool once = false)
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In, T_Out> action, object? keyData = null, bool once = false)
         {
             return Signal.AddCommand(action, keyData, once);
         }
 
-        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In, T_Out> action, out IKey? key, object keyData = null, bool once = false)
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In, T_Out> action, out IKey key, object? keyData = null, bool once = false)
         {
             return Signal.AddCommand(action, out key, keyData, once);
         }
@@ -141,41 +141,41 @@ namespace cpGames.core.RapidIoC
     public abstract class LazySignalResultOut<T_Result, T_In_1, T_In_2, T_Out> : LazySignalBaseResultOut<T_Result, T_Out>, ISignalResultOut<T_Result, T_In_1, T_In_2, T_Out>
     {
         #region Fields
-        private ISignalResultOut<T_Result, T_In_1, T_In_2, T_Out> _signal;
+        private ISignalResultOut<T_Result, T_In_1, T_In_2, T_Out>? _signal;
         #endregion
 
         #region Properties
-        protected ISignalResultOut<T_Result, T_In_1, T_In_2, T_Out> Signal => _signal ?? (_signal = Factory());
-        protected override ISignalBase SignalBase => _signal;
+        protected ISignalResultOut<T_Result, T_In_1, T_In_2, T_Out> Signal => _signal ??= Factory();
+        protected override ISignalBase SignalBase => Signal;
         #endregion
 
         #region ISignalResultOut<T_Result,T_In_1,T_In_2,T_Out> Members
-        public Outcome AddCommand(ICommandResultOut<T_Result, T_In_1, T_In_2, T_Out> command, IKey? key, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_In_1, T_In_2, T_Out> command, IKey key, bool once = false)
         {
             return Signal.AddCommand(command, key, once);
         }
 
-        public Outcome AddCommand(ICommandResultOut<T_Result, T_In_1, T_In_2, T_Out> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_In_1, T_In_2, T_Out> command, object? keyData = null, bool once = false)
         {
             return Signal.AddCommand(command, keyData, once);
         }
 
-        public Outcome AddCommand(ICommandResultOut<T_Result, T_In_1, T_In_2, T_Out> command, out IKey? key, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommandResultOut<T_Result, T_In_1, T_In_2, T_Out> command, out IKey key, object? keyData = null, bool once = false)
         {
             return Signal.AddCommand(command, out key, keyData, once);
         }
 
-        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In_1, T_In_2, T_Out> action, IKey? key, bool once = false)
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In_1, T_In_2, T_Out> action, IKey key, bool once = false)
         {
             return Signal.AddCommand(action, key, once);
         }
 
-        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In_1, T_In_2, T_Out> action, object keyData = null, bool once = false)
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In_1, T_In_2, T_Out> action, object? keyData = null, bool once = false)
         {
             return Signal.AddCommand(action, keyData, once);
         }
 
-        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In_1, T_In_2, T_Out> action, out IKey? key, object keyData = null, bool once = false)
+        public Outcome AddCommand(ActionResultOutDelegate<T_Result, T_In_1, T_In_2, T_Out> action, out IKey key, object? keyData = null, bool once = false)
         {
             return Signal.AddCommand(action, out key, keyData, once);
         }

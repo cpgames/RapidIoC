@@ -3,9 +3,9 @@
     internal class ByteKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public Outcome Create(object keyData, out IKey? key)
+        public Outcome Create(object? keyData, out IKey key)
         {
-            key = null;
+            key = Rapid.InvalidKey;
             if (keyData is byte byteKeyData)
             {
                 key = new ByteKey(byteKeyData);
@@ -59,7 +59,7 @@
 
         public static bool operator ==(ByteKey lhs, IKey rhs)
         {
-            return lhs?.Equals(rhs) ?? ReferenceEquals(rhs, null);
+            return lhs.Equals(rhs);
         }
 
         public static bool operator !=(ByteKey lhs, IKey rhs)

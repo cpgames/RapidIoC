@@ -18,7 +18,7 @@
         /// factory.
         /// False if dataType is handled, but key creation failed for whatever reason.
         /// </returns>
-        Outcome Create(object keyData, out IKey? key);
+        Outcome Create(object? keyData, out IKey key);
         #endregion
     }
 }

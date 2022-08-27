@@ -1,23 +1,23 @@
 ﻿namespace cpGames.core.RapidIoC
 {
-    public class ContextView<T_MODEL, T_STATE> :
-        View<T_MODEL>,
-        IContext<T_STATE> where T_STATE : IStateBase
+    public class ContextView<T_Model, TState> :
+        View<T_Model>,
+        IContext<TState> where TState : IStateBase
     {
         #region Properties
         public ISignal StateChangedSignal { get; } = new Signal();
         #endregion
 
-        #region IContext<T_STATE> Members
-        public T_STATE State { get; set; }
+        #region IContext<TState> Members
+        public TState? State { get; set; }
 
-        public void SetState<U>() where U : T_STATE
+        public void SetState<UState>() where UState : TState
         {
             if (State != null)
             {
                 DisposeState();
             }
-            State = StateContextMethods.SetState<U>(this);
+            State = StateContextMethods.SetState<UState>(this);
             InitializeState();
             StateChangedSignal.Dispatch();
             FinalizeStateChange();
@@ -27,81 +27,81 @@
         #region Methods
         public virtual void InitializeState()
         {
-            State.Start();
+            State?.Start();
         }
 
         public virtual void FinalizeStateChange() { }
 
         public virtual void DisposeState()
         {
-            State.Stop();
+            State?.Stop();
         }
         #endregion
     }
 
-    public class StateView<T_MODEL, T_CONTEXT> :
-        View<T_MODEL>, IState<T_CONTEXT>
-        where T_CONTEXT : IContextBase
+    public class StateView<T_Model, TContext> :
+        View<T_Model>, IState<TContext>
+        where TContext : IContextBase
     {
         #region Fields
-        private T_CONTEXT _context;
+        private TContext? _context;
         #endregion
 
-        #region IState<T_CONTEXT> Members
+        #region IState<TContext> Members
         public virtual void Start() { }
 
         public virtual void Stop() { }
 
         public virtual void SetContext(IContextBase context)
         {
-            _context = (T_CONTEXT)context;
+            _context = (TContext)context;
         }
 
-        public T_CONTEXT Context => _context;
+        public TContext? Context => _context;
         #endregion
     }
 
-    public class StateView<T_CONTEXT> : IState<T_CONTEXT>
-        where T_CONTEXT : IContextBase
+    public class StateView<TContext> : IState<TContext>
+        where TContext : IContextBase
     {
         #region Fields
-        private T_CONTEXT _context;
+        private TContext? _context;
         #endregion
 
-        #region IState<T_CONTEXT> Members
+        #region IState<TContext> Members
         public virtual void Start() { }
 
         public virtual void Stop() { }
 
         public virtual void SetContext(IContextBase context)
         {
-            _context = (T_CONTEXT)context;
+            _context = (TContext)context;
         }
 
-        public T_CONTEXT Context => _context;
+        public TContext? Context => _context;
         #endregion
     }
 
-    public class StateContextView<T_MODEL, T_STATE, T_CONTEXT> :
-        ContextView<T_MODEL, T_STATE>, IState<T_CONTEXT>
-        where T_STATE : IStateBase
-        where T_CONTEXT : IContextBase
+    public class StateContextView<TModel, TState, TContext> :
+        ContextView<TModel, TState>, IState<TContext>
+        where TState : IStateBase
+        where TContext : IContextBase
     {
         #region Fields
-        private T_CONTEXT _context;
+        private TContext? _context;
         #endregion
 
-        #region IState<T_CONTEXT> Members
+        #region IState<TContext> Members
         public virtual void Start() { }
 
         public virtual void Stop() { }
 
         public virtual void SetContext(IContextBase context)
         {
-            _context = (T_CONTEXT)context;
+            _context = (TContext)context;
         }
 
-        public T_CONTEXT Context => _context;
+        public TContext? Context => _context;
         #endregion
     }
 }

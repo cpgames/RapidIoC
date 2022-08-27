@@ -2,14 +2,14 @@
 {
     public interface IContextBase { }
 
-    public interface IContext<T> : IContextBase where T : IStateBase
+    public interface IContext<TState> : IContextBase where TState : IStateBase
     {
         #region Properties
-        T State { get; set; }
+        TState? State { get; set; }
         #endregion
 
         #region Methods
-        void SetState<U>() where U : T;
+        void SetState<UState>() where UState : TState;
         #endregion
     }
 }

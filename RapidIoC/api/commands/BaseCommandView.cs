@@ -7,20 +7,22 @@ namespace cpGames.core.RapidIoC
         #region Fields
         private bool _executing;
         internal bool _retain;
-        protected internal readonly object _syncRoot = new object();
+        protected internal readonly object _syncRoot = new();
         #endregion
 
         #region IBaseCommand Members
         public virtual Outcome Connect()
         {
-            return Outcome.Success();
+            return RegisterWithContext();
         }
 
         public virtual Outcome Release()
         {
-            return _executing ?
-                Outcome.Fail($"Command <{this}> is still executing. Call EndExecute first.") :
-                Outcome.Success();
+            if (_executing)
+            {
+                return Outcome.Fail($"Command <{this}> is still executing. Call EndExecute first.");
+            }
+            return UnregisterFromContext();
         }
         #endregion
 
@@ -52,8 +54,6 @@ namespace cpGames.core.RapidIoC
                 throw new Exception(unregisterWithContextOutcome.ErrorMessage);
             }
         }
-
-        protected abstract void ExecuteInternal();
 
         protected void Retain()
         {

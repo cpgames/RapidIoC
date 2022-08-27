@@ -3,9 +3,9 @@
     internal class UidKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public Outcome Create(object keyData, out IKey? key)
+        public Outcome Create(object? keyData, out IKey key)
         {
-            key = null;
+            key = Rapid.InvalidKey;
             switch (keyData)
             {
                 case long longKeyData:
@@ -63,7 +63,7 @@
 
         public static bool operator ==(UidKey lhs, IKey rhs)
         {
-            return lhs?.Equals(rhs) ?? ReferenceEquals(rhs, null);
+            return lhs.Equals(rhs);
         }
 
         public static bool operator !=(UidKey lhs, IKey rhs)

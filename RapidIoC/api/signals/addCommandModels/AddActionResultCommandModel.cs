@@ -41,9 +41,9 @@ namespace cpGames.core.RapidIoC
             };
         }
 
-        public static implicit operator AddActionResultCommandModel<T_Result, T_In>(ActionResultDelegate<T_Result, T_In> action)
+        public static implicit operator AddActionResultCommandModel<T_Result?, T_In?>(ActionResultDelegate<T_Result?, T_In?> action)
         {
-            return new ActionResultCommand<T_Result, T_In>(action);
+            return new ActionResultCommand<T_Result?, T_In?>(action);
         }
         #endregion
     }

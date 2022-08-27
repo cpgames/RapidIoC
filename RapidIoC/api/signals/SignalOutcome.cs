@@ -16,6 +16,10 @@
 
         public override Outcome ResultAggregate(Outcome a, Outcome b)
         {
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            {
+                return Outcome.Fail();
+            }
             return a && b;
         }
         #endregion
@@ -37,6 +41,10 @@
 
         public override Outcome ResultAggregate(Outcome a, Outcome b)
         {
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            {
+                return Outcome.Fail();
+            }
             return a && b;
         }
         #endregion
@@ -58,6 +66,10 @@
 
         public override Outcome ResultAggregate(Outcome a, Outcome b)
         {
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            {
+                return Outcome.Fail();
+            }
             return a && b;
         }
         #endregion

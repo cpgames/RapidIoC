@@ -7,9 +7,11 @@
     {
         #region Properties
         /// <summary>
-        /// Number of bindings.
+        /// Get number of bindings.
         /// </summary>
-        int BindingCount { get; }
+        /// <param name="includeDiscarded">Include discarded bindings as well.</param>
+        /// <returns>Total number of bindings.</returns>
+        int GetBindingCount(bool includeDiscarded);
         #endregion
 
         #region Methods
@@ -17,17 +19,17 @@
         /// Find binding by key. Return false if not found.
         /// </summary>
         /// <param name="key">Unique key.</param>
-        /// <param name="includeDiscarded">Search discarded bucket as well.</param>
+        /// <param name="includeDiscarded">Search discarded bindings as well.</param>
         /// <param name="binding">Binding instance if found, otherwise null.</param>
-        /// <returns>True if binding found, otherwise false.</returns>
-        Outcome FindBinding(IKey? key, bool includeDiscarded, out IBinding binding);
+        /// <returns><see cref="Outcome.Success()"/> if binding found, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
+        Outcome FindBinding(IKey key, bool includeDiscarded, out IBinding? binding);
 
         /// <summary>
         /// Check if binding exists.
         /// </summary>
         /// <param name="key">Unique key.</param>
-        /// <returns>True if binding exists, otherwise false.</returns>
-        Outcome BindingExists(IKey? key);
+        /// <returns><see cref="Outcome.Success()"/> if binding exists, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
+        Outcome BindingExists(IKey key);
 
         /// <summary>
         /// If binding does not exist, register new binding. Otherwise return existing one.
@@ -36,20 +38,20 @@
         /// </summary>
         /// <param name="key">Unique key.</param>
         /// <param name="binding">Binding instance if found or created, otherwise null.</param>
-        /// <returns>True if success, otherwise false.</returns>
-        Outcome Bind(IKey? key, out IBinding binding);
+        /// <returns><see cref="Outcome.Success()"/> if successful, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
+        Outcome Bind(IKey key, out IBinding? binding);
 
         /// <summary>
         /// Remove binding by key.
         /// </summary>
         /// <param name="key">Unique key.</param>
-        /// <returns>True if success, otherwise false.</returns>
-        Outcome Unbind(IKey? key);
+        /// <returns><see cref="Outcome.Success()"/> if successful, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
+        Outcome Unbind(IKey key);
 
         /// <summary>
         /// Remove all local bindings.
         /// </summary>
-        /// <returns>True if success, otherwise false.</returns>
+        /// <returns><see cref="Outcome.Success()"/> if successful, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
         Outcome ClearBindings();
 
         /// <summary>
@@ -57,11 +59,22 @@
         /// </summary>
         /// <param name="key">Unique key.</param>
         /// <param name="value">New value to assign to binding.</param>
-        /// <returns>True if success, otherwise false.</returns>
-        Outcome BindValue(IKey? key, object value);
+        /// <returns><see cref="Outcome.Success()"/> if successful, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
+        Outcome BindValue(IKey key, object value);
 
-        Outcome MoveBindingFrom(IKey? key, IBindingCollection collection);
+        /// <summary>
+        /// Move binding from current collection to another collection
+        /// </summary>
+        /// <param name="key">Binding key</param>
+        /// <param name="collection">Destination <see cref="IBindingCollection"/></param>
+        /// <returns><see cref="Outcome.Success()"/> if successful, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
+        Outcome MoveBindingFrom(IKey key, IBindingCollection collection);
 
+        /// <summary>
+        /// Move binding to current collection. Intended to be used with <see cref="MoveBindingFrom"/>.
+        /// </summary>
+        /// <param name="binding">Binding to move.</param>
+        /// <returns></returns>
         Outcome MoveBindingTo(IBinding binding);
         #endregion
     }

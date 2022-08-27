@@ -15,32 +15,66 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region ISignal Members
-        public Outcome AddCommand(ICommand command, IKey? key, bool once = false)
+        public Outcome AddCommand<TCommand>(bool once = false) where TCommand : ICommand
+        {
+            var createKeyResult = Rapid.KeyFactoryCollection.Create(typeof(TCommand), out var key);
+            if (!createKeyResult)
+            {
+                return createKeyResult;
+            }
+            if (HasKey(key))
+            {
+                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.");
+            }
+            var instantiator = new DefaultInstantiator<TCommand>();
+            return
+                instantiator.Create(out var command) &&
+                AddCommand(command!, key, once);
+        }
+
+        public Outcome AddCommand<TCommand>(out IKey key, bool once = false) where TCommand : ICommand
+        {
+            var createKeyResult = Rapid.KeyFactoryCollection.Create(typeof(TCommand), out key);
+            if (!createKeyResult)
+            {
+                return createKeyResult;
+            }
+            if (HasKey(key))
+            {
+                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.");
+            }
+            var instantiator = new DefaultInstantiator<TCommand>();
+            return
+                instantiator.Create(out var command) &&
+                AddCommand(command!, key, once);
+        }
+
+        public Outcome AddCommand(ICommand command, IKey key, bool once = false)
         {
             return AddCommandInternal(command, key, once);
         }
 
-        public Outcome AddCommand(ICommand command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommand command, object? keyData = null, bool once = false)
         {
             return AddCommandInternal(command, keyData, once);
         }
 
-        public Outcome AddCommand(ICommand command, out IKey? key, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommand command, out IKey key, object? keyData = null, bool once = false)
         {
             return AddCommandInternal(command, out key, keyData, once);
         }
 
-        public Outcome AddCommand(Action action, IKey? key, bool once = false)
+        public Outcome AddCommand(Action action, IKey key, bool once = false)
         {
             return AddCommandInternal(new ActionCommand(action), key, once);
         }
 
-        public Outcome AddCommand(Action action, object keyData = null, bool once = false)
+        public Outcome AddCommand(Action action, object? keyData = null, bool once = false)
         {
             return AddCommandInternal(new ActionCommand(action), keyData, once);
         }
 
-        public Outcome AddCommand(Action action, out IKey? key, object keyData = null, bool once = false)
+        public Outcome AddCommand(Action action, out IKey key, object? keyData = null, bool once = false)
         {
             return AddCommandInternal(new ActionCommand(action), out key, keyData, once);
         }
@@ -89,36 +123,70 @@ namespace cpGames.core.RapidIoC
     public class Signal<T_In> : SignalBase, ISignal<T_In>
     {
         #region Fields
-        private readonly Queue<T_In> _dispatchQueue = new Queue<T_In>();
+        private readonly Queue<T_In> _dispatchQueue = new();
         #endregion
 
         #region ISignal<T_In> Members
-        public Outcome AddCommand(ICommand<T_In> command, IKey? key, bool once = false)
+        public Outcome AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T_In>
+        {
+            var createKeyResult = Rapid.KeyFactoryCollection.Create(typeof(TCommand), out var key);
+            if (!createKeyResult)
+            {
+                return createKeyResult;
+            }
+            if (HasKey(key))
+            {
+                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.");
+            }
+            var instantiator = new DefaultInstantiator<TCommand>();
+            return
+                instantiator.Create(out var command) &&
+                AddCommand(command!, key, once);
+        }
+
+        public Outcome AddCommand<TCommand>(out IKey key, bool once = false) where TCommand : ICommand<T_In>
+        {
+            var createKeyResult = Rapid.KeyFactoryCollection.Create(typeof(TCommand), out key);
+            if (!createKeyResult)
+            {
+                return createKeyResult;
+            }
+            if (HasKey(key))
+            {
+                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.");
+            }
+            var instantiator = new DefaultInstantiator<TCommand>();
+            return
+                instantiator.Create(out var command) &&
+                AddCommand(command!, key, once);
+        }
+
+        public Outcome AddCommand(ICommand<T_In> command, IKey key, bool once = false)
         {
             return AddCommandInternal(command, key, once);
         }
 
-        public Outcome AddCommand(ICommand<T_In> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommand<T_In> command, object? keyData = null, bool once = false)
         {
             return AddCommandInternal(command, keyData, once);
         }
 
-        public Outcome AddCommand(ICommand<T_In> command, out IKey? key, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommand<T_In> command, out IKey key, object? keyData = null, bool once = false)
         {
             return AddCommandInternal(command, out key, keyData, once);
         }
 
-        public Outcome AddCommand(Action<T_In> action, IKey? key, bool once = false)
+        public Outcome AddCommand(Action<T_In> action, IKey key, bool once = false)
         {
             return AddCommandInternal(new ActionCommand<T_In>(action), key, once);
         }
 
-        public Outcome AddCommand(Action<T_In> action, object keyData = null, bool once = false)
+        public Outcome AddCommand(Action<T_In> action, object? keyData = null, bool once = false)
         {
             return AddCommandInternal(new ActionCommand<T_In>(action), keyData, once);
         }
 
-        public Outcome AddCommand(Action<T_In> action, out IKey? key, object keyData = null, bool once = false)
+        public Outcome AddCommand(Action<T_In> action, out IKey key, object? keyData = null, bool once = false)
         {
             return AddCommandInternal(new ActionCommand<T_In>(action), out key, keyData, once);
         }
@@ -165,41 +233,75 @@ namespace cpGames.core.RapidIoC
     /// Signal with two parameters.
     /// If you want to have more, I recommend creating a model and using that as a single-parameter signal.
     /// </summary>
-    public class Signal<T_In1, T_In2> : SignalBase, ISignal<T_In1, T_In2>
+    public class Signal<T_In_1, T_In_2> : SignalBase, ISignal<T_In_1, T_In_2>
     {
         #region Fields
-        private readonly Queue<KeyValuePair<T_In1, T_In2>> _dispatchQueue = new Queue<KeyValuePair<T_In1, T_In2>>();
+        private readonly Queue<KeyValuePair<T_In_1, T_In_2>> _dispatchQueue = new();
         #endregion
 
-        #region ISignal<T_In1,T_In2> Members
-        public Outcome AddCommand(ICommand<T_In1, T_In2> command, IKey? key, bool once = false)
+        #region ISignal<T_In_1,T_In_2> Members
+        public Outcome AddCommand<TCommand>(bool once = false) where TCommand : ICommand<T_In_1, T_In_2>
+        {
+            var createKeyResult = Rapid.KeyFactoryCollection.Create(typeof(TCommand), out var key);
+            if (!createKeyResult)
+            {
+                return createKeyResult;
+            }
+            if (HasKey(key))
+            {
+                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.");
+            }
+            var instantiator = new DefaultInstantiator<TCommand>();
+            return
+                instantiator.Create(out var command) &&
+                AddCommand(command!, key, once);
+        }
+
+        public Outcome AddCommand<TCommand>(out IKey key, bool once = false) where TCommand : ICommand<T_In_1, T_In_2>
+        {
+            var createKeyResult = Rapid.KeyFactoryCollection.Create(typeof(TCommand), out key);
+            if (!createKeyResult)
+            {
+                return createKeyResult;
+            }
+            if (HasKey(key))
+            {
+                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.");
+            }
+            var instantiator = new DefaultInstantiator<TCommand>();
+            return
+                instantiator.Create(out var command) &&
+                AddCommand(command!, key, once);
+        }
+
+        public Outcome AddCommand(ICommand<T_In_1, T_In_2> command, IKey key, bool once = false)
         {
             return AddCommandInternal(command, key, once);
         }
 
-        public Outcome AddCommand(ICommand<T_In1, T_In2> command, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommand<T_In_1, T_In_2> command, object? keyData = null, bool once = false)
         {
             return AddCommandInternal(command, keyData, once);
         }
 
-        public Outcome AddCommand(ICommand<T_In1, T_In2> command, out IKey? key, object keyData = null, bool once = false)
+        public Outcome AddCommand(ICommand<T_In_1, T_In_2> command, out IKey key, object? keyData = null, bool once = false)
         {
             return AddCommandInternal(command, out key, keyData, once);
         }
 
-        public Outcome AddCommand(Action<T_In1, T_In2> action, IKey? key, bool once = false)
+        public Outcome AddCommand(Action<T_In_1, T_In_2> action, IKey key, bool once = false)
         {
-            return AddCommandInternal(new ActionCommand<T_In1, T_In2>(action), key, once);
+            return AddCommandInternal(new ActionCommand<T_In_1, T_In_2>(action), key, once);
         }
 
-        public Outcome AddCommand(Action<T_In1, T_In2> action, object keyData = null, bool once = false)
+        public Outcome AddCommand(Action<T_In_1, T_In_2> action, object? keyData = null, bool once = false)
         {
-            return AddCommandInternal(new ActionCommand<T_In1, T_In2>(action), keyData, once);
+            return AddCommandInternal(new ActionCommand<T_In_1, T_In_2>(action), keyData, once);
         }
 
-        public Outcome AddCommand(Action<T_In1, T_In2> action, out IKey? key, object keyData = null, bool once = false)
+        public Outcome AddCommand(Action<T_In_1, T_In_2> action, out IKey key, object? keyData = null, bool once = false)
         {
-            return AddCommandInternal(new ActionCommand<T_In1, T_In2>(action), out key, keyData, once);
+            return AddCommandInternal(new ActionCommand<T_In_1, T_In_2>(action), out key, keyData, once);
         }
 
         /// <summary>
@@ -211,20 +313,20 @@ namespace cpGames.core.RapidIoC
         /// </summary>
         /// <param name="in1">First parameter data to pass to commands</param>
         /// <param name="in2">Second parameter data to pass to commands</param>
-        public void Dispatch(T_In1 in1, T_In2 in2)
+        public void Dispatch(T_In_1 in1, T_In_2 in2)
         {
             lock (_syncRoot)
             {
                 if (!DispatchBegin())
                 {
-                    _dispatchQueue.Enqueue(new KeyValuePair<T_In1, T_In2>(in1, in2));
+                    _dispatchQueue.Enqueue(new KeyValuePair<T_In_1, T_In_2>(in1, in2));
                 }
                 else
                 {
                     foreach (var kvp in Commands)
                     {
                         if (!IsScheduledForRemoval(kvp.Key) &&
-                            kvp.Value.Command is ICommand<T_In1, T_In2> command)
+                            kvp.Value.Command is ICommand<T_In_1, T_In_2> command)
                         {
                             command.Execute(in1, in2);
                         }

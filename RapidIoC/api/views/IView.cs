@@ -8,7 +8,7 @@
     public interface IView
     {
         #region Properties
-        IKey? ContextKey { get; }
+        IKey ContextKey { get; }
         #endregion
 
         #region Methods
@@ -27,14 +27,14 @@
     public interface IView<TModel> : IView
     {
         #region Properties
-        TModel Model { get; }
+        TModel? Model { get; }
         bool HasModel { get; }
-        ISignalOutcome<TModel> ModelBeginSetSignal { get; }
+        ISignalOutcome<TModel?> ModelBeginSetSignal { get; }
         ISignalOutcome ModelEndSetSignal { get; }
         #endregion
 
         #region Methods
-        Outcome SetModel(TModel model);
+        Outcome SetModel(TModel? model);
         #endregion
     }
 }

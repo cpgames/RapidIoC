@@ -5,7 +5,7 @@ namespace cpGames.core.RapidIoC.impl
     public class ContextCollection : IContextCollection
     {
         #region Fields
-        private readonly Dictionary<IKey?, IContext> _contexts = new Dictionary<IKey?, IContext>();
+        private readonly Dictionary<IKey, IContext> _contexts = new();
         #endregion
 
         #region IContextCollection Members
@@ -13,7 +13,7 @@ namespace cpGames.core.RapidIoC.impl
         public int Count => _contexts.Count;
         public IEnumerable<IContext> Contexts => _contexts.Values;
 
-        public Outcome FindContext(IKey? key, out IContext context)
+        public Outcome FindContext(IKey key, out IContext? context)
         {
             if (RootKey.Instance == key)
             {
@@ -22,14 +22,14 @@ namespace cpGames.core.RapidIoC.impl
             }
             return
                 _contexts.TryGetValue(key, out context) ?
-                    Outcome.Fail($"Failed to find context <{key}>.") :
-                    Outcome.Success();
+                    Outcome.Success() :
+                    Outcome.Fail($"Failed to find context <{key}>.");
         }
 
-        public Outcome FindOrCreateContext(IKey? key, out IContext context)
+        public Outcome FindOrCreateContext(IKey key, out IContext? context)
         {
             var findContextOutcome = FindContext(key, out context);
-            if (!findContextOutcome)
+            if (findContextOutcome)
             {
                 return findContextOutcome;
             }
@@ -47,7 +47,7 @@ namespace cpGames.core.RapidIoC.impl
             return Outcome.Success();
         }
 
-        public Outcome ContextExists(IKey? key)
+        public Outcome ContextExists(IKey key)
         {
             return !_contexts.ContainsKey(key) ?
                 Outcome.Fail($"Context <{key}> does not exist.") :

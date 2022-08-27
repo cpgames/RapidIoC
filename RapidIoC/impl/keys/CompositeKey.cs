@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using zLib;
 
 namespace cpGames.core.RapidIoC.impl
 {
     internal class CompositeKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
-        public Outcome Create(object keyData, out IKey key)
+        public Outcome Create(object? keyData, out IKey key)
         {
-            key = null;
+            key = Rapid.InvalidKey;
             if (keyData is List<object> childKeyDatas)
             {
                 var keyList = new List<IKey>();
@@ -71,12 +70,12 @@ namespace cpGames.core.RapidIoC.impl
         public override int GetHashCode()
         {
             return
-                Keys == null ? 0 : Keys.Aggregate(0, (current, key) => current ^ key.GetHashCode());
+                Keys.Aggregate(0, (current, key) => current ^ key.GetHashCode());
         }
 
         public static bool operator ==(CompositeKey lhs, IKey rhs)
         {
-            return lhs?.Equals(rhs) ?? ReferenceEquals(rhs, null);
+            return lhs.Equals(rhs);
         }
 
         public static bool operator !=(CompositeKey lhs, IKey rhs)
