@@ -7,6 +7,7 @@ While developing RapidIoC, I've tried to accomplish the following:
 * **Lean** - unlike similar MVC frameworks RapidIoC does away with a lot of code bloat (e.g. there are no Mediators) and you can use it to any degree you want, whether architecting everything around Context-View hierarchy, or only binding several shared instances.  
 * **Powerful Signal API** - RapidIoC comes with an extensive Signal-Command API which greatly promotes better code decoupling.  
 * **Free and open-source** - code is regularly updated, documented, and can be modified for your specific needs.
+* **Threadsafe** - RapidIoC can be used in multithreaded code.
 
 What is Inversion of Control and Dependency Injection, and how it can benefit you, read [here](https://www.tutorialsteacher.com/ioc/inversion-of-control).
 
