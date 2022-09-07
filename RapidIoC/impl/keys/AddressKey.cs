@@ -1,42 +1,38 @@
 ﻿namespace cpGames.core.RapidIoC.impl
 {
-    internal class UidKeyFactory : IKeyFactory
+    internal class AddressKeyFactory : IKeyFactory
     {
         #region IKeyFactory Members
         public Outcome Create(object? keyData, out IKey key)
         {
             key = Rapid.InvalidKey;
-            switch (keyData)
+            if (keyData is Address address)
             {
-                case long longKeyData:
-                    key = new UidKey(longKeyData);
-                    return Outcome.Success();
-                case UidGenerator uidGenerator:
-                    key = new UidKey(uidGenerator.GenerateUid());
-                    return Outcome.Success();
+                key = new AddressKey(address);
+                return Outcome.Success();
             }
             return Outcome.Fail("keyData type is not supported.");
         }
         #endregion
     }
 
-    internal class UidKey : IKey
+    internal class AddressKey : IKey
     {
         #region Properties
-        public long Uid { get; }
+        public Address Address { get; }
         #endregion
 
         #region Constructors
-        public UidKey(long uid)
+        public AddressKey(Address address)
         {
-            Uid = uid;
+            Address = address;
         }
         #endregion
 
         #region Methods
-        protected bool Equals(UidKey other)
+        protected bool Equals(AddressKey other)
         {
-            return Uid == other.Uid;
+            return Address == other.Address;
         }
 
         public override bool Equals(object obj)
@@ -53,27 +49,27 @@
             {
                 return false;
             }
-            return Equals((UidKey)obj);
+            return Equals((IdKey)obj);
         }
 
         public override int GetHashCode()
         {
-            return Uid.GetHashCode();
+            return Address.GetHashCode();
         }
 
-        public static bool operator ==(UidKey lhs, IKey rhs)
+        public static bool operator ==(AddressKey lhs, IKey rhs)
         {
             return lhs.Equals(rhs);
         }
 
-        public static bool operator !=(UidKey lhs, IKey rhs)
+        public static bool operator !=(AddressKey lhs, IKey rhs)
         {
             return !(lhs == rhs);
         }
 
         public override string ToString()
         {
-            return $"UidKey:{Uid}";
+            return $"AddressKey:{Address}";
         }
         #endregion
     }

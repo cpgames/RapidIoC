@@ -5,7 +5,9 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RapidIoC", "RapidIoC\RapidIoC.csproj", "{B2595183-33F2-4C22-A9EE-3F4655E8F534}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{A1E20149-C114-4994-A7F7-5E20877D8C9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{A1E20149-C114-4994-A7F7-5E20877D8C9E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeUtils", "..\CodeUtils\CodeUtils\CodeUtils.csproj", "{CA77AAA5-3D16-4512-AA55-014B3F20E93C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A1E20149-C114-4994-A7F7-5E20877D8C9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1E20149-C114-4994-A7F7-5E20877D8C9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1E20149-C114-4994-A7F7-5E20877D8C9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA77AAA5-3D16-4512-AA55-014B3F20E93C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA77AAA5-3D16-4512-AA55-014B3F20E93C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA77AAA5-3D16-4512-AA55-014B3F20E93C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA77AAA5-3D16-4512-AA55-014B3F20E93C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -11,17 +11,11 @@ namespace cpGames.core.RapidIoC.impl
     public abstract class SignalBase : ISignalBase
     {
         #region Fields
-        private static UidGenerator? _uidGenerator;
-
         private readonly Dictionary<IKey, SignalCommandModel> _commands = new();
         private readonly Dictionary<IKey, SignalCommandModel> _commandsToAdd = new();
         private readonly HashSet<IKey> _commandsToRemove = new();
         private bool _dispatching;
         protected internal readonly object _syncRoot = new();
-        #endregion
-
-        #region Properties
-        internal static UidGenerator UidGenerator => _uidGenerator ??= new UidGenerator();
         #endregion
 
         #region ISignalBase Members
@@ -40,14 +34,6 @@ namespace cpGames.core.RapidIoC.impl
                 return
                     Rapid.KeyFactoryCollection.Create(keyData, out var key) &&
                     HasKey(key);
-            }
-        }
-
-        public bool HasKey(IKey key)
-        {
-            lock (_syncRoot)
-            {
-                return _commands.ContainsKey(key) || _commandsToAdd.ContainsKey(key);
             }
         }
 
@@ -81,6 +67,14 @@ namespace cpGames.core.RapidIoC.impl
         #endregion
 
         #region Methods
+        public bool HasKey(IKey key)
+        {
+            lock (_syncRoot)
+            {
+                return _commands.ContainsKey(key) || _commandsToAdd.ContainsKey(key);
+            }
+        }
+
         protected Outcome RemoveCommandInternal(IKey key)
         {
             lock (_syncRoot)
@@ -102,9 +96,13 @@ namespace cpGames.core.RapidIoC.impl
                 {
                     return releaseCommandResult;
                 }
-                if (key is UidKey uidKey)
+                if (key is IdKey idKey)
                 {
-                    UidGenerator.RemoveUid(uidKey.Uid);
+                    var removeIdResult = Rapid._idContainer.RemoveKey(idKey);
+                    if (!removeIdResult)
+                    {
+                        return removeIdResult;
+                    }
                 }
                 _commands.Remove(key);
             }
@@ -156,7 +154,7 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (keyData == null)
             {
-                var createKeyOutcome = Rapid.KeyFactoryCollection.Create(UidGenerator, out key);
+                var createKeyOutcome = Rapid._idContainer.CreateKey(out key);
                 if (!createKeyOutcome)
                 {
                     return createKeyOutcome;

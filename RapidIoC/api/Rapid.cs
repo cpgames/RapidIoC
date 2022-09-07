@@ -8,7 +8,8 @@ namespace cpGames.core.RapidIoC
     public static class Rapid
     {
         #region Fields
-        private static readonly object _syncRoot = new object();
+        private static readonly object _syncRoot = new();
+        internal static readonly IdKeyContainer _idContainer = new();
         #endregion
 
         #region Properties
