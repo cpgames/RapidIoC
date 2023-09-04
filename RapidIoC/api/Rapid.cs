@@ -88,6 +88,13 @@ namespace cpGames.core.RapidIoC
                 Unbind(key, contextKey);
         }
 
+        public static Outcome Unbind(object keyData, IKey contextKey)
+        {
+            return
+                KeyFactoryCollection.Create(keyData, out var key) &&
+                Unbind(key, contextKey);
+        }
+
         public static Outcome GetBinding(IKey key, IKey contextKey, out IBinding? binding)
         {
             lock (_syncRoot)

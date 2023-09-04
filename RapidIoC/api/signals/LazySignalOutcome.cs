@@ -9,7 +9,7 @@
         #region Methods
         protected override ISignalResult<Outcome> Factory()
         {
-            return new SignalOutcome();
+            return new SignalOutcome { IgnoreRecursiveDispatch = IgnoreRecursiveDispatch };
         }
         #endregion
     }
@@ -23,7 +23,7 @@
         #region Methods
         protected override ISignalResult<Outcome, T_In> Factory()
         {
-            return new SignalOutcome<T_In>();
+            return new SignalOutcome<T_In> { IgnoreRecursiveDispatch = IgnoreRecursiveDispatch };
         }
         #endregion
     }
@@ -37,7 +37,7 @@
         #region Methods
         protected override ISignalResult<Outcome, T_In_1, T_In_2> Factory()
         {
-            return new SignalOutcome<T_In_1, T_In_2>();
+            return new SignalOutcome<T_In_1, T_In_2> { IgnoreRecursiveDispatch = IgnoreRecursiveDispatch };
         }
         #endregion
     }

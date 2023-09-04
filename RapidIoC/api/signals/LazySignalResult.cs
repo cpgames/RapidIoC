@@ -12,6 +12,8 @@ namespace cpGames.core.RapidIoC
         protected ISignalResult<T_Result> Signal => _signal ??= Factory();
 
         protected override ISignalBase SignalBase => Signal;
+
+        public virtual bool IgnoreRecursiveDispatch { get; set; }
         #endregion
 
         #region ISignalResult<T_Result> Members
@@ -25,9 +27,17 @@ namespace cpGames.core.RapidIoC
             return Signal.AddCommand(command, keyData, once);
         }
 
-        public Outcome AddCommand(ICommandResult<T_Result> command, out IKey key, object? keyData = null, bool once = false)
+        public Outcome AddCommand(
+            ICommandResult<T_Result> command,
+            out IKey key,
+            object? keyData = null,
+            bool once = false)
         {
-            return Signal.AddCommand(command, out key, keyData, once);
+            return Signal.AddCommand(
+                command,
+                out key,
+                keyData,
+                once);
         }
 
         public Outcome AddCommand(ActionResultDelegate<T_Result> action, IKey key, bool once = false)
@@ -40,9 +50,17 @@ namespace cpGames.core.RapidIoC
             return Signal.AddCommand(new ActionResultCommand<T_Result>(action), keyData, once);
         }
 
-        public Outcome AddCommand(ActionResultDelegate<T_Result> action, out IKey key, object? keyData = null, bool once = false)
+        public Outcome AddCommand(
+            ActionResultDelegate<T_Result> action,
+            out IKey key,
+            object? keyData = null,
+            bool once = false)
         {
-            return Signal.AddCommand(new ActionResultCommand<T_Result>(action), out key, keyData, once);
+            return Signal.AddCommand(
+                new ActionResultCommand<T_Result>(action),
+                out key,
+                keyData,
+                once);
         }
 
         public T_Result DispatchResult(T_Result startingResult)
@@ -71,6 +89,7 @@ namespace cpGames.core.RapidIoC
         protected ISignalResult<T_Result, T_In> Signal => _signal ??= Factory();
 
         protected override ISignalBase SignalBase => Signal;
+        public virtual bool IgnoreRecursiveDispatch { get; set; }
         #endregion
 
         #region ISignalResult<T_Result,T_In> Members
@@ -84,9 +103,17 @@ namespace cpGames.core.RapidIoC
             return Signal.AddCommand(command, keyData, once);
         }
 
-        public Outcome AddCommand(ICommandResult<T_Result, T_In> command, out IKey key, object? keyData = null, bool once = false)
+        public Outcome AddCommand(
+            ICommandResult<T_Result, T_In> command,
+            out IKey key,
+            object? keyData = null,
+            bool once = false)
         {
-            return Signal.AddCommand(command, out key, keyData, once);
+            return Signal.AddCommand(
+                command,
+                out key,
+                keyData,
+                once);
         }
 
         public Outcome AddCommand(ActionResultDelegate<T_Result, T_In> action, IKey key, bool once = false)
@@ -99,9 +126,17 @@ namespace cpGames.core.RapidIoC
             return Signal.AddCommand(new ActionResultCommand<T_Result, T_In>(action), keyData, once);
         }
 
-        public Outcome AddCommand(ActionResultDelegate<T_Result, T_In> action, out IKey key, object? keyData = null, bool once = false)
+        public Outcome AddCommand(
+            ActionResultDelegate<T_Result, T_In> action,
+            out IKey key,
+            object? keyData = null,
+            bool once = false)
         {
-            return Signal.AddCommand(new ActionResultCommand<T_Result, T_In>(action), out key, keyData, once);
+            return Signal.AddCommand(
+                new ActionResultCommand<T_Result, T_In>(action),
+                out key,
+                keyData,
+                once);
         }
 
         public T_Result DispatchResult(T_In @in, T_Result startingResult)
@@ -130,6 +165,7 @@ namespace cpGames.core.RapidIoC
         protected ISignalResult<T_Result, T_In_1, T_In_2> Signal => _signal ??= Factory();
 
         protected override ISignalBase SignalBase => Signal;
+        public virtual bool IgnoreRecursiveDispatch { get; set; }
         #endregion
 
         #region ISignalResult<T_Result,T_In_1,T_In_2> Members
@@ -143,9 +179,17 @@ namespace cpGames.core.RapidIoC
             return Signal.AddCommand(command, keyData, once);
         }
 
-        public Outcome AddCommand(ICommandResult<T_Result, T_In_1, T_In_2> command, out IKey key, object? keyData = null, bool once = false)
+        public Outcome AddCommand(
+            ICommandResult<T_Result, T_In_1, T_In_2> command,
+            out IKey key,
+            object? keyData = null,
+            bool once = false)
         {
-            return Signal.AddCommand(command, out key, keyData, once);
+            return Signal.AddCommand(
+                command,
+                out key,
+                keyData,
+                once);
         }
 
         public Outcome AddCommand(ActionResultDelegate<T_Result, T_In_1, T_In_2> action, IKey key, bool once = false)
@@ -158,9 +202,17 @@ namespace cpGames.core.RapidIoC
             return Signal.AddCommand(new ActionResultCommand<T_Result, T_In_1, T_In_2>(action), keyData, once);
         }
 
-        public Outcome AddCommand(ActionResultDelegate<T_Result, T_In_1, T_In_2> action, out IKey key, object? keyData = null, bool once = false)
+        public Outcome AddCommand(
+            ActionResultDelegate<T_Result, T_In_1, T_In_2> action,
+            out IKey key,
+            object? keyData = null,
+            bool once = false)
         {
-            return Signal.AddCommand(new ActionResultCommand<T_Result, T_In_1, T_In_2>(action), out key, keyData, once);
+            return Signal.AddCommand(
+                new ActionResultCommand<T_Result, T_In_1, T_In_2>(action),
+                out key,
+                keyData,
+                once);
         }
 
         public T_Result DispatchResult(T_In_1 in1, T_In_2 in2, T_Result startingResult)

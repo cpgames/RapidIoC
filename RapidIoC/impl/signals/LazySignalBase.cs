@@ -11,6 +11,7 @@ namespace cpGames.core.RapidIoC.impl
         #region ISignalBase Members
         public IEnumerable<KeyValuePair<IKey, SignalCommandModel>> Commands => SignalBase.Commands;
         public int CommandCount => SignalBase.CommandCount;
+        public bool IsDispatching => SignalBase.IsDispatching;
 
         public bool IsScheduledForRemoval(IKey key)
         {
@@ -35,6 +36,21 @@ namespace cpGames.core.RapidIoC.impl
         public Outcome ClearCommands()
         {
             return SignalBase.ClearCommands();
+        }
+
+        public Outcome SuspendCommand(object keyData)
+        {
+            return SignalBase.SuspendCommand(keyData);
+        }
+
+        public Outcome ResumeCommand(object keyData)
+        {
+            return SignalBase.ResumeCommand(keyData);
+        }
+
+        public bool IsSuspended(object keyData)
+        {
+            return SignalBase.IsSuspended(keyData);
         }
         #endregion
     }

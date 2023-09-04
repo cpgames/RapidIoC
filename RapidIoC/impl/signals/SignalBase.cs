@@ -14,6 +14,7 @@ namespace cpGames.core.RapidIoC.impl
         private readonly Dictionary<IKey, SignalCommandModel> _commands = new();
         private readonly Dictionary<IKey, SignalCommandModel> _commandsToAdd = new();
         private readonly HashSet<IKey> _commandsToRemove = new();
+        private readonly HashSet<IKey> _suspendedCommands = new();
         private bool _dispatching;
         protected internal readonly object _syncRoot = new();
         #endregion
@@ -21,6 +22,7 @@ namespace cpGames.core.RapidIoC.impl
         #region ISignalBase Members
         public IEnumerable<KeyValuePair<IKey, SignalCommandModel>> Commands => _commands;
         public int CommandCount => _commands.Count;
+        public bool IsDispatching => _dispatching;
 
         public bool IsScheduledForRemoval(IKey key)
         {
@@ -64,6 +66,55 @@ namespace cpGames.core.RapidIoC.impl
                 return Outcome.Success();
             }
         }
+
+        public Outcome SuspendCommand(object keyData)
+        {
+            lock (_syncRoot)
+            {
+                var createKeyOutcome = Rapid.KeyFactoryCollection.Create(keyData, out var key);
+                if (!createKeyOutcome)
+                {
+                    return createKeyOutcome;
+                }
+                if (!_commands.ContainsKey(key))
+                {
+                    return Outcome.Fail($"Command with key <{key}> not found.");
+                }
+                if (_commandsToRemove.Contains(key))
+                {
+                    return Outcome.Fail($"Command with key <{key}> is scheduled for removal.");
+                }
+                if (!_suspendedCommands.Add(key))
+                {
+                    return Outcome.Fail($"Command with key <{key}> is already suspended.");
+                }
+                return Outcome.Success();
+            }
+        }
+
+        public Outcome ResumeCommand(object keyData)
+        {
+            lock (_syncRoot)
+            {
+                var createKeyOutcome = Rapid.KeyFactoryCollection.Create(keyData, out var key);
+                if (!createKeyOutcome)
+                {
+                    return createKeyOutcome;
+                }
+                if (!_suspendedCommands.Remove(key))
+                {
+                    return Outcome.Fail($"Command with key <{key}> is not suspended.");
+                }
+                return Outcome.Success();
+            }
+        }
+
+        public bool IsSuspended(object keyData)
+        {
+            return 
+                Rapid.KeyFactoryCollection.Create(keyData, out var key) &&
+                _suspendedCommands.Contains(key);
+        }
         #endregion
 
         #region Methods
@@ -83,6 +134,7 @@ namespace cpGames.core.RapidIoC.impl
                 {
                     return Outcome.Fail($"Command with key <{key}> not found.");
                 }
+                _suspendedCommands.Remove(key);
                 if (_dispatching)
                 {
                     if (!_commandsToRemove.Add(key))
@@ -147,10 +199,18 @@ namespace cpGames.core.RapidIoC.impl
 
         protected Outcome AddCommandInternal(IBaseCommand command, object? keyData, bool once)
         {
-            return AddCommandInternal(command, out _, keyData, once);
+            return AddCommandInternal(
+                command,
+                out _,
+                keyData,
+                once);
         }
 
-        protected Outcome AddCommandInternal(IBaseCommand command, out IKey key, object? keyData, bool once)
+        protected Outcome AddCommandInternal(
+            IBaseCommand command,
+            out IKey key,
+            object? keyData,
+            bool once)
         {
             if (keyData == null)
             {
@@ -171,14 +231,14 @@ namespace cpGames.core.RapidIoC.impl
             return AddCommandInternal(command, key, once);
         }
 
-        protected bool DispatchBegin()
+        protected Outcome DispatchBegin()
         {
             if (_dispatching)
             {
-                return false;
+                return Outcome.Fail($"{GetType().Name} is already dispatching, recursive execution for this Signal type is not supported.");
             }
             _dispatching = true;
-            return true;
+            return Outcome.Success();
         }
 
         protected void DispatchEnd()
@@ -221,20 +281,13 @@ namespace cpGames.core.RapidIoC.impl
         public abstract T_Result DefaultResult { get; }
         public abstract T_Result TargetResult { get; }
         public virtual bool StopOnResult => false;
+        public virtual bool IgnoreRecursiveDispatch { get; set; }
         #endregion
 
         #region Methods
         public abstract bool ResultEquals(T_Result a, T_Result b);
 
         public abstract T_Result ResultAggregate(T_Result a, T_Result b);
-
-        protected new void DispatchBegin()
-        {
-            if (!base.DispatchBegin())
-            {
-                throw new Exception($"{GetType().Name} is already dispatching, recursive execution for this Signal type is not supported.");
-            }
-        }
         #endregion
     }
 

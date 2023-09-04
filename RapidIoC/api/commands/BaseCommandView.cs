@@ -10,6 +10,8 @@ namespace cpGames.core.RapidIoC
         protected internal readonly object _syncRoot = new();
         #endregion
 
+        public virtual bool AllowMultipleExecutions => false;
+
         #region IBaseCommand Members
         public virtual Outcome Connect()
         {
@@ -29,15 +31,18 @@ namespace cpGames.core.RapidIoC
         #region Methods
         protected void BeginExecute()
         {
-            if (_executing)
+            if (_executing && !AllowMultipleExecutions)
             {
                 throw new Exception($"Command <{this}> is already executing.");
             }
-            _executing = true;
-            var registerWithContextOutcome = RegisterWithContext();
-            if (!registerWithContextOutcome)
+            if (!_executing)
             {
-                throw new Exception(registerWithContextOutcome.ErrorMessage);
+                _executing = true;
+                var registerWithContextOutcome = RegisterWithContext();
+                if (!registerWithContextOutcome)
+                {
+                    throw new Exception(registerWithContextOutcome.ErrorMessage);
+                }
             }
         }
 

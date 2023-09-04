@@ -44,7 +44,8 @@ namespace cpGames.core.RapidIoC
                 @out = DefaultOut;
                 foreach (var kvp in Commands)
                 {
-                    if (!IsScheduledForRemoval(kvp.Key) &&
+                    if (!IsSuspended(kvp.Key) &&
+                        !IsScheduledForRemoval(kvp.Key) &&
                         kvp.Value.Command is ICommandResultOut<T_Result, T_Out> command)
                     {
                         if (StopOnResult && ResultEquals(currentResult, TargetResult))
@@ -108,7 +109,8 @@ namespace cpGames.core.RapidIoC
                 @out = DefaultOut;
                 foreach (var kvp in Commands)
                 {
-                    if (!IsScheduledForRemoval(kvp.Key) &&
+                    if (!IsSuspended(kvp.Key) &&
+                        !IsScheduledForRemoval(kvp.Key) &&
                         kvp.Value.Command is ICommandResultOut<T_Result, T_In, T_Out> command)
                     {
                         if (StopOnResult && ResultEquals(currentResult, TargetResult))
@@ -172,7 +174,8 @@ namespace cpGames.core.RapidIoC
                 @out = DefaultOut;
                 foreach (var kvp in Commands)
                 {
-                    if (!IsScheduledForRemoval(kvp.Key) &&
+                    if (!IsSuspended(kvp.Key) &&
+                        !IsScheduledForRemoval(kvp.Key) &&
                         kvp.Value.Command is ICommandResultOut<T_Result, T_In_1, T_In_2, T_Out> command)
                     {
                         if (StopOnResult && ResultEquals(currentResult, TargetResult))
