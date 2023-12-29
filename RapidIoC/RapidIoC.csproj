@@ -47,8 +47,4 @@
       <ProjectReference Include="..\CodeUtils\CodeUtils\CodeUtils.csproj" />
     </ItemGroup>
 
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="echo Copying RapidIoC build output to client folder...&#xD;&#xA;cd $(BaseOutputPath)\$(Configuration)\$(TargetFramework)&#xD;&#xA;copy RapidIoC.dll %25PA_ROOT%25\Shared\CpCore\Assets\CpCore\Runtime\lib\  /Y&#xD;&#xA;copy RapidIoC.pdb %25PA_ROOT%25\Shared\CpCore\Assets\CpCore\Runtime\lib\  /Y" />
-    </Target>
-
 </Project>
