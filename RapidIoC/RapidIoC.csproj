@@ -44,7 +44,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\CodeUtils\CodeUtils\CodeUtils.csproj" />
+      <ProjectReference Include="..\CodeUtils\CodeUtils\CodeUtils.csproj" />
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
