@@ -84,7 +84,7 @@ namespace cpGames.core.RapidIoC
         /// note: sometimes your commands may contain code to add more commands to the same signal instance,
         /// in this case they will be queued up and added after this dispatch, and not executed in this cycle
         /// note2: if one or more commands contains logic to remove commands from this signal, they will be removed
-        /// after this dispatch, and WILL be executed in this cycle
+        /// after this dispatch, and will be executed in this cycle
         /// </summary>
         public void Dispatch()
         {
@@ -98,7 +98,8 @@ namespace cpGames.core.RapidIoC
                 {
                     foreach (var kvp in Commands)
                     {
-                        if (!IsScheduledForRemoval(kvp.Key) &&
+                        if (!IsSuspended(kvp.Key) &&
+                            !IsScheduledForRemoval(kvp.Key) &&
                             kvp.Value.Command is ICommand command)
                         {
                             command.Execute();
@@ -211,7 +212,8 @@ namespace cpGames.core.RapidIoC
                 {
                     foreach (var kvp in Commands)
                     {
-                        if (!IsScheduledForRemoval(kvp.Key) &&
+                        if (!IsSuspended(kvp.Key) && 
+                            !IsScheduledForRemoval(kvp.Key) &&
                             kvp.Value.Command is ICommand<T_In> command)
                         {
                             command.Execute(@in);
@@ -325,7 +327,8 @@ namespace cpGames.core.RapidIoC
                 {
                     foreach (var kvp in Commands)
                     {
-                        if (!IsScheduledForRemoval(kvp.Key) &&
+                        if (!IsSuspended(kvp.Key) && 
+                            !IsScheduledForRemoval(kvp.Key) &&
                             kvp.Value.Command is ICommand<T_In_1, T_In_2> command)
                         {
                             command.Execute(in1, in2);

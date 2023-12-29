@@ -8,7 +8,8 @@ namespace cpGames.core.RapidIoC
     public static class Rapid
     {
         #region Fields
-        private static readonly object _syncRoot = new object();
+        private static readonly object _syncRoot = new();
+        internal static readonly IdKeyContainer _idContainer = new();
         #endregion
 
         #region Properties
@@ -84,6 +85,13 @@ namespace cpGames.core.RapidIoC
         {
             return
                 KeyFactoryCollection.Create(typeof(TDataValue), out var key) &&
+                Unbind(key, contextKey);
+        }
+
+        public static Outcome Unbind(object keyData, IKey contextKey)
+        {
+            return
+                KeyFactoryCollection.Create(keyData, out var key) &&
                 Unbind(key, contextKey);
         }
 

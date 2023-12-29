@@ -1,4 +1,5 @@
-﻿using cpGames.core.RapidIoC.impl;
+﻿using System;
+using cpGames.core.RapidIoC.impl;
 
 namespace cpGames.core.RapidIoC
 {
@@ -39,11 +40,24 @@ namespace cpGames.core.RapidIoC
         {
             lock (_syncRoot)
             {
-                DispatchBegin();
+                var dispatchBeginOutcome = DispatchBegin();
+                if (!dispatchBeginOutcome)
+                {
+                    if (!IgnoreRecursiveDispatch)
+                    {
+                        if (typeof(T_Result) == typeof(Outcome))
+                        {
+                            return (T_Result)(object)dispatchBeginOutcome;
+                        }
+                        throw new Exception(dispatchBeginOutcome.ErrorMessage);
+                    }
+                    return startingResult;
+                }
                 var currentResult = startingResult;
                 foreach (var kvp in Commands)
                 {
-                    if (!IsScheduledForRemoval(kvp.Key) &&
+                    if (!IsSuspended(kvp.Key) && 
+                        !IsScheduledForRemoval(kvp.Key) &&
                         kvp.Value.Command is ICommandResult<T_Result> command)
                     {
                         if (StopOnResult && ResultEquals(currentResult, TargetResult))
@@ -106,7 +120,8 @@ namespace cpGames.core.RapidIoC
                 var currentResult = startingResult;
                 foreach (var kvp in Commands)
                 {
-                    if (!IsScheduledForRemoval(kvp.Key) &&
+                    if (!IsSuspended(kvp.Key) &&
+                        !IsScheduledForRemoval(kvp.Key) &&
                         kvp.Value.Command is ICommandResult<T_Result, T_In> command)
                     {
                         if (StopOnResult && ResultEquals(currentResult, TargetResult))
@@ -169,7 +184,8 @@ namespace cpGames.core.RapidIoC
                 var currentResult = startingResult;
                 foreach (var kvp in Commands)
                 {
-                    if (!IsScheduledForRemoval(kvp.Key) &&
+                    if (!IsSuspended(kvp.Key) &&
+                        !IsScheduledForRemoval(kvp.Key) &&
                         kvp.Value.Command is ICommandResult<T_Result, T_In_1, T_In_2> command)
                     {
                         if (StopOnResult && ResultEquals(currentResult, TargetResult))

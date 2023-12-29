@@ -11,6 +11,7 @@ namespace cpGames.core.RapidIoC
         #region Properties
         protected ISignalResultOut<T_Result, T_Out> Signal => _signal ??= Factory();
         protected override ISignalBase SignalBase => Signal;
+        public virtual bool IgnoreRecursiveDispatch { get; set; }
         #endregion
 
         #region ISignalResultOut<T_Result,T_Out> Members
@@ -79,6 +80,7 @@ namespace cpGames.core.RapidIoC
         #region Properties
         protected ISignalResultOut<T_Result, T_In, T_Out> Signal => _signal ??= Factory();
         protected override ISignalBase SignalBase => Signal;
+        public virtual bool IgnoreRecursiveDispatch { get; set; }
         #endregion
 
         #region ISignalResultOut<T_Result,T_In,T_Out> Members
@@ -147,6 +149,7 @@ namespace cpGames.core.RapidIoC
         #region Properties
         protected ISignalResultOut<T_Result, T_In_1, T_In_2, T_Out> Signal => _signal ??= Factory();
         protected override ISignalBase SignalBase => Signal;
+        public virtual bool IgnoreRecursiveDispatch { get; set; }
         #endregion
 
         #region ISignalResultOut<T_Result,T_In_1,T_In_2,T_Out> Members

@@ -10,6 +10,11 @@ namespace cpGames.core.RapidIoC
         protected internal readonly object _syncRoot = new();
         #endregion
 
+        #region Properties
+        public virtual bool AllowMultipleExecutions => false;
+        public virtual bool EndOnRelease => false;
+        #endregion
+
         #region IBaseCommand Members
         public virtual Outcome Connect()
         {
@@ -20,7 +25,14 @@ namespace cpGames.core.RapidIoC
         {
             if (_executing)
             {
-                return Outcome.Fail($"Command <{this}> is still executing. Call EndExecute first.");
+                if (EndOnRelease)
+                {
+                    EndExecute();
+                }
+                else
+                {
+                    return Outcome.Fail($"Command <{this}> is still executing. Call EndExecute first.");
+                }
             }
             return UnregisterFromContext();
         }
@@ -29,15 +41,18 @@ namespace cpGames.core.RapidIoC
         #region Methods
         protected void BeginExecute()
         {
-            if (_executing)
+            if (_executing && !AllowMultipleExecutions)
             {
                 throw new Exception($"Command <{this}> is already executing.");
             }
-            _executing = true;
-            var registerWithContextOutcome = RegisterWithContext();
-            if (!registerWithContextOutcome)
+            if (!_executing)
             {
-                throw new Exception(registerWithContextOutcome.ErrorMessage);
+                _executing = true;
+                var registerWithContextOutcome = RegisterWithContext();
+                if (!registerWithContextOutcome)
+                {
+                    throw new Exception(registerWithContextOutcome.ErrorMessage);
+                }
             }
         }
 

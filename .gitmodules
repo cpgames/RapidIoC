@@ -1,0 +1,4 @@
+[submodule "CodeUtils"]
+	path = CodeUtils
+	url = https://github.com/cpgames/CodeUtils.git
+	branch = main

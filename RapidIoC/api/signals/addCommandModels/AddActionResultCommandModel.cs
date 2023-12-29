@@ -8,7 +8,7 @@ namespace cpGames.core.RapidIoC
         #region Methods
         public static implicit operator AddActionResultCommandModel<T_Result>(ActionResultCommand<T_Result> command)
         {
-            var createKeyOutcome = Rapid.KeyFactoryCollection.Create(SignalBase.UidGenerator, out var key);
+            var createKeyOutcome = Rapid._idContainer.CreateKey(out var key);
             if (!createKeyOutcome)
             {
                 throw new Exception(createKeyOutcome.ErrorMessage);
@@ -28,7 +28,7 @@ namespace cpGames.core.RapidIoC
         #region Methods
         public static implicit operator AddActionResultCommandModel<T_Result, T_In>(ActionResultCommand<T_Result, T_In> command)
         {
-            var createKeyOutcome = Rapid.KeyFactoryCollection.Create(SignalBase.UidGenerator, out var key);
+            var createKeyOutcome = Rapid._idContainer.CreateKey(out var key);
             if (!createKeyOutcome)
             {
                 throw new Exception(createKeyOutcome.ErrorMessage);
@@ -53,7 +53,7 @@ namespace cpGames.core.RapidIoC
         #region Methods
         public static implicit operator AddActionResultCommandModel<T_Result, T_In_1, T_In_2>(ActionResultCommand<T_Result, T_In_1, T_In_2> command)
         {
-            var createKeyOutcome = Rapid.KeyFactoryCollection.Create(SignalBase.UidGenerator, out var key);
+            var createKeyOutcome = Rapid._idContainer.CreateKey(out var key);
             if (!createKeyOutcome)
             {
                 throw new Exception(createKeyOutcome.ErrorMessage);

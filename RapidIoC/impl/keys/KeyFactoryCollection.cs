@@ -16,8 +16,9 @@ namespace cpGames.core.RapidIoC.impl
             var addFactoryOutcome =
                 AddFactory(new NameKeyFactory()) &&
                 AddFactory(new TypeKeyFactory()) &&
-                AddFactory(new UidKeyFactory()) &&
-                AddFactory(new ByteKeyFactory()) &&
+                AddFactory(new IdKeyFactory()) &&
+                AddFactory(new AddressKeyFactory()) &&
+                //AddFactory(new ByteKeyFactory()) && // raw bytes are converted into IdKeys, comment out IdKeyFactory to use ByteKeyFactory instead
                 AddFactory(new EnumKeyFactory()) &&
                 AddFactory(new CompositeKeyFactory()) &&
                 AddFactory(new InstanceKeyFactory());
