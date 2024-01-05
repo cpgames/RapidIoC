@@ -22,8 +22,8 @@ namespace cpGames.core.RapidIoC
                 return Outcome.Success();
             }
             var registerResult =
-                RegisterWithContextInternal() &&
-                Rapid.RegisterView(this);
+                Rapid.RegisterView(this) &&
+                RegisterWithContextInternal();
             _registered = registerResult;
             return registerResult;
         }
