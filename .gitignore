@@ -31,3 +31,6 @@ UnityExamples/*.sln
 *.user
 *.userprefs
 *.DS_store
+
+# Rider
+.idea/
