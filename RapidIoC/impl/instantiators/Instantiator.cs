@@ -15,7 +15,7 @@ namespace cpGames.core.RapidIoC.impl
             if (ctor == null)
             {
                 value = default;
-                return Outcome.Fail($"Type <{typeof(T).Name}> missing empty ctor.");
+                return Outcome.Fail($"Type <{typeof(T).Name}> missing empty ctor.", this);
             }
             value = (T)ctor.Invoke(null);
             return Outcome.Success();

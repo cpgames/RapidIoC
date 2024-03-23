@@ -13,7 +13,7 @@ namespace cpGames.core.RapidIoC.impl
                 key = new EnumKey((Enum)keyData);
                 return Outcome.Success();
             }
-            return Outcome.Fail("keyData type is not supported.");
+            return Outcome.Fail("keyData type is not supported.", this);
         }
         #endregion
     }

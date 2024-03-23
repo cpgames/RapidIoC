@@ -14,7 +14,7 @@
                 case byte bytes:
                     key = new IdKey(new Id(bytes));
                     return Outcome.Success();
-                default: return Outcome.Fail("keyData type is not supported.");
+                default: return Outcome.Fail("keyData type is not supported.", this);
             }
         }
         #endregion

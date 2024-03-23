@@ -47,7 +47,7 @@ namespace cpGames.core.RapidIoC.impl
             {
                 return _ids.Remove(key.Id) ?
                     Outcome.Success() :
-                    Outcome.Fail($"Id <{key.Id}> does not exist.");
+                    Outcome.Fail($"Id <{key.Id}> does not exist.", this);
             }
         }
         #endregion

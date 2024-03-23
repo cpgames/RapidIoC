@@ -66,7 +66,7 @@ namespace cpGames.core.RapidIoC.impl
                 case 2:
                     return ConnectSignalWithTwoParameters(view, signal, baseName);
             }
-            return Outcome.Fail("Only up to 2 parameters are supported.");
+            return Outcome.Fail("Only up to 2 parameters are supported.", null);
         }
 
         private static Outcome ConnectSignalWithNoParameters(

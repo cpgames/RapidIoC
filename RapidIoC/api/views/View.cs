@@ -72,11 +72,11 @@ namespace cpGames.core.RapidIoC
         {
             if (OneTimeSet && HasModel)
             {
-                return Outcome.Fail($"View {GetType().Name} is a one-time set, can not update model again.");
+                return Outcome.Fail($"View {GetType().Name} is a one-time set, can not update model again.", this);
             }
             if (ReferenceEquals(Model, model))
             {
-                return Outcome.Fail("Model is already set.");
+                return Outcome.Fail("Model is already set.", this);
             }
             var beginUpdateModelInternalResult = BeginUpdateModelInternal(model);
             if (!beginUpdateModelInternalResult)

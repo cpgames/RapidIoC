@@ -23,7 +23,7 @@ namespace cpGames.core.RapidIoC.impl
             return
                 _contexts.TryGetValue(key, out context) ?
                     Outcome.Success() :
-                    Outcome.Fail($"Failed to find context <{key}>.");
+                    Outcome.Fail($"Failed to find context <{key}>.", this);
         }
 
         public Outcome FindOrCreateContext(IKey key, out IContext? context)
@@ -31,7 +31,7 @@ namespace cpGames.core.RapidIoC.impl
             var findContextOutcome = FindContext(key, out context);
             if (findContextOutcome)
             {
-                return findContextOutcome;
+                return findContextOutcome.Append(this);
             }
             var newContext = new Context(key);
             var addCommandResult = newContext.DestroyedSignal.AddCommand(() =>
@@ -50,7 +50,7 @@ namespace cpGames.core.RapidIoC.impl
         public Outcome ContextExists(IKey key)
         {
             return !_contexts.ContainsKey(key) ?
-                Outcome.Fail($"Context <{key}> does not exist.") :
+                Outcome.Fail($"Context <{key}> does not exist.", this) :
                 Outcome.Success();
         }
         #endregion

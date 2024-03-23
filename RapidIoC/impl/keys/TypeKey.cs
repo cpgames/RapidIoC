@@ -13,7 +13,7 @@ namespace cpGames.core.RapidIoC
                 key = new TypeKey(typeKeyData);
                 return Outcome.Success();
             }
-            return Outcome.Fail("keyData type is not supported.");
+            return Outcome.Fail("keyData type is not supported.", this);
         }
         #endregion
     }

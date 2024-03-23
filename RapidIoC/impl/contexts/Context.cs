@@ -106,7 +106,7 @@ namespace cpGames.core.RapidIoC.impl
             {
                 if (Rapid.Contexts.Root.BindingExists(key))
                 {
-                    return Outcome.Fail($"Binding <{key}> already exists in Root context.");
+                    return Outcome.Fail($"Binding <{key}> already exists in Root context.", this);
                 }
             }
             return

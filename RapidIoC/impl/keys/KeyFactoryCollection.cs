@@ -53,7 +53,7 @@ namespace cpGames.core.RapidIoC.impl
                 }
             }
             key = Rapid.InvalidKey;
-            return Outcome.Fail("Failed to create binding key, no matching key factory found.");
+            return Outcome.Fail("Failed to create binding key, no matching key factory found.", this);
         }
 
         public Outcome AddFactory(IKeyFactory factory)
@@ -62,7 +62,7 @@ namespace cpGames.core.RapidIoC.impl
             {
                 if (_factories.Any(x => x.GetType() == factory.GetType()))
                 {
-                    return Outcome.Fail($"Factory of type <{factory.GetType().Name}> already exists.");
+                    return Outcome.Fail($"Factory of type <{factory.GetType().Name}> already exists.", this);
                 }
                 _factories.Add(factory);
             }

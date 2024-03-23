@@ -15,7 +15,7 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (_views.Contains(view))
             {
-                return Outcome.Fail($"View <{view}> is already registered.");
+                return Outcome.Fail($"View <{view}> is already registered.", this);
             }
             _views.Add(view);
             return Outcome.Success();
@@ -25,7 +25,7 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (!_views.Contains(view))
             {
-                return Outcome.Fail($"View <{view}> is not registered.");
+                return Outcome.Fail($"View <{view}> is not registered.", this);
             }
             _views.Remove(view);
             return Outcome.Success();

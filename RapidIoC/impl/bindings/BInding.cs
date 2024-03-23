@@ -31,12 +31,12 @@ namespace cpGames.core.RapidIoC.impl
             if (_value == null)
             {
                 value = default;
-                return Outcome.Fail("Value is null");
+                return Outcome.Fail("Value is null", this);
             }
-            if (!(_value is TValue))
+            if (_value is not TValue)
             {
                 value = default;
-                return Outcome.Fail($"Incorrect value type <{_value.GetType()}>, <{typeof(TValue)}> expected.");
+                return Outcome.Fail($"Incorrect value type <{_value.GetType()}>, <{typeof(TValue)}> expected.", this);
             }
             value = (TValue)_value;
             return Outcome.Success();
@@ -53,7 +53,7 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (_subscribers.ContainsKey(view))
             {
-                return Outcome.Fail($"View <{view}> already binded property <{property.Name}>.");
+                return Outcome.Fail($"View <{view}> already binded property <{property.Name}>.", this);
             }
             SubscribeInternal(view, property);
             return Outcome.Success();
@@ -63,7 +63,7 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (!_subscribers.TryGetValue(view, out var property))
             {
-                return Outcome.Fail($"View <{view}> is not binded to binding with key <{Key}>.");
+                return Outcome.Fail($"View <{view}> is not binded to binding with key <{Key}>.", this);
             }
             UnsubscribeInternal(view, property);
             return Outcome.Success();
@@ -75,7 +75,7 @@ namespace cpGames.core.RapidIoC.impl
             {
                 if (_subscribers.ContainsKey(subscriber.Key))
                 {
-                    return Outcome.Fail($"Can't consume binding <{binding.Key}> with <{Key}>, encountered duplicate subscriber <{subscriber.Key}>.");
+                    return Outcome.Fail($"Can't consume binding <{binding.Key}> with <{Key}>, encountered duplicate subscriber <{subscriber.Key}>.", this);
                 }
                 var subscribeResult = Subscribe(subscriber.Key, subscriber.Value);
                 if (!subscribeResult)

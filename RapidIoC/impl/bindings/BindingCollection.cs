@@ -25,13 +25,13 @@ namespace cpGames.core.RapidIoC.impl
             {
                 return Outcome.Success();
             }
-            return Outcome.Fail($"Binding with key <{key}> not found.");
+            return Outcome.Fail($"Binding with key <{key}> not found.", this);
         }
 
         public Outcome BindingExists(IKey key)
         {
             return !_bindings.ContainsKey(key) ?
-                Outcome.Fail($"Binding with key <{key}> not found.") :
+                Outcome.Fail($"Binding with key <{key}> not found.", this) :
                 Outcome.Success();
         }
 

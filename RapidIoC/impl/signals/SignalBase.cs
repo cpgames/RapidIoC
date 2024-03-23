@@ -78,15 +78,15 @@ namespace cpGames.core.RapidIoC.impl
                 }
                 if (!_commands.ContainsKey(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> not found.");
+                    return Outcome.Fail($"Command with key <{key}> not found.", this);
                 }
                 if (_commandsToRemove.Contains(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> is scheduled for removal.");
+                    return Outcome.Fail($"Command with key <{key}> is scheduled for removal.", this);
                 }
                 if (!_suspendedCommands.Add(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> is already suspended.");
+                    return Outcome.Fail($"Command with key <{key}> is already suspended.", this);
                 }
                 return Outcome.Success();
             }
@@ -103,7 +103,7 @@ namespace cpGames.core.RapidIoC.impl
                 }
                 if (!_suspendedCommands.Remove(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> is not suspended.");
+                    return Outcome.Fail($"Command with key <{key}> is not suspended.", this);
                 }
                 return Outcome.Success();
             }
@@ -132,14 +132,14 @@ namespace cpGames.core.RapidIoC.impl
             {
                 if (!_commands.TryGetValue(key, out var commandData))
                 {
-                    return Outcome.Fail($"Command with key <{key}> not found.");
+                    return Outcome.Fail($"Command with key <{key}> not found.", this);
                 }
                 _suspendedCommands.Remove(key);
                 if (_dispatching)
                 {
                     if (!_commandsToRemove.Add(key))
                     {
-                        return Outcome.Fail($"Command with key <{key}> is already scheduled for removal.");
+                        return Outcome.Fail($"Command with key <{key}> is already scheduled for removal.", this);
                     }
                     return Outcome.Success();
                 }
@@ -167,15 +167,15 @@ namespace cpGames.core.RapidIoC.impl
             {
                 if (_commands.ContainsKey(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> already added.");
+                    return Outcome.Fail($"Command with key <{key}> already added.", this);
                 }
                 if (_commandsToRemove.Contains(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> is already scheduled for removal.");
+                    return Outcome.Fail($"Command with key <{key}> is already scheduled for removal.", this);
                 }
                 if (_commandsToAdd.ContainsKey(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> is already scheduled to add.");
+                    return Outcome.Fail($"Command with key <{key}> is already scheduled to add.", this);
                 }
             }
             return Outcome.Success();
@@ -235,7 +235,7 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (_dispatching)
             {
-                return Outcome.Fail($"{GetType().Name} is already dispatching, recursive execution for this Signal type is not supported.");
+                return Outcome.Fail($"{GetType().Name} is already dispatching, recursive execution for this Signal type is not supported.", this);
             }
             _dispatching = true;
             return Outcome.Success();

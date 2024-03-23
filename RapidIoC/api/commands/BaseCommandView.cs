@@ -31,7 +31,7 @@ namespace cpGames.core.RapidIoC
                 }
                 else
                 {
-                    return Outcome.Fail($"Command <{this}> is still executing. Call EndExecute first.");
+                    return Outcome.Fail($"Command <{this}> is still executing. Call EndExecute first.", this);
                 }
             }
             return UnregisterFromContext();
