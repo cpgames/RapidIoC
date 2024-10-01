@@ -140,7 +140,7 @@ namespace cpGames.core.RapidIoC.impl
                 var commandType = typeof(ActionCommand<,>).MakeGenericType(signalType.GetGenericArguments());
                 var command = Activator.CreateInstance(commandType, action);
                 var addCommandMethod = signalType.GetMethod("AddCommand", new[] { commandType, typeof(object), typeof(bool) });
-                var outcome = (Outcome)addCommandMethod.Invoke(signal, new[] { command, view });
+                var outcome = (Outcome)addCommandMethod.Invoke(signal, new[] { command, view, false });
                 return outcome;
             }
             return Outcome.Success();
