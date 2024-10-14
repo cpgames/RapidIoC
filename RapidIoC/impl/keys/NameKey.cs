@@ -11,7 +11,12 @@
                 key = new NameKey(stringKeyData);
                 return Outcome.Success();
             }
-            return Outcome.Fail("keyData type is not supported.", this);
+            return Outcome.Fail("keyData type is not supported.");
+        }
+
+        public bool CanCreate(object? keyData)
+        {
+            return keyData is string;
         }
         #endregion
     }
@@ -30,7 +35,7 @@
         #endregion
 
         #region Methods
-        protected bool Equals(NameKey other)
+        private bool Equals(NameKey other)
         {
             return string.Equals(Name, other.Name);
         }

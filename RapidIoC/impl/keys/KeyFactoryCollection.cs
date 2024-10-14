@@ -7,7 +7,7 @@ namespace cpGames.core.RapidIoC.impl
     internal class KeyFactoryCollection : IKeyFactoryCollection
     {
         #region Fields
-        private readonly List<IKeyFactory> _factories = new List<IKeyFactory>();
+        private readonly List<IKeyFactory> _factories = new();
         #endregion
 
         #region Constructors
@@ -45,15 +45,16 @@ namespace cpGames.core.RapidIoC.impl
                 {
                     lock (factory)
                     {
-                        if (factory.Create(keyData, out key))
+                        if (!factory.CanCreate(keyData))
                         {
-                            return Outcome.Success();
+                            continue;
                         }
+                        return factory.Create(keyData, out key);
                     }
                 }
             }
             key = Rapid.InvalidKey;
-            return Outcome.Fail("Failed to create binding key, no matching key factory found.", this);
+            return Outcome.Fail("Failed to create binding key, no matching key factory found.");
         }
 
         public Outcome AddFactory(IKeyFactory factory)
@@ -62,7 +63,7 @@ namespace cpGames.core.RapidIoC.impl
             {
                 if (_factories.Any(x => x.GetType() == factory.GetType()))
                 {
-                    return Outcome.Fail($"Factory of type <{factory.GetType().Name}> already exists.", this);
+                    return Outcome.Fail($"Factory of type <{factory.GetType().Name}> already exists.");
                 }
                 _factories.Add(factory);
             }

@@ -31,15 +31,31 @@ namespace cpGames.core.RapidIoC.impl
             if (_value == null)
             {
                 value = default;
-                return Outcome.Fail("Value is null", this);
+                return Outcome.Fail("Value is null");
             }
             if (_value is not TValue)
             {
                 value = default;
-                return Outcome.Fail($"Incorrect value type <{_value.GetType()}>, <{typeof(TValue)}> expected.", this);
+                return Outcome.Fail($"Incorrect value type <{_value.GetType()}>, <{typeof(TValue)}> expected.");
             }
             value = (TValue)_value;
             return Outcome.Success();
+        }
+
+        public bool TryGetValue<TValue>(out TValue? value)
+        {
+            if (_value == null)
+            {
+                value = default;
+                return false;
+            }
+            if (_value is not TValue)
+            {
+                value = default;
+                return false;
+            }
+            value = (TValue)_value;
+            return true;
         }
 
         public Outcome SetValue(object value)
@@ -53,7 +69,7 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (_subscribers.ContainsKey(view))
             {
-                return Outcome.Fail($"View <{view}> already binded property <{property.Name}>.", this);
+                return Outcome.Fail($"View <{view}> already binded property <{property.Name}>.");
             }
             SubscribeInternal(view, property);
             return Outcome.Success();
@@ -63,7 +79,7 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (!_subscribers.TryGetValue(view, out var property))
             {
-                return Outcome.Fail($"View <{view}> is not binded to binding with key <{Key}>.", this);
+                return Outcome.Fail($"View <{view}> is not binded to binding with key <{Key}>.");
             }
             UnsubscribeInternal(view, property);
             return Outcome.Success();
@@ -75,7 +91,7 @@ namespace cpGames.core.RapidIoC.impl
             {
                 if (_subscribers.ContainsKey(subscriber.Key))
                 {
-                    return Outcome.Fail($"Can't consume binding <{binding.Key}> with <{Key}>, encountered duplicate subscriber <{subscriber.Key}>.", this);
+                    return Outcome.Fail($"Can't consume binding <{binding.Key}> with <{Key}>, encountered duplicate subscriber <{subscriber.Key}>.");
                 }
                 var subscribeResult = Subscribe(subscriber.Key, subscriber.Value);
                 if (!subscribeResult)

@@ -16,7 +16,21 @@
                     return Outcome.Success();
                 }
             }
-            return Outcome.Fail("keyData type is not supported.", this);
+            return Outcome.Fail("keyData type is not supported.");
+        }
+
+        public bool CanCreate(object? keyData)
+        {
+            if (keyData != null)
+            {
+                var keyDataType = keyData.GetType();
+                if (!keyDataType.IsValueType
+                    && keyDataType != typeof(string))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         #endregion
     }

@@ -13,8 +13,8 @@ namespace cpGames.core.RapidIoC.impl
         #region IBindingCollection Members
         public int GetBindingCount(bool includeDiscarded)
         {
-            return 
-                _bindings.Count + 
+            return
+                _bindings.Count +
                 (includeDiscarded ? _discardedBindings.Count : 0);
         }
 
@@ -25,22 +25,25 @@ namespace cpGames.core.RapidIoC.impl
             {
                 return Outcome.Success();
             }
-            return Outcome.Fail($"Binding with key <{key}> not found.", this);
+            return Outcome.Fail($"Binding with key <{key}> not found.");
         }
 
-        public Outcome BindingExists(IKey key)
+        public bool BindingExists(IKey key, bool includeDiscarded)
         {
-            return !_bindings.ContainsKey(key) ?
-                Outcome.Fail($"Binding with key <{key}> not found.", this) :
-                Outcome.Success();
+            if (!_bindings.ContainsKey(key))
+            {
+                return includeDiscarded && _discardedBindings.ContainsKey(key);
+            }
+            return true;
         }
 
         public Outcome Bind(IKey key, out IBinding? binding)
         {
-            if (!FindBinding(key, false, out binding))
+            binding = default;
+            if (!BindingExists(key, false))
             {
                 binding = new Binding(key);
-                var addCommandResult = binding.RemovedSignal.AddCommand(() =>
+                var outcome = binding.RemovedSignal.AddCommand(() =>
                 {
                     if (_discardedBindings.ContainsKey(key))
                     {
@@ -51,17 +54,22 @@ namespace cpGames.core.RapidIoC.impl
                         _bindings.Remove(key);
                     }
                 }, key, true);
-                if (!addCommandResult)
+                if (!outcome)
                 {
-                    return addCommandResult;
+                    return outcome;
                 }
                 _bindings.Add(key, binding);
+                return Outcome.Success();
             }
-            return Outcome.Success();
+            return FindBinding(key, false, out binding);
         }
 
         public Outcome Unbind(IKey key)
         {
+            if (!BindingExists(key, true))
+            {
+                return Outcome.Fail($"Binding with key <{key}> not found.");
+            }
             return
                 FindBinding(key, true, out var binding) &&
                 UnbindInternal(key, binding!);
@@ -72,10 +80,10 @@ namespace cpGames.core.RapidIoC.impl
             var bindingKeys = _bindings.Keys.ToList();
             foreach (var key in bindingKeys)
             {
-                var unbindOutcome = Unbind(key);
-                if (!unbindOutcome)
+                var outcome = Unbind(key);
+                if (!outcome)
                 {
-                    return unbindOutcome;
+                    return outcome;
                 }
             }
             return Outcome.Success();
@@ -90,13 +98,13 @@ namespace cpGames.core.RapidIoC.impl
 
         public Outcome MoveBindingFrom(IKey key, IBindingCollection collection)
         {
-            var clearCommandsOutcome =
+            var outcome =
                 FindBinding(key, false, out var binding) &&
                 collection.MoveBindingTo(binding!) &&
                 binding!.RemovedSignal.ClearCommands();
-            if (!clearCommandsOutcome)
+            if (!outcome)
             {
-                return clearCommandsOutcome;
+                return outcome;
             }
             _bindings.Remove(key);
             return Outcome.Success();
@@ -113,15 +121,14 @@ namespace cpGames.core.RapidIoC.impl
         #region Methods
         private Outcome UnbindInternal(IKey key, IBinding binding)
         {
-            if (!binding.Empty && !binding.Discarded)
+            if (binding is { Empty: false, Discarded: false })
             {
-                var getBindingOutcome = binding.GetValue<SignalBase>(out var signal);
-                if (getBindingOutcome)
+                if (binding.TryGetValue<SignalBase>(out var signal))
                 {
-                    var clearCommandsOutcome = signal!.ClearCommands();
-                    if (!clearCommandsOutcome)
+                    var outcome = signal!.ClearCommands();
+                    if (!outcome)
                     {
-                        return clearCommandsOutcome;
+                        return outcome;
                     }
                 }
                 binding.Discarded = true;

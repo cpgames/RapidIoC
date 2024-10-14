@@ -24,7 +24,7 @@ namespace cpGames.core.RapidIoC
             }
             if (HasKey(key))
             {
-                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.", this);
+                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.");
             }
             var instantiator = new DefaultInstantiator<TCommand>();
             return
@@ -41,7 +41,7 @@ namespace cpGames.core.RapidIoC
             }
             if (HasKey(key))
             {
-                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.", this);
+                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.");
             }
             var instantiator = new DefaultInstantiator<TCommand>();
             return
@@ -137,7 +137,7 @@ namespace cpGames.core.RapidIoC
             }
             if (HasKey(key))
             {
-                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.", this);
+                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.");
             }
             var instantiator = new DefaultInstantiator<TCommand>();
             return
@@ -154,7 +154,7 @@ namespace cpGames.core.RapidIoC
             }
             if (HasKey(key))
             {
-                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.", this);
+                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.");
             }
             var instantiator = new DefaultInstantiator<TCommand>();
             return
@@ -251,7 +251,7 @@ namespace cpGames.core.RapidIoC
             }
             if (HasKey(key))
             {
-                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.", this);
+                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.");
             }
             var instantiator = new DefaultInstantiator<TCommand>();
             return
@@ -268,7 +268,7 @@ namespace cpGames.core.RapidIoC
             }
             if (HasKey(key))
             {
-                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.", this);
+                return Outcome.Fail($"Command with key <{key}> is already registered with the signal.");
             }
             var instantiator = new DefaultInstantiator<TCommand>();
             return

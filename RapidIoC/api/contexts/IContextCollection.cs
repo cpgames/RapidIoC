@@ -39,6 +39,8 @@ namespace cpGames.core.RapidIoC
         /// <param name="context">Context instance if found, otherwise null.</param>
         /// <returns>True if successful, otherwise false.</returns>
         Outcome FindContext(IKey key, out IContext? context);
+        
+        bool TryFindContext(IKey key, out IContext? context);
 
         /// <summary>
         /// Find context by name, try to create one if none exists.

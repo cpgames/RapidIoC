@@ -3,7 +3,7 @@
 namespace cpGames.core.RapidIoC
 {
     /// <summary>
-    /// Main point of entry to RapidIoC api.
+    ///     Main point of entry to RapidIoC api.
     /// </summary>
     public static class Rapid
     {
@@ -122,6 +122,21 @@ namespace cpGames.core.RapidIoC
                 IBinding? binding = null;
                 return
                     Contexts.FindContext(contextKey, out var context) &&
+                    context!.FindBinding(key, false, out binding) &&
+                    binding!.GetValue(out value);
+            }
+        }
+
+        public static Outcome GetBindingValue<TDataValue>(object keyData, IKey contextKey, out TDataValue? value)
+        {
+            lock (_syncRoot)
+            {
+                value = default;
+                var context = default(IContext);
+                var binding = default(IBinding);
+                return
+                    KeyFactoryCollection.Create(keyData, out var key) &&
+                    Contexts.FindContext(contextKey, out context) &&
                     context!.FindBinding(key, false, out binding) &&
                     binding!.GetValue(out value);
             }

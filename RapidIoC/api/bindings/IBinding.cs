@@ -49,7 +49,8 @@ namespace cpGames.core.RapidIoC
         /// <param name="value">Binding value of type TValue, if value is null or mismatched type, then default.</param>
         /// <returns><see cref="Outcome.Success()"/> if value is not null and of type TValue, otherwise <see cref="Outcome.Fail(string)"/>.</returns>
         Outcome GetValue<TValue>(out TValue? value);
-
+        bool TryGetValue<TValue>(out TValue? value);
+        
         /// <summary>
         /// Set binding value.
         /// </summary>

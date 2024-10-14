@@ -2,7 +2,7 @@
 
 namespace cpGames.core.RapidIoC.impl
 {
-    /// <inheritdoc cref="IContext"/>
+    /// <inheritdoc cref="IContext" />
     internal class Context : IContext
     {
         #region Fields
@@ -55,17 +55,24 @@ namespace cpGames.core.RapidIoC.impl
 
         public Outcome FindBinding(IKey key, bool includeDiscarded, out IBinding? binding)
         {
-            var findBindingResult = _bindings.FindBinding(key, includeDiscarded, out binding);
-            if (!findBindingResult && !IsRoot)
+            if (!_bindings.BindingExists(key, includeDiscarded) && !IsRoot)
             {
-                findBindingResult = Rapid.Contexts.Root.FindBinding(key, includeDiscarded, out binding);
+                return Rapid.Contexts.Root.FindBinding(key, includeDiscarded, out binding);
             }
-            return findBindingResult;
+            return _bindings.FindBinding(key, includeDiscarded, out binding);
         }
 
-        public Outcome BindingExists(IKey key)
+        public bool BindingExists(IKey key, bool includeDiscarded)
         {
-            return _bindings.BindingExists(key);
+            if (_bindings.BindingExists(key, includeDiscarded))
+            {
+                return true;
+            }
+            if (!IsRoot)
+            {
+                return Rapid.Contexts.Root.BindingExists(key, includeDiscarded);
+            }
+            return false;
         }
 
         public Outcome Bind(IKey key, out IBinding? binding)
@@ -73,7 +80,7 @@ namespace cpGames.core.RapidIoC.impl
             if (IsRoot)
             {
                 foreach (var context in Rapid.Contexts.Contexts
-                             .Where(x => x.LocalBindingExists(key)))
+                             .Where(x => x.LocalBindingExists(key, true)))
                 {
                     var moveBindingOutcome = context.MoveBindingFrom(key, this);
                     if (!moveBindingOutcome)
@@ -83,9 +90,11 @@ namespace cpGames.core.RapidIoC.impl
                     }
                 }
             }
-            return
-                FindBinding(key, false, out binding) ||
-                _bindings.Bind(key, out binding);
+            if (BindingExists(key, false))
+            {
+                return FindBinding(key, false, out binding);
+            }
+            return _bindings.Bind(key, out binding);
         }
 
         public Outcome BindValue(IKey key, object value)
@@ -93,7 +102,7 @@ namespace cpGames.core.RapidIoC.impl
             if (IsRoot)
             {
                 foreach (var context in Rapid.Contexts.Contexts
-                             .Where(x => x.LocalBindingExists(key)))
+                             .Where(x => x.LocalBindingExists(key, true)))
                 {
                     var moveBindingOutcome = context.MoveBindingFrom(key, this);
                     if (!moveBindingOutcome)
@@ -104,9 +113,9 @@ namespace cpGames.core.RapidIoC.impl
             }
             else
             {
-                if (Rapid.Contexts.Root.BindingExists(key))
+                if (Rapid.Contexts.Root.BindingExists(key, true))
                 {
-                    return Outcome.Fail($"Binding <{key}> already exists in Root context.", this);
+                    return Outcome.Fail($"Binding <{key}> already exists in Root context.");
                 }
             }
             return
@@ -136,9 +145,9 @@ namespace cpGames.core.RapidIoC.impl
             return Outcome.Success();
         }
 
-        public Outcome LocalBindingExists(IKey key)
+        public bool LocalBindingExists(IKey key, bool includeDiscarded)
         {
-            return _bindings.BindingExists(key);
+            return _bindings.BindingExists(key, includeDiscarded);
         }
 
         public Outcome UnregisterView(IView view)
@@ -203,7 +212,7 @@ namespace cpGames.core.RapidIoC.impl
         private void DestroyIfEmpty()
         {
             if (!IsRoot &&
-                ViewCount == 0 && 
+                ViewCount == 0 &&
                 GetBindingCount(true) == 0)
             {
                 DestroyedSignal.Dispatch();

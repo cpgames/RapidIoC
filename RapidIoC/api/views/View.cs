@@ -4,7 +4,7 @@ namespace cpGames.core.RapidIoC
 {
     /// <inheritdoc cref="IView" />
     /// <summary>
-    /// Default View
+    ///     Default View
     /// </summary>
     public abstract class View : IView
     {
@@ -72,11 +72,11 @@ namespace cpGames.core.RapidIoC
         {
             if (OneTimeSet && HasModel)
             {
-                return Outcome.Fail($"View {GetType().Name} is a one-time set, can not update model again.", this);
+                return Outcome.Fail($"View {GetType().Name} is a one-time set, can not update model again.");
             }
             if (ReferenceEquals(Model, model))
             {
-                return Outcome.Fail("Model is already set.", this);
+                return Outcome.Fail("Model is already set.");
             }
             var beginUpdateModelInternalResult = BeginUpdateModelInternal(model);
             if (!beginUpdateModelInternalResult)
@@ -123,6 +123,7 @@ namespace cpGames.core.RapidIoC
         T Foo();
         #endregion
     }
+
     public abstract class Base<T> : IBase<T?>
     {
         #region Properties
@@ -133,7 +134,9 @@ namespace cpGames.core.RapidIoC
         public abstract T Foo();
         #endregion
     }
+
     public interface IDerived<T> : IBase<T> { }
+
     public class Derived : Base<Element>, IDerived<Element>
     {
         #region Properties
@@ -147,6 +150,7 @@ namespace cpGames.core.RapidIoC
         }
         #endregion
     }
+
     public class DerivedNullable : Base<Element?>, IDerived<Element?>
     {
         #region Properties
@@ -160,16 +164,17 @@ namespace cpGames.core.RapidIoC
         }
         #endregion
     }
+
     public class Caller
     {
         #region Fields
-        private readonly IDerived<Element> derived = new Derived();
+        private readonly IDerived<Element> _derived = new Derived();
         #endregion
 
         #region Methods
         public Element GetElement()
         {
-            return derived.Foo();
+            return _derived.Foo();
         }
         #endregion
     }

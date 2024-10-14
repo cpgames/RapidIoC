@@ -23,24 +23,30 @@ namespace cpGames.core.RapidIoC.impl
             return
                 _contexts.TryGetValue(key, out context) ?
                     Outcome.Success() :
-                    Outcome.Fail($"Failed to find context <{key}>.", this);
+                    Outcome.Fail($"Failed to find context <{key}>.");
+        }
+
+        public bool TryFindContext(IKey key, out IContext? context)
+        {
+            if (RootKey.Instance == key)
+            {
+                context = Root;
+                return true;
+            }
+            return _contexts.TryGetValue(key, out context);
         }
 
         public Outcome FindOrCreateContext(IKey key, out IContext? context)
         {
-            var findContextOutcome = FindContext(key, out context);
-            if (findContextOutcome)
+            if (TryFindContext(key, out context))
             {
-                return findContextOutcome.Append(this);
+                return Outcome.Success();
             }
             var newContext = new Context(key);
-            var addCommandResult = newContext.DestroyedSignal.AddCommand(() =>
+            var outcome = newContext.DestroyedSignal.AddCommand(() => { _contexts.Remove(newContext.Key); }, key, true);
+            if (!outcome)
             {
-                _contexts.Remove(newContext.Key);
-            }, key, true);
-            if (!addCommandResult)
-            {
-                return addCommandResult;
+                return outcome;
             }
             _contexts.Add(key, newContext);
             context = newContext;
@@ -50,7 +56,7 @@ namespace cpGames.core.RapidIoC.impl
         public Outcome ContextExists(IKey key)
         {
             return !_contexts.ContainsKey(key) ?
-                Outcome.Fail($"Context <{key}> does not exist.", this) :
+                Outcome.Fail($"Context <{key}> does not exist.") :
                 Outcome.Success();
         }
         #endregion

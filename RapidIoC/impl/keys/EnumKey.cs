@@ -13,7 +13,12 @@ namespace cpGames.core.RapidIoC.impl
                 key = new EnumKey((Enum)keyData);
                 return Outcome.Success();
             }
-            return Outcome.Fail("keyData type is not supported.", this);
+            return Outcome.Fail("keyData type is not supported.");
+        }
+
+        public bool CanCreate(object? keyData)
+        {
+            return keyData != null && keyData.GetType().IsEnum;
         }
         #endregion
     }
@@ -34,7 +39,7 @@ namespace cpGames.core.RapidIoC.impl
         #region Methods
         protected bool Equals(EnumKey other)
         {
-            return Enum.Equals(EnumType, other.EnumType);
+            return Equals(EnumType, other.EnumType);
         }
 
         public override bool Equals(object obj)

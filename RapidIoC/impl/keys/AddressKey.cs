@@ -11,7 +11,12 @@
                 key = new AddressKey(address);
                 return Outcome.Success();
             }
-            return Outcome.Fail("keyData type is not supported.", this);
+            return Outcome.Fail("keyData type is not supported.");
+        }
+
+        public bool CanCreate(object? keyData)
+        {
+            return keyData is Address;
         }
         #endregion
     }

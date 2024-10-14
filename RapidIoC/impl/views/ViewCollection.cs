@@ -5,7 +5,7 @@ namespace cpGames.core.RapidIoC.impl
     internal class ViewCollection : IViewCollection
     {
         #region Fields
-        private readonly List<IView> _views = new List<IView>();
+        private readonly List<IView> _views = new();
         #endregion
 
         #region IViewCollection Members
@@ -15,7 +15,7 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (_views.Contains(view))
             {
-                return Outcome.Fail($"View <{view}> is already registered.", this);
+                return Outcome.Fail($"View <{view}> is already registered.");
             }
             _views.Add(view);
             return Outcome.Success();
@@ -25,7 +25,7 @@ namespace cpGames.core.RapidIoC.impl
         {
             if (!_views.Contains(view))
             {
-                return Outcome.Fail($"View <{view}> is not registered.", this);
+                return Outcome.Fail($"View <{view}> is not registered.");
             }
             _views.Remove(view);
             return Outcome.Success();

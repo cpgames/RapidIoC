@@ -14,8 +14,13 @@
                 case byte bytes:
                     key = new IdKey(new Id(bytes));
                     return Outcome.Success();
-                default: return Outcome.Fail("keyData type is not supported.", this);
+                default: return Outcome.Fail("keyData type is not supported.");
             }
+        }
+
+        public bool CanCreate(object? keyData)
+        {
+            return keyData is Id or byte;
         }
         #endregion
     }
@@ -34,7 +39,7 @@
         #endregion
 
         #region Methods
-        protected bool Equals(IdKey other)
+        private bool Equals(IdKey other)
         {
             return Id == other.Id;
         }

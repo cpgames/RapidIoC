@@ -5,8 +5,8 @@ using System.Linq;
 namespace cpGames.core.RapidIoC.impl
 {
     /// <summary>
-    /// Signals are a way to execute commands.
-    /// To use, connect your commands to a signal and the call signal.Dispatch(parameters) to execute connected commands.
+    ///     Signals are a way to execute commands.
+    ///     To use, connect your commands to a signal and the call signal.Dispatch(parameters) to execute connected commands.
     /// </summary>
     public abstract class SignalBase : ISignalBase
     {
@@ -15,14 +15,13 @@ namespace cpGames.core.RapidIoC.impl
         private readonly Dictionary<IKey, SignalCommandModel> _commandsToAdd = new();
         private readonly HashSet<IKey> _commandsToRemove = new();
         private readonly HashSet<IKey> _suspendedCommands = new();
-        private bool _dispatching;
         protected internal readonly object _syncRoot = new();
         #endregion
 
         #region ISignalBase Members
         public IEnumerable<KeyValuePair<IKey, SignalCommandModel>> Commands => _commands;
         public int CommandCount => _commands.Count;
-        public bool IsDispatching => _dispatching;
+        public bool IsDispatching { get; private set; }
 
         public bool IsScheduledForRemoval(IKey key)
         {
@@ -78,15 +77,15 @@ namespace cpGames.core.RapidIoC.impl
                 }
                 if (!_commands.ContainsKey(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> not found.", this);
+                    return Outcome.Fail($"Command with key <{key}> not found.");
                 }
                 if (_commandsToRemove.Contains(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> is scheduled for removal.", this);
+                    return Outcome.Fail($"Command with key <{key}> is scheduled for removal.");
                 }
                 if (!_suspendedCommands.Add(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> is already suspended.", this);
+                    return Outcome.Fail($"Command with key <{key}> is already suspended.");
                 }
                 return Outcome.Success();
             }
@@ -103,7 +102,7 @@ namespace cpGames.core.RapidIoC.impl
                 }
                 if (!_suspendedCommands.Remove(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> is not suspended.", this);
+                    return Outcome.Fail($"Command with key <{key}> is not suspended.");
                 }
                 return Outcome.Success();
             }
@@ -111,7 +110,7 @@ namespace cpGames.core.RapidIoC.impl
 
         public bool IsSuspended(object keyData)
         {
-            return 
+            return
                 Rapid.KeyFactoryCollection.Create(keyData, out var key) &&
                 _suspendedCommands.Contains(key);
         }
@@ -132,14 +131,14 @@ namespace cpGames.core.RapidIoC.impl
             {
                 if (!_commands.TryGetValue(key, out var commandData))
                 {
-                    return Outcome.Fail($"Command with key <{key}> not found.", this);
+                    return Outcome.Fail($"Command with key <{key}> not found.");
                 }
                 _suspendedCommands.Remove(key);
-                if (_dispatching)
+                if (IsDispatching)
                 {
                     if (!_commandsToRemove.Add(key))
                     {
-                        return Outcome.Fail($"Command with key <{key}> is already scheduled for removal.", this);
+                        return Outcome.Fail($"Command with key <{key}> is already scheduled for removal.");
                     }
                     return Outcome.Success();
                 }
@@ -167,15 +166,15 @@ namespace cpGames.core.RapidIoC.impl
             {
                 if (_commands.ContainsKey(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> already added.", this);
+                    return Outcome.Fail($"Command with key <{key}> already added.");
                 }
                 if (_commandsToRemove.Contains(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> is already scheduled for removal.", this);
+                    return Outcome.Fail($"Command with key <{key}> is already scheduled for removal.");
                 }
                 if (_commandsToAdd.ContainsKey(key))
                 {
-                    return Outcome.Fail($"Command with key <{key}> is already scheduled to add.", this);
+                    return Outcome.Fail($"Command with key <{key}> is already scheduled to add.");
                 }
             }
             return Outcome.Success();
@@ -191,7 +190,7 @@ namespace cpGames.core.RapidIoC.impl
                     return result;
                 }
                 var commandData = new SignalCommandModel(command, once);
-                var commands = _dispatching ? _commandsToAdd : _commands;
+                var commands = IsDispatching ? _commandsToAdd : _commands;
                 commands.Add(key, commandData);
                 return command.Connect();
             }
@@ -233,11 +232,11 @@ namespace cpGames.core.RapidIoC.impl
 
         protected Outcome DispatchBegin()
         {
-            if (_dispatching)
+            if (IsDispatching)
             {
-                return Outcome.Fail($"{GetType().Name} is already dispatching, recursive execution for this Signal type is not supported.", this);
+                return Outcome.Fail($"{GetType().Name} is already dispatching, recursive execution for this Signal type is not supported.");
             }
-            _dispatching = true;
+            IsDispatching = true;
             return Outcome.Success();
         }
 
@@ -269,7 +268,7 @@ namespace cpGames.core.RapidIoC.impl
                     _commands.Add(kvp.Key, kvp.Value);
                 }
                 _commandsToAdd.Clear();
-                _dispatching = false;
+                IsDispatching = false;
             }
         }
         #endregion
