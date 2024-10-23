@@ -57,14 +57,31 @@ namespace cpGames.core.RapidIoC.impl
             var baseName = SignalToBaseName(signalProperty.Name);
             var signalType = GetSignalType(signal);
             var argLength = signalType.GetGenericArguments().Length;
-            switch (argLength)
+            if (signalType.IsSubclassOfRawGeneric(typeof(SignalBaseResult<>)))
             {
-                case 0:
-                    return ConnectSignalWithNoParameters(view, signal, baseName);
-                case 1:
-                    return ConnectSignalWithOneParameter(view, signal, baseName);
-                case 2:
-                    return ConnectSignalWithTwoParameters(view, signal, baseName);
+                var resultType = signalType.GetGenericArguments()[0];
+                argLength--;
+                switch (argLength)
+                {
+                    case 0:
+                        return ConnectSignalResultWithNoParameters(view, signal, baseName, resultType);
+                    case 1:
+                        return ConnectSignalResultWithOneParameter(view, signal, baseName, resultType);
+                    case 2:
+                        return ConnectSignalResultWithTwoParameters(view, signal, baseName, resultType);
+                }
+            }
+            else
+            {
+                switch (argLength)
+                {
+                    case 0:
+                        return ConnectSignalWithNoParameters(view, signal, baseName);
+                    case 1:
+                        return ConnectSignalWithOneParameter(view, signal, baseName);
+                    case 2:
+                        return ConnectSignalWithTwoParameters(view, signal, baseName);
+                }
             }
             return Outcome.Fail("Only up to 2 parameters are supported.");
         }
@@ -86,6 +103,34 @@ namespace cpGames.core.RapidIoC.impl
                 var actionType = typeof(Action);
                 var action = (Action)Delegate.CreateDelegate(actionType, view, method);
                 return (signal as ISignal)!.AddCommand(action, view);
+            }
+            return Outcome.Success();
+        }
+
+        private static Outcome ConnectSignalResultWithNoParameters(
+            IView view,
+            SignalBase signal,
+            string baseName,
+            Type resultType)
+        {
+            var type = view.GetType();
+            var methodName = "On" + baseName;
+            var method = type.GetMethods(BINDING_FLAGS)
+                .Where(x =>
+                    !x.HasAttribute<IgnoreSignalMapAttribute>() &&
+                    x.GetParameters().Length == 0 &&
+                    x.ReturnType == resultType)
+                .FirstOrDefault(x => x.Name.Equals(methodName));
+            if (method != null)
+            {
+                var actionType = typeof(ActionResultDelegate<>).MakeGenericType(resultType);
+                var action = Delegate.CreateDelegate(actionType, view, method);
+                var addCommandMethod = signal.GetType().GetMethod("AddCommand", new[] { actionType, typeof(object), typeof(bool) });
+                if (addCommandMethod != null)
+                {
+                    var outcome = (Outcome)addCommandMethod.Invoke(signal, new object[] { action, view, false });
+                    return outcome;
+                }
             }
             return Outcome.Success();
         }
@@ -117,6 +162,36 @@ namespace cpGames.core.RapidIoC.impl
             return Outcome.Success();
         }
 
+        private static Outcome ConnectSignalResultWithOneParameter(
+            IView view,
+            SignalBase signal,
+            string baseName,
+            Type resultType)
+        {
+            var type = view.GetType();
+            var signalType = GetSignalType(signal);
+            var methodName = "On" + baseName;
+            var method = type.GetMethods(BINDING_FLAGS)
+                .Where(x =>
+                    !x.HasAttribute<IgnoreSignalMapAttribute>() &&
+                    x.GetParameters().Length == 1 &&
+                    x.GetParameters()[0].ParameterType == signalType.GetGenericArguments()[1] &&
+                    x.ReturnType == signalType.GetGenericArguments()[0])
+                .FirstOrDefault(x => x.Name.Equals(methodName));
+            if (method != null)
+            {
+                var actionType = typeof(ActionResultDelegate<,>).MakeGenericType(signalType.GetGenericArguments()[1], resultType);
+                var action = Delegate.CreateDelegate(actionType, view, method);
+                var addCommandMethod = signal.GetType().GetMethod("AddCommand", new[] { actionType, typeof(object), typeof(bool) });
+                if (addCommandMethod != null)
+                {
+                    var outcome = (Outcome)addCommandMethod.Invoke(signal, new object[] { action, view, false });
+                    return outcome;
+                }
+            }
+            return Outcome.Success();
+        }
+
         private static Outcome ConnectSignalWithTwoParameters(
             IView view,
             SignalBase signal,
@@ -142,6 +217,37 @@ namespace cpGames.core.RapidIoC.impl
                 var addCommandMethod = signalType.GetMethod("AddCommand", new[] { commandType, typeof(object), typeof(bool) });
                 var outcome = (Outcome)addCommandMethod.Invoke(signal, new[] { command, view, false });
                 return outcome;
+            }
+            return Outcome.Success();
+        }
+
+        private static Outcome ConnectSignalResultWithTwoParameters(
+            IView view,
+            SignalBase signal,
+            string baseName,
+            Type resultType)
+        {
+            var type = view.GetType();
+            var signalType = GetSignalType(signal);
+            var methodName = "On" + baseName;
+            var method = type.GetMethods(BINDING_FLAGS)
+                .Where(x =>
+                    !x.HasAttribute<IgnoreSignalMapAttribute>() &&
+                    x.GetParameters().Length == 2 &&
+                    x.GetParameters()[0].ParameterType == signalType.GetGenericArguments()[1] &&
+                    x.GetParameters()[1].ParameterType == signalType.GetGenericArguments()[2] &&
+                    x.ReturnType == signalType.GetGenericArguments()[0])
+                .FirstOrDefault(x => x.Name.Equals(methodName));
+            if (method != null)
+            {
+                var actionType = typeof(ActionResultDelegate<,,>).MakeGenericType(signalType.GetGenericArguments()[1], signalType.GetGenericArguments()[2], resultType);
+                var action = Delegate.CreateDelegate(actionType, view, method);
+                var addCommandMethod = signal.GetType().GetMethod("AddCommand", new[] { actionType, typeof(object), typeof(bool) });
+                if (addCommandMethod != null)
+                {
+                    var outcome = (Outcome)addCommandMethod.Invoke(signal, new object[] { action, view, false });
+                    return outcome;
+                }
             }
             return Outcome.Success();
         }
