@@ -8,11 +8,8 @@ public class Rapid_Signal_Tests
     public void NoParam_Lambda_Test()
     {
         var n = 0;
-        var signal = new TestSignalA();
-        signal.AddCommand(() =>
-        {
-            n++;
-        });
+        var signal = new TestNoParamsSignal();
+        signal.AddCommand(() => { n++; });
         signal.Dispatch();
         Assert.AreEqual(n, 1);
         signal.Dispatch();
@@ -23,11 +20,8 @@ public class Rapid_Signal_Tests
     public void NoParam_Once_Lambda_Test()
     {
         var n = 0;
-        var signal = new TestSignalA();
-        signal.AddCommand(() =>
-        {
-            n++;
-        }, keyData: null, once: true);
+        var signal = new TestNoParamsSignal();
+        signal.AddCommand(() => { n++; }, keyData: null, once: true);
         signal.Dispatch();
         Assert.AreEqual(n, 1);
         signal.Dispatch();
@@ -38,11 +32,8 @@ public class Rapid_Signal_Tests
     public void OnceParam_Lambda_Test()
     {
         var n = 0;
-        var signal = new TestSignalB();
-        signal.AddCommand(val =>
-        {
-            n = val;
-        });
+        var signal = new TestOneParamSignal();
+        signal.AddCommand(val => { n = val; });
         signal.Dispatch(5);
         Assert.AreEqual(n, 5);
         signal.Dispatch(4);
@@ -54,7 +45,7 @@ public class Rapid_Signal_Tests
     {
         var n = 0;
         var text = "";
-        var signal = new TestSignalC();
+        var signal = new TestTwoParamsSignal();
         signal.AddCommand((intVal, textVal) =>
         {
             n = intVal;
@@ -78,7 +69,7 @@ public class Rapid_Signal_Tests
             Rapid.KeyFactoryCollection.Create(Globals.INJECT_KEY1, out key1) &&
             Rapid.Bind(key1, contextKey, commandData));
 
-        var signal = new TestSignalA();
+        var signal = new TestNoParamsSignal();
         Assert.IsTrue(signal.AddCommand<TestCommandViewA>());
         signal.Dispatch();
         Assert.AreEqual(commandData.n, 1);
@@ -100,7 +91,7 @@ public class Rapid_Signal_Tests
             Rapid.KeyFactoryCollection.Create(Globals.INJECT_KEY1, out key1) &&
             Rapid.Bind(key1, contextKey, commandData));
 
-        var signal = new TestSignalB();
+        var signal = new TestOneParamSignal();
         Assert.IsTrue(signal.AddCommand<TestCommandViewB>());
         signal.Dispatch(5);
         Assert.AreEqual(commandData.n, 5);
@@ -122,7 +113,7 @@ public class Rapid_Signal_Tests
             Rapid.KeyFactoryCollection.Create(Globals.INJECT_KEY1, out key1) &&
             Rapid.Bind(key1, contextKey, commandData));
 
-        var signal = new TestSignalC();
+        var signal = new TestTwoParamsSignal();
         Assert.IsTrue(signal.AddCommand<TestCommandViewC>());
         signal.Dispatch(5, "five");
         Assert.AreEqual(commandData.n, 5);
@@ -145,7 +136,7 @@ public class Rapid_Signal_Tests
             Rapid.KeyFactoryCollection.Create(Globals.INJECT_KEY1, out key1) &&
             Rapid.Bind(key1, contextKey, commandData));
 
-        var signal = new TestSignalA();
+        var signal = new TestNoParamsSignal();
         Assert.IsTrue(signal.AddCommand<TestCommandViewA>());
         Assert.IsFalse(signal.AddCommand<TestCommandViewA>());
         Assert.AreEqual(signal.CommandCount, 1);
@@ -161,14 +152,8 @@ public class Rapid_Signal_Tests
     public void Dispatch_While_Modifying_Commands_Test()
     {
         var n = 0;
-        var signal = new TestSignalA();
-        Assert.IsTrue(signal.AddCommand(() =>
-        {
-            signal.AddCommand(() =>
-            {
-                n = 5;
-            });
-        }));
+        var signal = new TestNoParamsSignal();
+        Assert.IsTrue(signal.AddCommand(() => { signal.AddCommand(() => { n = 5; }); }));
         signal.Dispatch();
         Assert.AreEqual(n, 0);
         signal.Dispatch();
@@ -181,20 +166,11 @@ public class Rapid_Signal_Tests
         var a = 0;
         var b = 0;
         var c = 0;
-        var signal = new TestSignalA();
+        var signal = new TestNoParamsSignal();
         Assert.IsTrue(
-            signal.AddCommand(() =>
-            {
-                a++;
-            }, "a") &&
-            signal.AddCommand(() =>
-            {
-                b++;
-            }, "b") &&
-            signal.AddCommand(() =>
-            {
-                c++;
-            }, "c")
+            signal.AddCommand(() => { a++; }, "a") &&
+            signal.AddCommand(() => { b++; }, "b") &&
+            signal.AddCommand(() => { c++; }, "c")
         );
         Assert.AreEqual(signal.CommandCount, 3);
         signal.Dispatch();
