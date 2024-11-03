@@ -57,23 +57,13 @@ namespace cpGames.core.RapidIoC
 
     public abstract class View<TModel> : View, IView<TModel>
     {
-        #region Properties
-        public virtual bool OneTimeSet => !AllowNull;
-        public virtual bool AllowNull => false;
-        #endregion
-
         #region IView<TModel> Members
-        public ISignalOutcome<TModel?> ModelBeginSetSignal { get; } = new LazySignalOutcome<TModel?>();
+        public ISignalOutcome<TModel> ModelBeginSetSignal { get; } = new LazySignalOutcome<TModel>();
         public ISignalOutcome ModelEndSetSignal { get; } = new LazySignalOutcome();
-        public virtual TModel? Model { get; private set; }
-        public bool HasModel => Model != null;
+        public virtual TModel Model { get; private set; } = default!;
 
-        public Outcome SetModel(TModel? model)
+        public Outcome SetModel(TModel model)
         {
-            if (OneTimeSet && HasModel)
-            {
-                return Outcome.Fail($"View {GetType().Name} is a one-time set, can not update model again.");
-            }
             if (ReferenceEquals(Model, model))
             {
                 return Outcome.Fail("Model is already set.");
@@ -89,7 +79,7 @@ namespace cpGames.core.RapidIoC
         #endregion
 
         #region Methods
-        private Outcome BeginUpdateModelInternal(TModel? newModel)
+        private Outcome BeginUpdateModelInternal(TModel newModel)
         {
             return
                 ModelBeginSetSignal.DispatchResult(newModel) &&
@@ -103,7 +93,7 @@ namespace cpGames.core.RapidIoC
                 ModelEndSetSignal.DispatchResult();
         }
 
-        protected virtual Outcome BeginUpdateModel(TModel? newModel)
+        protected virtual Outcome BeginUpdateModel(TModel newModel)
         {
             return Outcome.Success();
         }
