@@ -30,7 +30,7 @@ namespace cpGames.core.RapidIoC
         /// </summary>
         /// <param name="key">>Unique key for context.</param>
         /// <returns>rue if exists, otherwise false.</returns>
-        Outcome ContextExists(IKey key);
+        bool ContextExists(IKey key);
 
         /// <summary>
         /// Find context by name, returns false if context does not exist.
