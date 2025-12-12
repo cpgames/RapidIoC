@@ -53,11 +53,9 @@ namespace cpGames.core.RapidIoC.impl
             return Outcome.Success();
         }
 
-        public Outcome ContextExists(IKey key)
+        public bool ContextExists(IKey key)
         {
-            return !_contexts.ContainsKey(key) ?
-                Outcome.Fail($"Context <{key}> does not exist.") :
-                Outcome.Success();
+            return _contexts.ContainsKey(key);
         }
         #endregion
     }

@@ -150,6 +150,22 @@ namespace cpGames.core.RapidIoC
                 GetBindingValue(key, contextKey, out value);
         }
 
+        public static bool BindingExists(IKey key, IKey contextKey)
+        {
+            if (!Contexts.TryFindContext(contextKey, out var context))
+            {
+                return false;
+            }
+            return context!.BindingExists(key, false);
+        }
+
+        public static bool BindingExists<TDataValue>(IKey contextKey)
+        {
+            return
+                KeyFactoryCollection.Create(typeof(TDataValue), out var key) &&
+                BindingExists(key, contextKey);
+        }
+
         public static Outcome RegisterView(IView view)
         {
             lock (_syncRoot)
