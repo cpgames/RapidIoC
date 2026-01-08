@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC
+namespace cpGames.core.RapidIoC
 {
     /// <summary>
     /// Views are registered with Contexts.

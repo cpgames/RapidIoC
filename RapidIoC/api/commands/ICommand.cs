@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC
+namespace cpGames.core.RapidIoC
 {
     /// <summary>
     /// Parameterless command, can be mapped to <see cref="ISignal"/>.

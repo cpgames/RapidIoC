@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC
+namespace cpGames.core.RapidIoC
 {
     public class ContextView<T_Model, TState> :
         View<T_Model>,

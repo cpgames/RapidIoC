@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC
+namespace cpGames.core.RapidIoC
 {
     /// <summary>
     /// KeyData factory allows creation of keys from different types of data.

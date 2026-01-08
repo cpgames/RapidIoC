@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 
 namespace cpGames.core.RapidIoC.impl
 {

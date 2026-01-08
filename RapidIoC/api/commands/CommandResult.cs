@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC
+namespace cpGames.core.RapidIoC
 {
     public abstract class CommandResult<T_Result> : BaseCommand, ICommandResult<T_Result>
     {

@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC
+namespace cpGames.core.RapidIoC
 {
     /// <summary>
     /// Parameterless command with a return value, can be mapped to <see cref="ISignalResult{T_Result}" />.

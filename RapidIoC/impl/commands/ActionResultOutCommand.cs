@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC.impl
+namespace cpGames.core.RapidIoC.impl
 {
     public class ActionResultOutCommand<T_Result, T_Out> : CommandResultOut<T_Result, T_Out>
     {

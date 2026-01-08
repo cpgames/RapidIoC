@@ -1,4 +1,4 @@
-﻿// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 
 using System;
 using cpGames.core.RapidIoC.impl;

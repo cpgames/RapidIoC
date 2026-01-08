@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC
+namespace cpGames.core.RapidIoC
 {
     /// <summary>
     /// Context encapsulates data for a collection of views registered under it.

@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC.Tests
+namespace cpGames.core.RapidIoC.Tests
 {
     public class TestSignalA : Signal { }
 

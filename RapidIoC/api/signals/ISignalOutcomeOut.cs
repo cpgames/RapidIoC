@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC
+namespace cpGames.core.RapidIoC
 {
     public interface ISignalOutcomeOut<T_Out> : ISignalResultOut<Outcome, T_Out> { }
     public interface ISignalOutcomeOut<T_In, T_Out> : ISignalResultOut<Outcome, T_In, T_Out> { }

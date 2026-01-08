@@ -1,4 +1,4 @@
-﻿using cpGames.core.RapidIoC.impl;
+using cpGames.core.RapidIoC.impl;
 
 namespace cpGames.core.RapidIoC
 {

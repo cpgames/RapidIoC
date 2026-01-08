@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC.Tests;
+namespace cpGames.core.RapidIoC.Tests;
 
 [TestClass]
 public class Rapid_Signal_Tests

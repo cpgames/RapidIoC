@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC.impl
+namespace cpGames.core.RapidIoC.impl
 {
     internal class AddressKeyFactory : IKeyFactory
     {

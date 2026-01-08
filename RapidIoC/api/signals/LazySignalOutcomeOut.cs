@@ -1,4 +1,4 @@
-﻿namespace cpGames.core.RapidIoC
+namespace cpGames.core.RapidIoC
 {
     public abstract class LazySignalOutcomeOut<T_Out> : LazySignalResultOut<Outcome, T_Out>, ISignalOutcomeOut<T_Out>
     {
