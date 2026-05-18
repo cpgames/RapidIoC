@@ -42,6 +42,10 @@ namespace cpGames.core.RapidIoC.impl
             binding = default;
             if (!BindingExists(key, false))
             {
+                if (_discardedBindings.TryGetValue(key, out var staleBinding))
+                {
+                    staleBinding.RemovedSignal.Dispatch();
+                }
                 binding = new Binding(key);
                 var outcome = binding.RemovedSignal.AddCommand(() =>
                 {
